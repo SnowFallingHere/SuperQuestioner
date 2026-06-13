@@ -28,6 +28,8 @@ DIFFICULTY_RE = re.compile(r"^难(?:易程度|度)[：:]\s*(.+)$")
 OPTION_RE = re.compile(r"^([A-Z])[.、．\s]\s*(.*)")
 # Strict option: must have a separator
 OPTION_STRICT_RE = re.compile(r"^([A-Z])[.、．]\s*(.*)")
+# Option with no separator: "D矛盾的特殊性" (letter directly before CJK text)
+OPTION_CJK_RE = re.compile(r"^([A-Z])([\u4e00-\u9fff\u3000-\u303f\uff00-\uffef].*)$")
 # Match section header
 SECTION_RE = re.compile(r"^[一二三四五六七八九十]+[、．.]\s*(单选|多选|判断)")
 # Match inline answer in question: "(  D  )" or "(D)" or "（  C  ）"
@@ -173,6 +175,30 @@ def clean_question_text(text):
     return text.strip()
 
 
+def split_embedded_options(options):
+    """
+    Split option texts that contain inline option markers for subsequent options.
+    E.g. text = "随机性选择的道路    B.英雄人物选择的道路"
+         → splits into {label:A, text:随机性选择的道路} and {label:B, text:英雄人物选择的道路}
+    This handles lines where the original .doc file placed multiple options on one line.
+    """
+    result = []
+    for opt in options:
+        text = opt["text"]
+        # Look for embedded B/C/D markers that appear mid-text (not at line start)
+        m = re.search(r'(?<=.)\s*([B-D])[.、．]\s*', text)
+        if m:
+            before = text[:m.start()].strip()
+            label = m.group(1)
+            after = text[m.end():].strip()
+            result.append({"label": opt["label"], "text": before})
+            nested = split_embedded_options([{"label": label, "text": after}])
+            result.extend(nested)
+        else:
+            result.append(opt)
+    return result
+
+
 def parse_block(block):
     """
     Parse a block of lines (ending with an answer line) into a question dict.
@@ -236,6 +262,12 @@ def parse_block(block):
         line = content_lines[i]
         # 1) A line that starts with a letter + dot -> option
         m_start = OPTION_STRICT_RE.match(line)
+        if not m_start:
+            # Fallback: allow space as separator (some docs use "D 矛盾的特殊性")
+            m_start = OPTION_RE.match(line)
+        if not m_start:
+            # Fallback: letter directly before CJK text, no separator ("D矛盾的特殊性")
+            m_start = OPTION_CJK_RE.match(line)
         if m_start:
             label = m_start.group(1)
             text = m_start.group(2).strip()
@@ -295,6 +327,10 @@ def parse_block(block):
 
     # Clean question text: remove section headers and question numbers
     question_text = clean_question_text(question_text)
+
+    # Split options that have embedded next-option markers in their text
+    # e.g. "A.随机性选择的道路    B.英雄人物选择的道路" → A + B as separate options
+    options = split_embedded_options(options)
 
     return {
         "question": question_text,

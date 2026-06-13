@@ -7,6 +7,40 @@ const QUIZ_SOURCES = [
 const DIFFICULTIES = ['easy','medium','hard','unknown'];
 const DIFF_LABELS = {easy:'易',medium:'中',hard:'难',unknown:'未知'};
 
+// 音效
+let AUDIO_ORB, AUDIO_LEVELUP, AUDIO_BREAK;
+function initAudio() {
+  try {
+    AUDIO_ORB = new Audio('orb.ogg');
+    AUDIO_LEVELUP = new Audio('levelup.ogg');
+    AUDIO_BREAK = new Audio('break.ogg');
+    AUDIO_ORB.volume = 0.6;
+    AUDIO_LEVELUP.volume = 0.8;
+    AUDIO_BREAK.volume = 0.7;
+  } catch (e) { /* noop */ }
+}
+function playOrb() {
+  try {
+    if (!AUDIO_ORB) initAudio();
+    AUDIO_ORB.currentTime = 0;
+    AUDIO_ORB.play().catch(() => {});
+  } catch (e) {}
+}
+function playLevelup() {
+  try {
+    if (!AUDIO_LEVELUP) initAudio();
+    AUDIO_LEVELUP.currentTime = 0;
+    AUDIO_LEVELUP.play().catch(() => {});
+  } catch (e) {}
+}
+function playBreak() {
+  try {
+    if (!AUDIO_BREAK) initAudio();
+    AUDIO_BREAK.currentTime = 0;
+    AUDIO_BREAK.play().catch(() => {});
+  } catch (e) {}
+}
+
 let ALL_QUESTIONS = [];
 let sourceData = {};
 
@@ -377,13 +411,16 @@ function startTimed() {
   if (chSelected.length > 0) pool = pool.filter(q => chSelected.includes(q.chapter));
   if (dfSelected.length > 0) pool = pool.filter(q => dfSelected.includes(getDifficulty(q)));
   if (pool.length === 0) { alert('没有符合条件的题目'); return; }
+  const minutesInput = document.getElementById('timed-minutes');
+  let minutes = parseInt(minutesInput && minutesInput.value, 10);
+  if (!minutes || minutes < 1) minutes = 10;
   mode = 'timed';
   timedQuestions = shuffle(pool).slice(0, 50);
   quizQueue = timedQuestions;
   currentIndex = 0;
   wrongCount = 0; correctCount = 0; totalAnswered = 0; streak = 0;
   wrongList = [];
-  timeLeft = 600; timerPaused = false;
+  timeLeft = minutes * 60; timerPaused = false;
   show('page-quiz');
   document.getElementById('gear-btn').classList.add('hidden');
   startTimer();
@@ -836,9 +873,19 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   if (isCorrect) {
     fb.className = 'answer-feedback show correct-fb';
     fb.textContent = '回答正确！答案：' + correctAnswer;
+    playOrb();
   } else {
     fb.className = 'answer-feedback show wrong-fb';
     fb.textContent = '回答错误！正确答案：' + correctAnswer;
+    playBreak();
+    // 周围闪红光
+    const card = document.querySelector('.quiz-card');
+    if (card) {
+      card.classList.remove('flash-red');
+      void card.offsetWidth;
+      card.classList.add('flash-red');
+      setTimeout(() => card.classList.remove('flash-red'), 800);
+    }
   }
 
   totalAnswered++;
@@ -873,6 +920,9 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   if (isCorrect) {
     correctCount++;
     streak++;
+    if (correctCount > 0 && correctCount % 10 === 0) {
+      setTimeout(playLevelup, 200);
+    }
     if (mode === 'infinite') {
       infiniteMap[key].correctCount++;
       // 更新 session：连续答对 3 次就移除此题（不再记在会话里）

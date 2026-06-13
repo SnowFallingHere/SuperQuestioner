@@ -87,7 +87,8 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f
 .quiz-header .timer { font-size: 18px; font-weight: 600; color: #e74c3c; }
 .gear-icon { font-size: 20px; cursor: pointer; color: #bbb; transition: color .2s; user-select: none; }
 .gear-icon:hover { color: #888; }
-.quiz-card { background: #fff; border-radius: 12px; padding: 24px; position: relative; transition: box-shadow .3s; }
+.quiz-card { background: #fff; border-radius: 12px; padding: 24px; position: relative; transition: box-shadow .15s; }
+.flash-red { box-shadow: 0 0 0 4px #e74c3c, 0 0 20px rgba(231,76,60,.4); }
 
 /* Streak glow */
 .quiz-card.streak-glow { animation: streakPulse .6s ease-out; }

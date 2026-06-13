@@ -41,7 +41,7 @@
       </div>
       <div class="mode-card" onclick="showTimedConfig()">
         <h2>限时模式</h2>
-        <p>选择章节和难度，10分钟内答完50题</p>
+        <p>选择章节和难度，限定时间内答完50题</p>
       </div>
     </div>
   </div>
@@ -57,9 +57,14 @@
     <h3>选择难度</h3>
     <div class="chip-group" id="difficulty-chips"></div>
   </div>
+  <div class="config-section">
+    <h3>答题时间（分钟）</h3>
+    <input type="number" id="timed-minutes" min="1" max="300" step="1" value="10"
+           style="padding:8px 12px;font-size:16px;border:1px solid #ddd;border-radius:8px;width:120px;text-align:center;">
+  </div>
   <div class="btn-row">
     <button class="btn btn-secondary" onclick="showHome()">返回</button>
-    <button class="btn btn-primary" id="btn-start-timed" onclick="startTimed()" disabled>开始</button>
+    <button class="btn btn-primary" id="btn-start-timed" onclick="startTimed()">开始</button>
   </div>
 </div>
 
