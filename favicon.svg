@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe5a8"/>
+      <stop offset="50%" stop-color="#f6b73c"/>
+      <stop offset="100%" stop-color="#b7791f"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b2a0a"/>
+      <stop offset="100%" stop-color="#7a4f11"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(32 34)">
+    <path d="M-16 -20 L-16 12 Q-16 14 -14 14 L-2 14 L-2 -20 Z M16 -20 L16 12 Q16 14 14 14 L2 14 L2 -20 Z"
+          fill="url(#ink)" opacity="0.92"/>
+    <path d="M-14 -20 L-14 12 Q-14 14 -12 14 L-2 14 L-2 -20 Z M14 -20 L14 12 Q14 14 12 14 L2 14 L2 -20 Z"
+          fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M-2 -18 L-2 12 M2 -18 L2 12" stroke="url(#gold)" stroke-width="1.4" opacity="0.9"/>
+    <path d="M-11 -13 L-5 -13 M-11 -9 L-5 -9 M-11 -5 L-5 -5 M-11 -1 L-5 -1 M-11 3 L-5 3 M-11 7 L-5 7 M5 -13 L11 -13 M5 -9 L11 -9 M5 -5 L11 -5 M5 -1 L11 -1 M5 3 L11 3 M5 7 L11 7"
+          stroke="url(#gold)" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/>
+    <path d="M-2 4 L8 -6 L10 -4 L-2 8 Z" fill="url(#gold)"/>
+  </g>
+</svg>
