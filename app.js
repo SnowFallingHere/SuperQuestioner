@@ -1,6 +1,7 @@
 // ====== 题库配置：新增题库只需在此添加一行 ======
 const QUIZ_SOURCES = [
   { file: 'Marxism.json', name: '马克思主义基本原理' },
+  { file: 'Statistic.json', name: '统计学' },
   // { file: 'math.json', name: '高等数学' },
 ];
 
@@ -66,6 +67,83 @@ let wrongSummaryCollapsed = false;
 // }
 let quizAnalysis = loadAnalysis();
 let questionStartTime = 0;
+
+// ====== Segmentit 中文分词（加载词典约 2~3 秒） ======
+let _segmenter = null, _segmenterReady = false;
+const STOPWORDS = new Set([
+  '的','了','在','是','我','有','和','就','不','人','都','一',
+  '上','也','很','到','说','要','去','你','会','着','没有','看',
+  '自己','这','他','她','它','们','那','什么','被','把','让','从',
+  '又','能','为','而','与','及','但','或','之','对','以','等',
+  '中','其','这个','那个','这些','那些','因为','所以','如果','虽然',
+  '但是','可以','应该','必须','通过','进行','包括','以及','更','还',
+  '才','再','只','却','已','正','将','使','如','向','并','所',
+  '给','让','比','同','于','由','按照','根据','经过',
+  '当','着','了','过','的','地','得','个','些','第','每','各',
+  '例如','比如','像','似','来','去','回','进','出',
+  '上','下','里','外','前','后','内','间','旁','边',
+  '方面','情况','时候','问题','方式','方法','手段','途径',
+  '过程','结果','原因','目的','条件','内容','形式','特征','特点',
+  '性质','本质','表现','体现','反映','说明','表明','显示',
+  '意义','价值','作用','影响','关系','联系','区别','不同','相同',
+  '方面','角度','层面','程度','水平','阶段','环节','步骤',
+  '分为','包括','包含','具有','进行','实现','发展','变化','产生',
+  '形成','成为','作为','认为','以为','主张','指出','强调','提出',
+  '概括','总结','归纳','阐述','论述','叙述','描述',
+  '分析','研究','探讨','讨论','解释','论证','证明','验证',
+  '回答','解答','解决','处理','应对','面对','针对','基于','鉴于',
+  '由于','从而','进而','然后','之后','此前',
+  '同时','此外','另外','还有','而且','并且','或者',
+  '不仅','不但','除了','除非','无论','不论','尽管',
+  '虽然','固然','即使','哪怕','如果','假如',
+  '要是','果然','居然','竟然','究竟','到底','毕竟','终究',
+  '的确','确实','其实','实际上','事实上',
+  '根本上','基本上','总体上','整体上',
+  '逐步','逐渐','不断','持续','继续','连续',
+]);
+
+function ensureSegmenter() {
+  return new Promise(resolve => {
+    if (_segmenterReady) return resolve(true);
+    if (typeof Segmentit === 'undefined') {
+      console.warn('segmentit 未加载');
+      return resolve(false);
+    }
+    try {
+      _segmenter = new Segmentit.Segment();
+      Segmentit.useDefault(_segmenter);
+      _segmenterReady = true;
+      resolve(true);
+    } catch (e) {
+      console.warn('segmentit 初始化失败', e);
+      resolve(false);
+    }
+  });
+}
+
+function segmentText(text) {
+  if (!_segmenterReady || !_segmenter) {
+    return text.split(/[\s,，。；;：:、！!？?（）【】《》""''「」\n\r]+/).filter(w => w.trim());
+  }
+  try {
+    const words = _segmenter.doSegment(text, { simple: true, stripPunctuation: true });
+    return words.filter(w => w && w.trim() && !STOPWORDS.has(w));
+  } catch (e) {
+    return text.split(/[\s,，。；;：:、！!？?（）【】《》""''「」\n\r]+/).filter(w => w.trim());
+  }
+}
+
+function scoreSubjectiveRef(userAnswer, referenceText) {
+  const userWords = new Set(segmentText(userAnswer));
+  const refWords = new Set(segmentText(referenceText));
+  if (refWords.size === 0) return 0;
+  let matched = 0;
+  refWords.forEach(w => { if (userWords.has(w)) matched++; });
+  return matched / refWords.size;
+}
+
+// 异步初始化分词（不阻塞页面渲染）
+setTimeout(ensureSegmenter, 100);
 
 function loadAnalysis() {
   try {
@@ -366,12 +444,24 @@ function startWrongBook() {
 function showTimedConfig() {
   if (ALL_QUESTIONS.length === 0) return;
   show('page-config');
-  const chapters = [...new Set(ALL_QUESTIONS.map(q => q.chapter).filter(Boolean))];
   const chapterSection = document.getElementById('config-chapter-section');
-  if (chapters.length > 0) {
+  const sources = Object.keys(sourceData);
+  if (sources.length > 0) {
     chapterSection.classList.remove('hidden');
-    document.getElementById('chapter-chips').innerHTML =
-      chapters.map(ch => '<div class="chip" data-val="'+ch+'" onclick="toggleChip(this)">'+ch+'</div>').join('');
+    let html = '';
+    sources.forEach(src => {
+      const srcQuestions = sourceData[src] || [];
+      const srcChapters = [...new Set(srcQuestions.map(q => q.chapter).filter(Boolean))];
+      if (srcChapters.length === 0) return;
+      html += '<div class="source-group">';
+      html += '<div class="source-label">' + escHtml(src) + '</div>';
+      html += '<div class="chip-group">';
+      srcChapters.forEach(ch => {
+        html += '<div class="chip" data-val="'+ch+'" onclick="toggleChip(this)">'+escHtml(ch)+'</div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('chapter-chips').innerHTML = html;
   } else {
     chapterSection.classList.add('hidden');
   }
@@ -384,32 +474,76 @@ function showTimedConfig() {
   } else {
     diffSection.classList.add('hidden');
   }
+  const allTypes = [...new Set(ALL_QUESTIONS.map(q => q.type).filter(Boolean))];
+  const typeSection = document.getElementById('config-type-section');
+  if (allTypes.length > 0) {
+    typeSection.classList.remove('hidden');
+    const typeLabels = {single_choice:'单选', multiple_choice:'多选', true_false:'判断', calculation:'计算', subjective:'主观'};
+    document.getElementById('type-chips').innerHTML =
+      allTypes.map(t => '<div class="chip" data-val="'+t+'" onclick="toggleChip(this)">'+(typeLabels[t]||t)+'</div>').join('');
+  } else {
+    typeSection.classList.add('hidden');
+  }
+  updateTypeChips();
   checkTimedReady();
 }
 
 function toggleChip(el) {
   el.classList.toggle('active');
+  // 章节切换时联动更新题型筛选
+  if (el.closest('#chapter-chips')) updateTypeChips();
   checkTimedReady();
+}
+
+function updateTypeChips() {
+  const chSelected = [...document.querySelectorAll('#chapter-chips .chip.active')].map(e => e.dataset.val);
+  const typeChips = document.querySelectorAll('#type-chips .chip');
+  if (chSelected.length === 0) {
+    // 未选章节时显示全部题型
+    typeChips.forEach(c => c.style.display = '');
+    return;
+  }
+  // 收集选中章节内出现的题型
+  const validTypes = new Set();
+  chSelected.forEach(ch => {
+    ALL_QUESTIONS.filter(q => q.chapter === ch).forEach(q => {
+      if (q.type) validTypes.add(q.type);
+    });
+  });
+  typeChips.forEach(c => {
+    if (validTypes.has(c.dataset.val)) {
+      c.style.display = '';
+    } else {
+      c.style.display = 'none';
+      c.classList.remove('active');
+    }
+  });
 }
 
 function checkTimedReady() {
   const ch = document.querySelectorAll('#chapter-chips .chip.active');
-  const df = document.querySelectorAll('#difficulty-chips .chip.active');
   const hasChapters = !document.getElementById('config-chapter-section').classList.contains('hidden');
-  const hasDiff = !document.getElementById('config-difficulty-section').classList.contains('hidden');
-  if (!hasChapters && !hasDiff) {
-    document.getElementById('btn-start-timed').disabled = false;
-  } else {
-    document.getElementById('btn-start-timed').disabled = (ch.length === 0 && df.length === 0);
-  }
+  const hint = document.getElementById('chapter-hint');
+  const hasSelection = hasChapters && ch.length > 0;
+  document.getElementById('btn-start-timed').disabled = !hasSelection;
+  if (hint) hint.style.display = hasSelection ? 'none' : '';
+  // 联动锁定难度和题型区
+  ['config-difficulty-section', 'config-type-section'].forEach(id => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.classList.toggle('config-section-locked', !hasSelection);
+    }
+  });
 }
 
 function startTimed() {
   const chSelected = [...document.querySelectorAll('#chapter-chips .chip.active')].map(e => e.dataset.val);
   const dfSelected = [...document.querySelectorAll('#difficulty-chips .chip.active')].map(e => e.dataset.val);
+  const tpSelected = [...document.querySelectorAll('#type-chips .chip.active')].map(e => e.dataset.val);
   let pool = ALL_QUESTIONS;
   if (chSelected.length > 0) pool = pool.filter(q => chSelected.includes(q.chapter));
   if (dfSelected.length > 0) pool = pool.filter(q => dfSelected.includes(getDifficulty(q)));
+  if (tpSelected.length > 0) pool = pool.filter(q => tpSelected.includes(q.type));
   if (pool.length === 0) { alert('没有符合条件的题目'); return; }
   const minutesInput = document.getElementById('timed-minutes');
   let minutes = parseInt(minutesInput && minutesInput.value, 10);
@@ -741,7 +875,7 @@ function renderQuestion() {
   else if (mode === 'wrongbook') info = '错题本 | ' + (currentIndex + 1) + '/' + quizQueue.length;
   document.getElementById('quiz-info').textContent = info;
 
-  const typeLabel = {single_choice:'单选',multiple_choice:'多选',true_false:'判断'}[q.type] || '';
+  const typeLabel = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'}[q.type] || '';
   const diff = getDifficulty(q);
   let metaParts = [];
   if (q.chapter) metaParts.push(q.chapter);
@@ -758,6 +892,15 @@ function renderQuestion() {
 
   const area = document.getElementById('options-area');
   area.innerHTML = '';
+
+  if (q.type === 'calculation') {
+    renderCalculation(q, area);
+    return;
+  }
+  if (q.type === 'subjective') {
+    renderSubjective(q, area);
+    return;
+  }
 
   if (q.type === 'true_false') {
     area.innerHTML = '<div class="tf-buttons">' +
@@ -968,6 +1111,302 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   }, 1500);
 }
 
+// ====== Calculation Questions ======
+function renderCalculation(q, area) {
+  const subQuestions = q.sub_questions || [];
+  const answers = q.answer || {};
+  let html = '<div class="calc-container">';
+
+  // Table rendering
+  if (q.table && q.table.headers && q.table.rows) {
+    html += '<div class="calc-table-wrap"><table class="calc-table"><thead><tr>';
+    q.table.headers.forEach(h => {
+      html += '<th>' + escHtml(h) + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+    q.table.rows.forEach(row => {
+      html += '<tr>';
+      row.forEach(cell => {
+        html += '<td>' + escHtml(cell) + '</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  subQuestions.forEach(sq => {
+    const id = sq.id;
+    html += '<div class="calc-question" data-qid="' + id + '">';
+    html += '<div class="calc-label">第' + id + '问：</div>';
+    html += '<div class="calc-text">' + escHtml(sq.text) + '</div>';
+    html += '<div class="calc-input-row">';
+    html += '<input type="text" class="calc-input" data-qid="' + id + '" placeholder="输入答案...">';
+    html += '<span class="calc-feedback" id="calc-fb-' + id + '"></span>';
+    html += '</div></div>';
+  });
+  html += '<div class="btn-row" style="margin-top:12px">';
+  html += '<button class="btn btn-primary" id="btn-submit-calculation" onclick="judgeCalculation()">提交计算题</button>';
+  html += '</div></div>';
+  area.innerHTML = html;
+  const fb = document.getElementById('answer-feedback');
+  fb.className = 'answer-feedback';
+  fb.textContent = '';
+}
+
+function judgeCalculation() {
+  answered = true;
+  const q = quizQueue[currentIndex];
+  const answers = q.answer || {};
+  const inputs = document.querySelectorAll('.calc-input');
+  let allCorrect = true;
+
+  inputs.forEach(input => {
+    const qid = input.dataset.qid;
+    const userVal = parseFloat(input.value.trim());
+    const fbEl = document.getElementById('calc-fb-' + qid);
+    const ans = answers[qid];
+    let isCorrect = false;
+
+    if (ans) {
+      if (ans.scope) {
+        isCorrect = userVal >= ans.scope[0] && userVal <= ans.scope[1];
+      } else if (ans.value !== undefined) {
+        isCorrect = Math.abs(userVal - ans.value) < 0.001;
+      }
+    }
+
+    if (isCorrect) {
+      fbEl.textContent = '✓';
+      fbEl.className = 'calc-feedback calc-correct';
+    } else {
+      fbEl.textContent = '✗ 期望: ' + (ans && ans.scope ? ans.scope[0] + '~' + ans.scope[1] : (ans ? ans.value : '?'));
+      fbEl.className = 'calc-feedback calc-wrong';
+      allCorrect = false;
+    }
+  });
+
+  const fb = document.getElementById('answer-feedback');
+  if (allCorrect) {
+    fb.className = 'answer-feedback show correct-fb';
+    fb.textContent = '全部正确！';
+    playOrb();
+  } else {
+    fb.className = 'answer-feedback show wrong-fb';
+    fb.textContent = '部分或全部错误，请查看各问反馈';
+    playBreak();
+    const card = document.querySelector('.quiz-card');
+    if (card) {
+      card.classList.remove('flash-red');
+      void card.offsetWidth;
+      card.classList.add('flash-red');
+      setTimeout(() => card.classList.remove('flash-red'), 800);
+    }
+  }
+
+  totalAnswered++;
+  const key = qKey(q);
+  const chapter = q.chapter || '未分类';
+  if (!quizAnalysis.byChapter[chapter]) quizAnalysis.byChapter[chapter] = {wrong:0, correct:0, total:0};
+  quizAnalysis.byChapter[chapter].total++;
+  if (allCorrect) quizAnalysis.byChapter[chapter].correct++;
+  else quizAnalysis.byChapter[chapter].wrong++;
+  let qa = quizAnalysis.byQuestion[key];
+  if (!qa) {
+    qa = {question: q.question, chapter: chapter, countWrong:0, countCorrect:0, hesitation:[], maxHesitation:0};
+    quizAnalysis.byQuestion[key] = qa;
+  }
+  const hesitation = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 0;
+  if (hesitation > 0) {
+    qa.hesitation.push(hesitation);
+    if (qa.hesitation.length > 20) qa.hesitation.splice(0, qa.hesitation.length - 20);
+    if (hesitation > qa.maxHesitation) qa.maxHesitation = hesitation;
+  }
+  if (allCorrect) qa.countCorrect++;
+  else qa.countWrong++;
+  qa.question = q.question;
+  qa.chapter = chapter;
+  saveAnalysis();
+
+  if (allCorrect) {
+    correctCount++;
+    if (correctCount > 0 && correctCount % 10 === 0) setTimeout(playLevelup, 200);
+  } else {
+    wrongCount++;
+    wrongList.push({question: q, selectedAnswer: JSON.stringify(Array.from(inputs).map(i => ({qid:i.dataset.qid, val:i.value})))
+  });
+    if (!wrongBookLong[key] && !wrongBookTemp[key]) {
+      wrongBookTemp[key] = qObj(q);
+      localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
+    }
+  }
+
+  document.getElementById('btn-submit-calculation').classList.add('hidden');
+  // Add "下一题" button dynamically
+  const btnRow = document.querySelector('.calc-container .btn-row');
+  if (btnRow && !btnRow.querySelector('#btn-next-calculation')) {
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn btn-primary';
+    nextBtn.id = 'btn-next-calculation';
+    nextBtn.textContent = '下一题';
+    nextBtn.onclick = nextQuestion;
+    btnRow.appendChild(nextBtn);
+  }
+}
+
+// ====== Subjective Questions ======
+function renderSubjective(q, area) {
+  let html = '<div class="subjective-container">';
+  html += '<textarea class="subjective-input" id="subjective-input" placeholder="请输入你的答案..."></textarea>';
+  html += '<div class="btn-row" style="margin-top:12px">';
+  html += '<button class="btn btn-primary" id="btn-submit-subjective" onclick="judgeSubjective()">提交</button>';
+  html += '</div></div>';
+  area.innerHTML = html;
+  const fb = document.getElementById('answer-feedback');
+  fb.className = 'answer-feedback';
+  fb.textContent = '';
+}
+
+function judgeSubjective() {
+  answered = true;
+  const q = quizQueue[currentIndex];
+  const userAnswer = document.getElementById('subjective-input').value.trim();
+  const answerData = q.answer || {};
+  const reference = answerData.reference || '';
+  const minMatch = answerData.min_match || 0.4;
+
+  let matchedItems = [], unmatchedItems = [], score = 0;
+
+  if (reference && reference.trim()) {
+    // 词集对比模式：用 jieba 分词后对比用户答案与参考答案的词重叠率
+    score = scoreSubjectiveRef(userAnswer, reference);
+    // unmatchedItems 暂时为空，detail 中展示参考核心词云
+  } else {
+    // 旧模式：groups 或 keywords（向后兼容）
+    const groups = answerData.groups;
+    if (groups && groups.length > 0) {
+      let matchedCount = 0;
+      groups.forEach((group, idx) => {
+        const groupMatch = group.some(kw => userAnswer.includes(kw));
+        if (groupMatch) {
+          matchedCount++;
+          matchedItems.push('第' + (idx + 1) + '组');
+        } else {
+          unmatchedItems.push('第' + (idx + 1) + '组（' + group.join('/') + '）');
+        }
+      });
+      score = groups.length > 0 ? matchedCount / groups.length : 0;
+    } else {
+      const keywords = answerData.keywords || [];
+      let matchedCount = 0;
+      keywords.forEach(kw => {
+        if (userAnswer.includes(kw)) {
+          matchedCount++;
+          matchedItems.push(kw);
+        } else {
+          unmatchedItems.push(kw);
+        }
+      });
+      score = keywords.length > 0 ? matchedCount / keywords.length : 0;
+    }
+  }
+
+  const isCorrect = score >= minMatch;
+  const pct = isFinite(score) ? Math.round(score * 100) : 0;
+
+  const fb = document.getElementById('answer-feedback');
+  if (isCorrect) {
+    fb.className = 'answer-feedback show correct-fb';
+    fb.textContent = '优秀！匹配度 ' + pct + '%';
+    playOrb();
+  } else {
+    fb.className = 'answer-feedback show wrong-fb';
+    fb.textContent = '匹配度 ' + pct + '%';
+    playBreak();
+    const card = document.querySelector('.quiz-card');
+    if (card) {
+      card.classList.remove('flash-red');
+      void card.offsetWidth;
+      card.classList.add('flash-red');
+      setTimeout(() => card.classList.remove('flash-red'), 800);
+    }
+  }
+
+  let detailHtml = '<div class="subjective-feedback">';
+  detailHtml += '<div class="subjective-score">得分：' + pct + '%</div>';
+  if (reference && reference.trim()) {
+    const refWords = segmentText(reference);
+    if (refWords.length > 0) {
+      detailHtml += '<div class="subjective-matched">参考答案核心词：' + refWords.join(' · ') + '</div>';
+    }
+  } else {
+    if (matchedItems.length > 0) detailHtml += '<div class="subjective-matched">命中的要点：' + matchedItems.join('、') + '</div>';
+    if (unmatchedItems.length > 0) detailHtml += '<div class="subjective-unmatched">遗漏的要点：' + unmatchedItems.join('; ') + '</div>';
+  }
+  if (reference) detailHtml += '<div class="subjective-reference">参考答案：' + escHtml(reference) + '</div>';
+  detailHtml += '</div>';
+
+  const container = document.querySelector('.subjective-container');
+  const existingDetail = container && container.querySelector('.subjective-feedback');
+  if (existingDetail) existingDetail.remove();
+  if (container) container.insertAdjacentHTML('beforeend', detailHtml);
+
+  totalAnswered++;
+  const key = qKey(q);
+  const chapter = q.chapter || '未分类';
+  if (!quizAnalysis.byChapter[chapter]) quizAnalysis.byChapter[chapter] = {wrong:0, correct:0, total:0};
+  quizAnalysis.byChapter[chapter].total++;
+  if (isCorrect) quizAnalysis.byChapter[chapter].correct++;
+  else quizAnalysis.byChapter[chapter].wrong++;
+  let qa = quizAnalysis.byQuestion[key];
+  if (!qa) {
+    qa = {question: q.question, chapter: chapter, countWrong:0, countCorrect:0, hesitation:[], maxHesitation:0};
+    quizAnalysis.byQuestion[key] = qa;
+  }
+  const hesitation = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 0;
+  if (hesitation > 0) {
+    qa.hesitation.push(hesitation);
+    if (qa.hesitation.length > 20) qa.hesitation.splice(0, qa.hesitation.length - 20);
+    if (hesitation > qa.maxHesitation) qa.maxHesitation = hesitation;
+  }
+  if (isCorrect) qa.countCorrect++;
+  else qa.countWrong++;
+  qa.question = q.question;
+  qa.chapter = chapter;
+  saveAnalysis();
+
+  if (isCorrect) {
+    correctCount++;
+    if (correctCount > 0 && correctCount % 10 === 0) setTimeout(playLevelup, 200);
+  } else {
+    wrongCount++;
+    wrongList.push({question: q, selectedAnswer: userAnswer});
+    if (!wrongBookLong[key] && !wrongBookTemp[key]) {
+      wrongBookTemp[key] = qObj(q);
+      localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
+    }
+  }
+
+  const submitBtn = document.getElementById('btn-submit-subjective');
+  if (submitBtn) {
+    submitBtn.classList.add('hidden');
+    const btnRow = document.querySelector('.subjective-container .btn-row');
+    if (btnRow && !btnRow.querySelector('.btn-next')) {
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'btn btn-primary btn-next';
+      nextBtn.textContent = '下一题';
+      nextBtn.onclick = nextQuestion;
+      btnRow.appendChild(nextBtn);
+    }
+  }
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (mode === 'infinite') saveInfiniteProgress();
+  if (mode === 'timed') timerPaused = false;
+  renderQuestion();
+}
+
 function quitQuiz() {
   clearTimeout(autoNextTimeout);
   clearInterval(timerInterval);
@@ -1029,19 +1468,74 @@ function renderWrongSummary() {
   let html = '';
   wrongList.forEach((item, i) => {
     const q = item.question;
-    const sel = item.selectedAnswer;
-    const ans = q.answer;
+    let sel = item.selectedAnswer;
+    let ans = q.answer;
+
+    // 格式化计算题答案
+    if (q.type === 'calculation') {
+      let parsedSel = '';
+      try {
+        const arr = JSON.parse(sel);
+        parsedSel = arr.map(s => {
+          const v = s.val ? s.val.trim() : '';
+          return 'Q' + s.qid + ': ' + (v || '未回答');
+        }).join('  ');
+      } catch (e) {
+        parsedSel = sel || '未回答';
+      }
+      sel = parsedSel;
+
+      if (typeof ans === 'object' && ans !== null) {
+        ans = Object.keys(ans).map(k => {
+          const a = ans[k];
+          if (a.scope) return 'Q' + k + ': [' + a.scope[0] + '~' + a.scope[1] + ']';
+          if (a.value !== undefined) return 'Q' + k + ': ' + a.value;
+          return 'Q' + k + ': ?';
+        }).join('  ');
+      } else if (!ans) {
+        ans = '未设置';
+      }
+    } else if (typeof ans === 'object' && ans !== null) {
+      ans = JSON.stringify(ans);
+    }
+
     const brief = q.question.length > 30 ? q.question.substring(0, 30) + '...' : q.question;
     html += '<div class="wrong-item">' +
       '<div class="wrong-item-header" onclick="toggleWrongItem(this)">' +
       '<span class="wrong-item-num">' + (i+1) + '</span>' +
       '<span class="wrong-item-brief">' + escHtml(brief) + '</span>' +
-      '<span class="wrong-item-ans"><span class="wrong-sel">选 ' + escHtml(sel) + '</span> → <span class="correct-ans">答 ' + escHtml(ans) + '</span></span>' +
+      '<span class="wrong-item-ans"><span class="wrong-sel">' + escHtml(sel || '未回答') + '</span> → <span class="correct-ans">答 ' + escHtml(ans || '未设置') + '</span></span>' +
       '</div>' +
       '<div class="wrong-item-detail">' +
       '<div class="detail-q">' + escHtml(q.question) + '</div>';
 
-    if (q.type === 'true_false') {
+    if (q.type === 'calculation') {
+      // 计算题详情：显示各子问
+      const subQuestions = q.sub_questions || [];
+      const ansObj = q.answer || {};
+      let userAnswers = [];
+      try { userAnswers = JSON.parse(item.selectedAnswer); } catch(e) {}
+      subQuestions.forEach(sq => {
+        const id = sq.id;
+        const ua = userAnswers.find(u => String(u.qid) === String(id));
+        const userVal = ua ? (ua.val ? ua.val.trim() : '未回答') : '未回答';
+        const correct = ansObj[id];
+        let correctStr = '';
+        if (correct) {
+          if (correct.scope) correctStr = correct.scope[0] + ' ~ ' + correct.scope[1];
+          else if (correct.value !== undefined) correctStr = String(correct.value);
+          else correctStr = '?';
+        }
+        const isRight = correct && (
+          correct.scope
+            ? (parseFloat(userVal) >= correct.scope[0] && parseFloat(userVal) <= correct.scope[1])
+            : correct.value !== undefined && Math.abs(parseFloat(userVal) - correct.value) < 0.001
+        );
+        html += '<div class="detail-opt' + (isRight ? ' correct' : ' wrong') + '">' +
+          escHtml(sq.text) + '<br><span style="font-size:12px;color:#888">你的答案：' + escHtml(userVal) +
+          ' | 正确答案：' + correctStr + '</span></div>';
+      });
+    } else if (q.type === 'true_false') {
       html += '<div class="detail-opt' + (sel === '正确' ? ' wrong' : '') + '">正确' + (sel === '正确' ? ' ← 你的选择' : '') + '</div>';
       html += '<div class="detail-opt' + (sel === '错误' ? ' wrong' : '') + '">错误' + (sel === '错误' ? ' ← 你的选择' : '') + '</div>';
       html += '<div class="detail-opt correct">正确答案：' + ans + '</div>';

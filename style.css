@@ -29,9 +29,13 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f
 .toggle-switch input:checked + .toggle-slider:before { transform: translateX(16px); }
 
 /* Config */
-.config-section { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+.config-section { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; }
+.config-section-locked { opacity: .45; pointer-events: none; }
 .config-section h3 { font-size: 16px; margin-bottom: 12px; }
-.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-group { display: flex; flex-wrap: wrap; gap: 10px; }
+.source-group { margin-bottom: 14px; }
+.source-label { font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+.chapter-hint { font-size: 13px; color: #e74c3c; margin-top: 10px; }
 .chip { padding: 6px 14px; border-radius: 20px; border: 1px solid #ddd; font-size: 14px; cursor: pointer; user-select: none; transition: all .15s; }
 .chip.active { background: #4a90d9; color: #fff; border-color: #4a90d9; }
 .chip.active-green { background: #27ae60; color: #fff; border-color: #27ae60; }
@@ -220,5 +224,34 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f
 
 /* Loading */
 .loading { text-align: center; padding: 40px; color: #888; }
+
+/* ====== Calculation Questions ====== */
+.calc-container { margin-top: 8px; }
+.calc-question { background: #f9f9f9; border: 1px solid #e5e5e5; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+.calc-label { font-weight: 600; color: #555; margin-bottom: 4px; }
+.calc-text { font-size: 15px; color: #333; margin-bottom: 10px; line-height: 1.6; }
+.calc-input-row { display: flex; align-items: center; gap: 10px; }
+.calc-input { flex: 1; padding: 10px 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; outline: none; transition: border-color .2s; box-sizing: border-box; max-width: 240px; }
+.calc-input:focus { border-color: #3498db; box-shadow: 0 0 0 2px rgba(52,152,219,.15); }
+.calc-feedback { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.calc-correct { color: #27ae60; }
+.calc-wrong { color: #e74c3c; }
+.calc-table-wrap { overflow-x: auto; margin-bottom: 16px; }
+.calc-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.calc-table th, .calc-table td { border: 1px solid #ddd; padding: 8px 12px; text-align: center; }
+.calc-table th { background: #3498db; color: #fff; font-weight: 600; }
+.calc-table tr:nth-child(even) { background: #f8f9fa; }
+.calc-table tr:hover { background: #e8f4fd; }
+
+/* ====== Subjective Questions ====== */
+.subjective-container { margin-top: 8px; }
+.subjective-input { width: 100%; min-height: 180px; padding: 14px; border: 1px solid #ccc; border-radius: 10px; font-size: 15px; line-height: 1.7; resize: vertical; outline: none; box-sizing: border-box; transition: border-color .2s; font-family: inherit; }
+.subjective-input:focus { border-color: #3498db; box-shadow: 0 0 0 2px rgba(52,152,219,.15); }
+.subjective-feedback { margin-top: 14px; padding: 14px; background: #f5f5f5; border-radius: 10px; border: 1px solid #e5e5e5; }
+.subjective-score { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.subjective-matched { color: #27ae60; font-size: 14px; margin-bottom: 4px; }
+.subjective-unmatched { color: #e74c3c; font-size: 14px; margin-bottom: 4px; }
+.subjective-reference { color: #666; font-size: 13px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ddd; }
+.subjective-refwords { color: #8e44ad; font-size: 13px; margin-top: 6px; margin-bottom: 8px; padding: 6px 10px; background: #f8f0ff; border-radius: 6px; }
 
 .hidden { display: none !important; }

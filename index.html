@@ -52,10 +52,15 @@
   <div class="config-section" id="config-chapter-section">
     <h3>选择章节</h3>
     <div class="chip-group" id="chapter-chips"></div>
+    <div class="chapter-hint" id="chapter-hint">请先选择章节</div>
   </div>
-  <div class="config-section hidden" id="config-difficulty-section">
+  <div class="config-section hidden config-section-locked" id="config-difficulty-section">
     <h3>选择难度</h3>
     <div class="chip-group" id="difficulty-chips"></div>
+  </div>
+  <div class="config-section hidden config-section-locked" id="config-type-section">
+    <h3>选择题型</h3>
+    <div class="chip-group" id="type-chips"></div>
   </div>
   <div class="config-section">
     <h3>答题时间（分钟）</h3>
@@ -185,6 +190,7 @@
 
 </div>
 
+<script src="segmentit.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
