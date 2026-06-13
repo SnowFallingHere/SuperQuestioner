@@ -455,6 +455,7 @@ function showTimedConfig() {
       if (srcChapters.length === 0) return;
       html += '<div class="source-group">';
       html += '<div class="source-label">' + escHtml(src) + '</div>';
+      html += '<span class="source-select-all" onclick="selectAllChapters(\'' + escHtml(src) + '\')">全选</span>';
       html += '<div class="chip-group">';
       srcChapters.forEach(ch => {
         html += '<div class="chip" data-val="'+ch+'" onclick="toggleChip(this)">'+escHtml(ch)+'</div>';
@@ -492,6 +493,17 @@ function toggleChip(el) {
   el.classList.toggle('active');
   // 章节切换时联动更新题型筛选
   if (el.closest('#chapter-chips')) updateTypeChips();
+  checkTimedReady();
+}
+
+function selectAllChapters(src) {
+  const chips = document.querySelectorAll('#chapter-chips .chip');
+  chips.forEach(c => {
+    const srcQuestions = sourceData[src] || [];
+    const srcChapters = new Set(srcQuestions.map(q => q.chapter).filter(Boolean));
+    if (srcChapters.has(c.dataset.val)) c.classList.add('active');
+  });
+  updateTypeChips();
   checkTimedReady();
 }
 
@@ -1463,6 +1475,18 @@ function showResult() {
 }
 
 // ====== Wrong Summary ======
+function formatAnswer(q) {
+  if (q.type === 'calculation') {
+    const ans = q.answer || {};
+    return Object.keys(ans).map(k => {
+      const a = ans[k];
+      if (a.scope) return 'Q' + k + '[' + a.scope[0] + '~' + a.scope[1] + ']';
+      if (a.value !== undefined) return 'Q' + k + '=' + a.value;
+      return 'Q' + k + '=?';
+    }).join(' ');
+  }
+  return q.answer;
+}
 function renderWrongSummary() {
   const list = document.getElementById('wrong-summary-list');
   let html = '';
@@ -1597,6 +1621,9 @@ function renderReviewItem() {
     html += '<div class="review-option' + (selected === '正确' ? ' wrong' : '') + '">正确' + (selected === '正确' ? ' (你的选择)' : '') + '</div>';
     html += '<div class="review-option' + (selected === '错误' ? ' wrong' : '') + '">错误' + (selected === '错误' ? ' (你的选择)' : '') + '</div>';
     html += '<div class="review-answer correct-ans">正确答案：' + q.answer + '</div>';
+  } else if (q.type === 'calculation') {
+    html += '<div class="review-answer correct-ans">正确答案：' + formatAnswer(q) + '</div>';
+    html += '<div class="review-answer" style="font-size:13px;color:#888">你的回答：' + escHtml(selected || '未回答') + '</div>';
   } else {
     (q.options || []).forEach(opt => {
       const label = opt.label || '';
@@ -1977,7 +2004,7 @@ function renderWbList() {
       catTag +
       '<span class="wb-list-num">' + (i + 1) + '</span>' +
       '<span class="wb-list-text">' + escHtml(brief) + '</span>' +
-      '<span class="wb-list-ans">答案：' + escHtml(q.answer) + '</span>' +
+      '<span class="wb-list-ans">答案：' + escHtml(formatAnswer(q)) + '</span>' +
       '</div>';
   });
   html += '</div>';
