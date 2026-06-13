@@ -33,7 +33,10 @@
         <p>答错100道即失败</p>
       </div>
       <div class="mode-card" onclick="startInfinite()">
-        <h2>无限模式</h2>
+        <div class="mode-card-row">
+          <h2>无限模式</h2>
+          <button class="btn btn-secondary btn-inline" onclick="event.stopPropagation(); startInfinite(true)">新一轮</button>
+        </div>
         <p>答对3次的题不再出现，错题会反复出现直到掌握</p>
       </div>
       <div class="mode-card" onclick="showTimedConfig()">
@@ -142,8 +145,10 @@
     <span class="chip active" data-filter="all" onclick="setWbFilter(this)">全部</span>
     <span class="chip active-green" data-filter="temp" onclick="setWbFilter(this)">暂时错题</span>
     <span class="chip" data-filter="long" onclick="setWbFilter(this)" style="background:#f39c12;color:#fff;border-color:#f39c12">长期记忆</span>
+    <span class="chip" data-filter="analysis" onclick="setWbFilter(this)" style="background:#3498db;color:#fff;border-color:#3498db">分析</span>
   </div>
   <div class="review-card" id="wb-card"></div>
+  <div class="review-card hidden" id="wb-analysis"></div>
   <div class="btn-row">
     <button class="btn btn-secondary" id="btn-wb-prev" onclick="wbPrev()">上一题</button>
     <button class="btn btn-primary" id="btn-wb-action" onclick="wbToggleCategory()">暂时错题</button>

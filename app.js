@@ -13,6 +13,7 @@ let sourceData = {};
 let mode, quizQueue, currentIndex, wrongCount, correctCount, totalAnswered;
 let timerInterval, timeLeft, timerPaused;
 let infiniteMap;
+let infiniteSession; // {key: {is_correct: bool, corrects: int}} —— 本轮已答过的题
 let timedQuestions;
 let customDifficulty = {};
 let wrongList = [];
@@ -22,6 +23,36 @@ let wrongBookNotes = {};
 let streak = 0;
 let effectsEnabled = null; // null = not asked yet, true/false
 let wrongSummaryCollapsed = false;
+
+// ====== 分析数据（章节错题 / 题目迟疑） ======
+// 结构: analysis = {
+//   byChapter: {[chapter]: {wrong: n, correct: n, total: n}},
+//   byQuestion: {[qKey(q)]: {question, chapter, countWrong, countCorrect, hesitation: [secs,...], maxHesitation}},
+//   lastUpdated
+// }
+let quizAnalysis = loadAnalysis();
+let questionStartTime = 0;
+
+function loadAnalysis() {
+  try {
+    const raw = localStorage.getItem('quizAnalysis');
+    if (!raw) return {byChapter:{}, byQuestion:{}, lastUpdated: null};
+    const parsed = JSON.parse(raw);
+    if (!parsed.byChapter) parsed.byChapter = {};
+    if (!parsed.byQuestion) parsed.byQuestion = {};
+    return parsed;
+  } catch(e) {
+    return {byChapter:{}, byQuestion:{}, lastUpdated: null};
+  }
+}
+function saveAnalysis() {
+  quizAnalysis.lastUpdated = new Date().toISOString();
+  try { localStorage.setItem('quizAnalysis', JSON.stringify(quizAnalysis)); } catch(e) {}
+}
+function resetAnalysis() {
+  quizAnalysis = {byChapter:{}, byQuestion:{}, lastUpdated: null};
+  saveAnalysis();
+}
 
 // ====== Normalize question: fill missing fields ======
 let _qCounter = 0;
@@ -198,34 +229,76 @@ function startChallenge() {
 }
 
 // ====== Infinite Mode ======
-function startInfinite() {
+// freshStart=true -> 清除缓存，从全题库重新开始
+// freshStart=false/undefined -> 沿用之前进度
+function startInfinite(freshStart) {
   if (ALL_QUESTIONS.length === 0) return;
   mode = 'infinite';
   correctCount = 0; totalAnswered = 0; streak = 0;
   wrongList = [];
   infiniteMap = {};
-  const savedProgress = localStorage.getItem('infiniteProgress');
-  if (savedProgress) {
-    try {
-      const parsed = JSON.parse(savedProgress);
-      const savedKeys = Object.keys(parsed).sort();
-      const currentKeys = ALL_QUESTIONS.map(q => qKey(q)).sort();
-      if (savedKeys.join(',') === currentKeys.join(',')) {
-        infiniteMap = parsed;
-      } else {
+  infiniteSession = {};
+  if (freshStart) {
+    localStorage.removeItem('infiniteProgress');
+    localStorage.removeItem('infiniteStats');
+    localStorage.removeItem('infiniteSession');
+    ALL_QUESTIONS.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+  } else {
+    const savedProgress = localStorage.getItem('infiniteProgress');
+    const savedStats = localStorage.getItem('infiniteStats');
+    const savedSession = localStorage.getItem('infiniteSession');
+    let loadedStats = null, loadedSession = null;
+    if (savedStats) { try { loadedStats = JSON.parse(savedStats); } catch(e) { loadedStats = null; } }
+    if (savedSession) { try { loadedSession = JSON.parse(savedSession); } catch(e) { loadedSession = null; } }
+    if (savedProgress) {
+      try {
+        const parsed = JSON.parse(savedProgress);
+        ALL_QUESTIONS.forEach(q => {
+          const k = qKey(q);
+          infiniteMap[k] = parsed[k] ? parsed[k] : {correctCount: 0};
+        });
+      } catch(e) {
         ALL_QUESTIONS.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
       }
-    } catch(e) {
+    } else {
       ALL_QUESTIONS.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
     }
-  } else {
-    ALL_QUESTIONS.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+    if (loadedStats && typeof loadedStats === 'object') {
+      if (typeof loadedStats.totalAnswered === 'number' && isFinite(loadedStats.totalAnswered)) {
+        totalAnswered = loadedStats.totalAnswered;
+      }
+      if (typeof loadedStats.correctCount === 'number' && isFinite(loadedStats.correctCount)) {
+        correctCount = loadedStats.correctCount;
+      }
+    }
+    if (loadedSession && typeof loadedSession === 'object') {
+      infiniteSession = loadedSession;
+    }
+    console.log('[startInfinite] 恢复进度：', {
+      savedProgress: !!savedProgress,
+      savedStatsRaw: savedStats,
+      savedSessionRaw: savedSession,
+      totalAnswered,
+      correctCount,
+      mastered: Object.values(infiniteMap).filter(v => v && v.correctCount >= 3).length,
+    });
   }
   quizQueue = shuffle(ALL_QUESTIONS);
   currentIndex = 0;
   show('page-quiz');
   document.getElementById('gear-btn').classList.remove('hidden');
   renderQuestion();
+}
+
+function saveInfiniteProgress() {
+  if (mode === 'infinite' && infiniteMap) {
+    localStorage.setItem('infiniteProgress', JSON.stringify(infiniteMap));
+    localStorage.setItem('infiniteStats', JSON.stringify({
+      totalAnswered: typeof totalAnswered === 'number' ? totalAnswered : 0,
+      correctCount: typeof correctCount === 'number' ? correctCount : 0,
+    }));
+    if (infiniteSession) localStorage.setItem('infiniteSession', JSON.stringify(infiniteSession));
+  }
 }
 
 function infiniteNextIndex() {
@@ -236,12 +309,6 @@ function infiniteNextIndex() {
   if (remaining.length === 0) return -1;
   quizQueue = quizQueue.concat(shuffle(remaining));
   return currentIndex;
-}
-
-function saveInfiniteProgress() {
-  if (mode === 'infinite' && infiniteMap) {
-    localStorage.setItem('infiniteProgress', JSON.stringify(infiniteMap));
-  }
 }
 
 // ====== Wrong Book Mode ======
@@ -452,6 +519,8 @@ function setWrongCategory(cat) {
 function exportProgress() {
   const data = {
     infiniteMap: infiniteMap || {},
+    infiniteStats: {totalAnswered: totalAnswered || 0, correctCount: correctCount || 0},
+    infiniteSession: infiniteSession || {},
     customDifficulty: customDifficulty,
     wrongBookTemp: wrongBookTemp,
     wrongBookLong: wrongBookLong,
@@ -474,6 +543,15 @@ function importProgress(event) {
     try {
       const data = JSON.parse(e.target.result);
       if (data.infiniteMap) { infiniteMap = data.infiniteMap; localStorage.setItem('infiniteProgress', JSON.stringify(infiniteMap)); }
+      if (data.infiniteStats) {
+        if (typeof data.infiniteStats.totalAnswered === 'number') totalAnswered = data.infiniteStats.totalAnswered;
+        if (typeof data.infiniteStats.correctCount === 'number') correctCount = data.infiniteStats.correctCount;
+        localStorage.setItem('infiniteStats', JSON.stringify(data.infiniteStats));
+      }
+      if (data.infiniteSession) {
+        infiniteSession = data.infiniteSession;
+        localStorage.setItem('infiniteSession', JSON.stringify(infiniteSession));
+      }
       if (data.customDifficulty) { customDifficulty = data.customDifficulty; localStorage.setItem('customDifficulty', JSON.stringify(customDifficulty)); }
       if (data.wrongBookTemp) { wrongBookTemp = data.wrongBookTemp; localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp)); }
       if (data.wrongBookLong) { wrongBookLong = data.wrongBookLong; localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong)); }
@@ -503,6 +581,8 @@ function resetProgress() {
   wrongBookLong = {};
   wrongBookNotes = {};
   localStorage.removeItem('infiniteProgress');
+  localStorage.removeItem('infiniteStats');
+  localStorage.removeItem('infiniteSession');
   localStorage.removeItem('customDifficulty');
   localStorage.removeItem('wrongBookTemp');
   localStorage.removeItem('wrongBookLong');
@@ -590,6 +670,7 @@ let autoNextTimeout;
 function renderQuestion() {
   answered = false;
   clearTimeout(autoNextTimeout);
+  questionStartTime = Date.now();
 
   if (mode === 'challenge' && wrongCount >= 100) { showResult(); return; }
   if (mode === 'infinite') {
@@ -608,7 +689,7 @@ function renderQuestion() {
   if (mode === 'challenge') info = '闯关 | 对' + correctCount + ' 错' + wrongCount;
   else if (mode === 'infinite') {
     const mastered = ALL_QUESTIONS.filter(x => infiniteMap[qKey(x)].correctCount >= 3).length;
-    info = '无限 | 已掌握 ' + mastered + '/' + ALL_QUESTIONS.length;
+    info = '无限 | 已掌握 ' + mastered + '/' + ALL_QUESTIONS.length + ' | 已答题 ' + totalAnswered + '/∞';
   }
   else if (mode === 'timed') info = '限时 | ' + (currentIndex + 1) + '/' + quizQueue.length;
   else if (mode === 'wrongbook') info = '错题本 | ' + (currentIndex + 1) + '/' + quizQueue.length;
@@ -754,10 +835,47 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   totalAnswered++;
   const key = qKey(q);
 
+  // —— 记录分析数据（章节错题 & 题目迟疑时长） ——
+  const chapter = q.chapter || '未分类';
+  if (!quizAnalysis.byChapter[chapter]) quizAnalysis.byChapter[chapter] = {wrong:0, correct:0, total:0};
+  quizAnalysis.byChapter[chapter].total++;
+  if (isCorrect) quizAnalysis.byChapter[chapter].correct++;
+  else quizAnalysis.byChapter[chapter].wrong++;
+
+  let qa = quizAnalysis.byQuestion[key];
+  if (!qa) {
+    qa = {question: q.question, chapter: chapter, countWrong:0, countCorrect:0, hesitation:[], maxHesitation:0};
+    quizAnalysis.byQuestion[key] = qa;
+  }
+  const hesitation = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 0; // 秒
+  if (hesitation > 0) {
+    qa.hesitation.push(hesitation);
+    if (qa.hesitation.length > 20) qa.hesitation.splice(0, qa.hesitation.length - 20);
+    if (hesitation > qa.maxHesitation) qa.maxHesitation = hesitation;
+  }
+  if (isCorrect) qa.countCorrect++;
+  else qa.countWrong++;
+  // 保持题干与章节信息始终最新
+  qa.question = q.question;
+  qa.chapter = chapter;
+  saveAnalysis();
+  // ——————————
+
   if (isCorrect) {
     correctCount++;
     streak++;
-    if (mode === 'infinite') infiniteMap[qKey(q)].correctCount++;
+    if (mode === 'infinite') {
+      infiniteMap[key].correctCount++;
+      // 更新 session：连续答对 3 次就移除此题（不再记在会话里）
+      const cur = infiniteSession[key] || {is_correct: false, corrects: 0};
+      cur.is_correct = true;
+      cur.corrects = (cur.corrects || 0) + 1;
+      if (cur.corrects >= 3) {
+        delete infiniteSession[key];
+      } else {
+        infiniteSession[key] = cur;
+      }
+    }
     // In wrongbook mode, only remove from temp, NOT from long
     if (mode === 'wrongbook' && wrongBookTemp[key]) {
       delete wrongBookTemp[key];
@@ -769,8 +887,10 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
     wrongCount++;
     streak = 0;
     if (mode === 'infinite') {
-      infiniteMap[qKey(q)].correctCount = 0;
+      infiniteMap[key].correctCount = 0;
       quizQueue.push(q);
+      // 答错：保留在 session 里，下次还要问
+      infiniteSession[key] = {is_correct: false, corrects: 0};
     }
     wrongList.push({question: q, selectedAnswer: selectedAnswer});
     // Auto add to temp (if not already in long)
@@ -1037,8 +1157,233 @@ function setWbFilter(el) {
   });
   el.classList.add('active');
   wbIndex = 0;
-  buildWbList();
-  renderWbView();
+  const card = document.getElementById('wb-card');
+  const analysis = document.getElementById('wb-analysis');
+  if (wbFilter === 'analysis') {
+    card.classList.add('hidden');
+    analysis.classList.remove('hidden');
+    renderAnalysis();
+  } else {
+    analysis.classList.add('hidden');
+    card.classList.remove('hidden');
+    buildWbList();
+    renderWbView();
+  }
+}
+
+// ====== 分析面板：逐题 SVG 柱状图 + 可点击跳转 ======
+function renderAnalysis() {
+  const analysisEl = document.getElementById('wb-analysis');
+  if (!analysisEl) return;
+
+  // —— 实时同步：每次进入分析页都从 localStorage 重新读（保证"答一题，数据更新一次"）
+  quizAnalysis = loadAnalysis();
+
+  const byChapter = Object.entries(quizAnalysis.byChapter || {})
+    .map(([name, v]) => ({name, wrong: v.wrong || 0, correct: v.correct || 0, total: v.total || 0}))
+    .sort((a, b) => b.wrong - a.wrong);
+
+  const byQuestion = Object.entries(quizAnalysis.byQuestion || {})
+    .map(([key, v]) => ({
+      key,
+      question: v.question || key,
+      chapter: v.chapter,
+      maxHesitation: v.maxHesitation || 0,
+      avgHesitation: v.hesitation && v.hesitation.length ? v.hesitation.reduce((a,b)=>a+b,0)/v.hesitation.length : 0,
+      countWrong: v.countWrong || 0,
+    }))
+    .sort((a, b) => b.maxHesitation - a.maxHesitation)
+    .slice(0, 10);
+
+  const totalWrong = byChapter.reduce((s, c) => s + c.wrong, 0);
+  const totalA = byChapter.reduce((s, c) => s + c.total, 0);
+  const worstChapter = byChapter[0];
+  const slowest = byQuestion[0];
+
+  function escapeXml(s) {
+    return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
+  }
+  function escapeAttr(s) { return escapeXml(s); }
+
+  // —— 每行一个独立 SVG（单一柱） ——
+  // row: {label, value, color, onClick?}
+  function buildBarRow(row, maxVal, color, onClickHtml) {
+    const barHeight = 28;
+    const labelWidth = 180;
+    const valueSpace = 70;
+    const chartWidth = 360;
+    const totalWidth = labelWidth + chartWidth + valueSpace;
+    const totalHeight = barHeight + 8;
+
+    const ratio = row.value / maxVal;
+    const barW = Math.max(2, chartWidth * ratio);
+    const label = row.label.length > 22 ? row.label.substring(0, 20) + '…' : row.label;
+    const valueText = Number.isInteger(row.value) ? row.value : row.value.toFixed(1);
+
+    let svg = '<svg viewBox="0 0 ' + totalWidth + ' ' + totalHeight + '" style="width:100%;height:auto;display:block">';
+    svg += '<text x="' + (labelWidth - 10) + '" y="' + (barHeight/2 + 4 + 4) + '" text-anchor="end" font-size="12" fill="#333">' + escapeXml(label) + '</text>';
+    svg += '<rect x="' + labelWidth + '" y="4" width="' + barW + '" height="' + barHeight + '" fill="' + color + '" rx="4" ry="4"></rect>';
+    svg += '<text x="' + (labelWidth + barW + 8) + '" y="' + (barHeight/2 + 4 + 4) + '" font-size="12" fill="#555">' + escapeXml(valueText) + '</text>';
+    svg += '</svg>';
+
+    if (onClickHtml) {
+      return '<div class="analysis-row" style="cursor:pointer;padding:4px 0" ' + onClickHtml + '>' + svg + '</div>';
+    }
+    return '<div class="analysis-row" style="padding:4px 0">' + svg + '</div>';
+  }
+
+  // —— 跳转：把题目送入错题本浏览视图（若没在错题本里，临时塞到 wrongBookTemp 以便查看） ——
+  function buildJumpOnClickAttr(qKeyVal, questionText) {
+    const safeKey = escapeAttr(qKeyVal);
+    const safeText = escapeAttr(questionText);
+    return 'onclick="jumpToAnalysisQuestion(\'' + safeKey + '\')" title="' + safeText + '"';
+  }
+
+  const updated = quizAnalysis.lastUpdated ? new Date(quizAnalysis.lastUpdated).toLocaleString() : '未记录';
+
+  // —— 最久迟疑题目摘要 ——
+  let slowestHtml = '';
+  if (slowest && slowest.maxHesitation > 0) {
+    const label = (slowest.chapter ? slowest.chapter + '·' : '') + slowest.question;
+    const slowestOnClick = 'onclick="jumpToAnalysisQuestion(\'' + escapeAttr(slowest.key) + '\')"';
+    slowestHtml = '最久迟疑的题目：<b style="color:#f39c12;cursor:pointer" ' + slowestOnClick + ' title="' + escapeAttr(label) + '">' +
+      escapeXml(label.substring(0, 30)) + (label.length > 30 ? '…' : '') + '</b>（最长 ' + slowest.maxHesitation.toFixed(1) + ' 秒）<br>';
+  }
+
+  // —— 章节图 ——
+  let chapterChart;
+  const chapterRows = byChapter.filter(c => c.wrong > 0);
+  if (chapterRows.length === 0) {
+    chapterChart = '<div style="color:#999;text-align:center;padding:30px">暂无错题记录</div>';
+  } else {
+    const maxWrong = Math.max(...chapterRows.map(c => c.wrong), 1);
+    chapterChart = chapterRows.map(r => buildBarRow({label: r.name, value: r.wrong}, maxWrong, '#e74c3c', null)).join('');
+  }
+
+  // —— 迟疑 Top 10 图（每行可点击） ——
+  let questionChart;
+  const qRows = byQuestion.filter(q => q.maxHesitation > 0);
+  if (qRows.length === 0) {
+    questionChart = '<div style="color:#999;text-align:center;padding:30px">暂无迟疑记录</div>';
+  } else {
+    const maxH = Math.max(...qRows.map(q => q.maxHesitation), 1);
+    questionChart = qRows.map(q => {
+      const label = (q.chapter ? q.chapter + '·' : '') + q.question;
+      const onClickHtml = buildJumpOnClickAttr(q.key, label);
+      return buildBarRow({label: label, value: q.maxHesitation}, maxH, '#f39c12', onClickHtml);
+    }).join('');
+  }
+
+  analysisEl.innerHTML = '' +
+    '<div style="padding:12px 18px 4px;">' +
+      '<h4 style="margin:0 0 10px 0;font-size:15px">📊 答题分析 <span style="font-size:12px;color:#999;font-weight:normal;margin-left:8px">(实时：每答一题自动更新)</span></h4>' +
+      '<div style="font-size:13px;color:#666;line-height:1.7">' +
+        '累计答题：<b>' + totalA + '</b> 题 · 累计错题：<b>' + totalWrong + '</b> 题<br>' +
+        (worstChapter && worstChapter.wrong > 0 ? '错题最多的章节：<b style="color:#e74c3c">' + escapeXml(worstChapter.name) + '</b>（' + worstChapter.wrong + ' 次）<br>' : '') +
+        slowestHtml +
+        '最后更新：' + updated +
+      '</div>' +
+    '</div>' +
+    '<div style="padding:10px 18px 18px;border-top:1px solid #eee">' +
+      '<h5 style="margin:8px 0 12px 0;font-size:14px">① 各章节错题数</h5>' + chapterChart +
+    '</div>' +
+    '<div style="padding:10px 18px 18px;border-top:1px solid #eee">' +
+      '<h5 style="margin:8px 0 12px 0;font-size:14px">② 迟疑最久的题目（Top 10，单位：秒，点击可查看原题）</h5>' + questionChart +
+    '</div>' +
+    '<div style="padding:6px 18px 18px;text-align:right;border-top:1px solid #eee">' +
+      '<button class="btn btn-secondary" onclick="if(confirm(\'确认清空所有分析数据？\')){resetAnalysis();renderAnalysis();}">清空分析数据</button>' +
+    '</div>';
+}
+
+// 点击分析页某行 → 跳转到对应题目详情
+function jumpToAnalysisQuestion(qKeyVal) {
+  const qa = quizAnalysis.byQuestion && quizAnalysis.byQuestion[qKeyVal];
+  if (!qa) return;
+
+  // 构造一个和现有题目结构一致的对象，用于浏览视图
+  // 若题库中有这道题（通过 key 匹配），优先用原题；否则用 qa 里保留的副本
+  let q = ALL_QUESTIONS.find(x => qKey(x) === qKeyVal);
+  if (!q) {
+    q = {question: qa.question, chapter: qa.chapter, type: 'single_choice', answer: '', options: []};
+  }
+
+  // 切到"错题本"页面展示这道题
+  show('page-wrongbook');
+  wbList = [{key: qKeyVal, q: q, cat: 'analysis'}];
+  wbIndex = 0;
+
+  // 临时切换显示：把视图改为单题详情
+  const cardEl = document.getElementById('wb-card');
+  const counterEl = document.getElementById('wb-counter');
+  cardEl.classList.remove('hidden');
+  document.getElementById('wb-analysis').classList.add('hidden');
+
+  // 高亮"全部"作为活跃状态（和原筛选逻辑保持一致）
+  document.querySelectorAll('#wb-filter-row .chip').forEach(c => {
+    c.classList.remove('active', 'active-green');
+    c.style.background = ''; c.style.color = ''; c.style.borderColor = '';
+  });
+  const allChip = document.querySelector('#wb-filter-row .chip[data-filter="all"]');
+  if (allChip) allChip.classList.add('active');
+
+  counterEl.textContent = '分析跳转 · 1 题';
+  // 直接渲染这道题的详情视图
+  renderSingleAnalysisItem(q, qKeyVal, qa);
+}
+
+function renderSingleAnalysisItem(q, qKeyVal, qa) {
+  const cardEl = document.getElementById('wb-card');
+  const btnAction = document.getElementById('btn-wb-action');
+  const btnPrev = document.getElementById('btn-wb-prev');
+  const btnNext = document.getElementById('btn-wb-next');
+  const btnRemove = document.getElementById('btn-wb-remove');
+  btnPrev.classList.add('hidden');
+  btnNext.classList.add('hidden');
+  btnAction.classList.add('hidden');
+  btnRemove.classList.add('hidden');
+
+  let html = '<div class="review-item" style="padding:10px 4px">';
+  html += '<div class="question-meta" style="font-size:12px;color:#666;margin-bottom:8px">';
+  const metaParts = [];
+  if (q.chapter) metaParts.push(q.chapter);
+  const typeLabel = {single_choice:'单选',multiple_choice:'多选',true_false:'判断'}[q.type];
+  if (typeLabel) metaParts.push(typeLabel);
+  html += metaParts.join(' · ');
+  html += '</div>';
+  html += '<div class="question-text" style="font-size:15px;line-height:1.6;margin-bottom:14px">' + escapeHtml(q.question) + '</div>';
+
+  if (q.options && q.options.length) {
+    html += '<div class="options" style="margin-bottom:12px">';
+    q.options.forEach((opt, i) => {
+      const isCorrect = opt.label === q.answer;
+      html += '<div class="option' + (isCorrect ? ' correct' : '') + '" style="padding:10px 12px;margin:6px 0;border:1px solid #e5e5e5;border-radius:6px;cursor:default">';
+      html += '<span style="font-weight:bold;margin-right:8px">' + (opt.label || (String.fromCharCode(65 + i))) + '</span>' + escapeHtml(opt.text || '');
+      if (isCorrect) html += ' <span style="color:#27ae60;margin-left:6px;font-weight:bold">✓</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '<div style="font-size:13px;color:#27ae60;margin-bottom:10px">正确答案：' + (q.answer || '未记录') + '</div>';
+  } else if (q.type === 'true_false') {
+    html += '<div style="font-size:13px;color:#27ae60;margin:8px 0 12px">正确答案：' + (q.answer || '未记录') + '</div>';
+  } else {
+    html += '<div style="font-size:13px;color:#888;margin:8px 0 12px">（未记录选项）</div>';
+  }
+
+  // 这道题的历史统计
+  if (qa) {
+    html += '<div class="answer-feedback" style="font-size:13px;color:#555;margin-top:10px;padding:8px 10px;background:#f8f9fa;border-radius:6px">';
+    html += '答错 ' + (qa.countWrong || 0) + ' 次 · 答对 ' + (qa.countCorrect || 0) + ' 次';
+    if (qa.maxHesitation > 0) html += ' · 最长迟疑 ' + qa.maxHesitation.toFixed(1) + ' 秒';
+    if (qa.avgHesitation > 0) html += ' · 平均 ' + qa.avgHesitation.toFixed(1) + ' 秒';
+    html += '</div>';
+  }
+
+  html += '</div>';
+  cardEl.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
 }
 
 function renderWbView() {

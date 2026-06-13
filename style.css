@@ -41,6 +41,7 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f
 .btn-primary:disabled { opacity: .4; cursor: default; }
 .btn-secondary { background: #e8e8e8; color: #333; }
 .btn-secondary:hover { background: #ddd; }
+.btn-inline { padding: 6px 14px; font-size: 13px; border-radius: 6px; }
 .btn-danger { background: #e74c3c; color: #fff; }
 .btn-danger:hover { opacity: .85; }
 .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
