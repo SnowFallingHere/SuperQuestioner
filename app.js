@@ -638,18 +638,40 @@ function renderQuestion() {
       '<div class="tf-btn" onclick="answerTF(false)">错误</div></div>';
   } else {
     const isMulti = q.type === 'multiple_choice';
+    const origOptions = q.options || [];
+    const indices = origOptions.map((_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    const shuffled = indices.map(i => origOptions[i]);
+    const labelMap = {};
+    shuffled.forEach((opt, i) => {
+      const newLabel = String.fromCharCode(65 + i);
+      labelMap[opt.label || ''] = newLabel;
+    });
+    const mappedAnswer = isMulti
+      ? (q.answer || '').split('').map(l => labelMap[l] || '').sort().join('')
+      : (labelMap[q.answer] || q.answer);
+
     let html = '<div class="options">';
-    (q.options || []).forEach(opt => {
-      const label = opt.label || '';
+    shuffled.forEach((opt, i) => {
+      const newLabel = String.fromCharCode(65 + i);
       const text = opt.text || '';
-      html += '<div class="option" data-label="'+label+'" onclick="clickOption(this,'+isMulti+')">' +
-        label + (label ? '. ' : '') + text + '</div>';
+      html += '<div class="option" data-label="'+newLabel+'" onclick="clickOption(this,'+isMulti+')">' +
+        newLabel + '. ' + text + '</div>';
     });
     html += '</div>';
     if (isMulti) {
       html += '<div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" id="btn-confirm-multi" onclick="confirmMulti()">确认</button></div>';
     }
     area.innerHTML = html;
+
+    const fb = document.getElementById('answer-feedback');
+    fb.className = 'answer-feedback';
+    fb.textContent = '';
+    fb.dataset.mappedAnswer = mappedAnswer;
+    return;
   }
 
   const fb = document.getElementById('answer-feedback');
@@ -665,7 +687,9 @@ function clickOption(el, isMulti) {
   if (!isMulti) {
     const q = quizQueue[currentIndex];
     const selected = el.dataset.label;
-    judge(selected === q.answer, q.answer, selected);
+    const fb = document.getElementById('answer-feedback');
+    const mappedAnswer = fb.dataset.mappedAnswer || q.answer;
+    judge(selected === mappedAnswer, mappedAnswer, selected);
   } else {
     el.classList.toggle('selected');
   }
@@ -675,8 +699,9 @@ function confirmMulti() {
   if (answered) return;
   const q = quizQueue[currentIndex];
   const selected = [...document.querySelectorAll('.option.selected')].map(e => e.dataset.label).sort().join('');
-  const correct = q.answer.split('').sort().join('');
-  judge(selected === correct, q.answer, selected);
+  const fb = document.getElementById('answer-feedback');
+  const mappedAnswer = (fb.dataset.mappedAnswer || q.answer).split('').sort().join('');
+  judge(selected === mappedAnswer, mappedAnswer, selected);
 }
 
 function answerTF(val) {

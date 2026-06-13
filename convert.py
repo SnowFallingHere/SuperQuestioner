@@ -5,20 +5,23 @@ from itertools import combinations
 
 # File config: (filepath, chapter_name)
 FILES = [
-    (r"h:\tencent\download\24-25-1题库\0导论新.docx", "导论"),
-    (r"h:\tencent\download\24-25-1题库\1第一章（修）.docx", "第一章"),
-    (r"h:\tencent\download\24-25-1题库\2第二章（新）.docx", "第二章"),
-    (r"h:\tencent\download\24-25-1题库\3_第三章题库更新.doc", "第三章"),
-    (r"h:\tencent\download\24-25-1题库\4 第四章(1).docx", "第四章"),
-    (r"h:\tencent\download\24-25-1题库\5第五章 新.docx", "第五章"),
-    (r"h:\tencent\download\24-25-1题库\6第六章题库修订.docx", "第六章"),
-    (r"h:\tencent\download\24-25-1题库\7第七章更新.doc", "第七章"),
+    (r"e:\SuperQuestioner\SuperQuestioner\0导论新.docx", "导论"),
+    (r"e:\SuperQuestioner\SuperQuestioner\1第一章（修）.docx", "第一章"),
+    (r"e:\SuperQuestioner\SuperQuestioner\2第二章（新）.docx", "第二章"),
+    (r"e:\SuperQuestioner\SuperQuestioner\3_第三章题库更新.doc", "第三章"),
+    (r"e:\SuperQuestioner\SuperQuestioner\4 第四章(1).docx", "第四章"),
+    (r"e:\SuperQuestioner\SuperQuestioner\5第五章 新.docx", "第五章"),
+    (r"e:\SuperQuestioner\SuperQuestioner\6第六章题库修订.docx", "第六章"),
+    (r"e:\SuperQuestioner\SuperQuestioner\7第七章更新.doc", "第七章"),
 ]
+
+EXPORT_NAME = "Marxism.json"
 
 DIFFICULTY_MAP = {"易": "easy", "中": "medium", "难": "hard"}
 
-# Match various answer formats
-ANSWER_RE = re.compile(r"^(?:正确)?答案[：:]?\s*([A-Z]+|正确|错误)$")
+# Match various answer formats.  The separator (冒号 or space) is required —
+# without it we'd mis-parse sentences containing bare "答案".
+ANSWER_RE = re.compile(r"^(?:正确)?答案[：:\s]\s*([A-Z]+|正确|错误)$")
 # Match difficulty
 DIFFICULTY_RE = re.compile(r"^难(?:易程度|度)[：:]\s*(.+)$")
 # Match option line: "A.xxx" or "A、xxx" or "A．xxx" or "D矛盾" (missing dot)
@@ -134,14 +137,15 @@ def parse_lines(lines):
             answer_indices.append(i)
 
     # Build blocks: for each answer, collect from previous answer's end to this answer
-    # plus any difficulty line after
+    # plus any difficulty line after them. The answer line is ALWAYS the boundary of a
+    # question — even if the following "difficulty line" contains A/B/C/D letters
+    # (e.g. "难易程度：C"), it must not leak into the next question.
     blocks = []
     prev_end = 0
     for idx in answer_indices:
-        # Block starts after previous block ended
-        # Block ends at this answer line, plus difficulty if present
         end = idx + 1
-        if end < len(filtered) and is_difficulty_line(filtered[end]):
+        # Absorb 0 or 1 difficulty lines that immediately follow the answer line
+        while end < len(filtered) and is_difficulty_line(filtered[end]):
             end += 1
         block = filtered[prev_end:end]
         blocks.append(block)
@@ -177,159 +181,103 @@ def parse_block(block):
     if not block:
         return None
 
-    # Extract answer (last answer line in block)
+    # Extract answer — use the FIRST answer line found. (Previously it used the
+    # last one, which could overwrite a correct answer from the last occurrence
+    # "答案：X"  within the same block.
     answer = None
     answer_idx = -1
     for i, line in enumerate(block):
         m = ANSWER_RE.match(line)
-        if m:
+        if m and answer is None:
             answer = m.group(1).strip()
             answer_idx = i
+            break
 
     if answer is None:
         return None
 
     # Extract difficulty (after answer)
+    # The difficulty line looks like "难易程度：中" / "难度：易".  If it contains a
+    # letter (A/B/C/D), that's likely a copy-paste artifact from the original doc —
+    # NEVER overwrite the already-parsed answer with it.
     difficulty = None
     for line in block[answer_idx + 1:]:
         m = DIFFICULTY_RE.match(line)
         if m:
             diff_text = m.group(1).strip()
-            # Handle "难易程度：C" case (answer in difficulty field)
-            if diff_text in DIFFICULTY_MAP:
-                difficulty = DIFFICULTY_MAP[diff_text]
-            elif diff_text in ("A", "B", "C", "D") or len(diff_text) > 1:
-                # This is likely an answer mistakenly placed in difficulty field
-                # Check if it looks like an answer
-                if re.match(r'^[A-Z]+$', diff_text):
-                    answer = diff_text
-                    difficulty = "unknown"
-                else:
-                    difficulty = "unknown"
+            mapped = DIFFICULTY_MAP.get(diff_text)
+            if mapped is not None:
+                difficulty = mapped
+            else:
+                # Looks like "难易程度：C" — record difficulty as unknown,
+                # do NOT touch answer.
+                difficulty = "unknown"
 
     # Everything before the answer line is question + options
     content_lines = block[:answer_idx]
 
-    # Separate options from question
-    # Options are lines starting with A. B. C. D. (or A、 B、 etc.)
-    # But option A might not have a prefix - it's the first non-question line
-    # before B.
-
+    # Robust option extraction:
+    #   - Scan every line; a line that starts with "<LETTER>." (or 、/．) is the
+    #     start of a NEW option, with that letter as its label.
+    #   - If a second "A." appears, that marks the start of the next question's
+    #     stem — stop collecting options at once (this is the real split point
+    #     that prevents two adjacent questions from being merged).
+    #   - Any content before the very first option line is treated as the
+    #     question stem.
+    #   - The option "A" may be embedded at the end of a question line, like
+    #     "...的观点是（ ）A.相对主义的观点" — split at the embedded "A.".
     question_parts = []
     options = []
+    seen_labels = set()
+    first_option_found = False
 
-    # Find where options start
-    # Look for the first option line (B. C. D. are reliable indicators)
-    option_start_idx = None
-    for i, line in enumerate(content_lines):
-        m = OPTION_STRICT_RE.match(line)
-        if m and m.group(1) in ("B", "C", "D"):
-            option_start_idx = i
-            break
-
-    if option_start_idx is not None:
-        # Everything before option_start_idx is question + option A
-        # Check if the line just before the B/C/D option is option A (without prefix)
-        pre_option = content_lines[:option_start_idx]
-        option_lines = content_lines[option_start_idx:]
-
-        # The last line(s) of pre_option might be option A without prefix
-        # Heuristic: if we find B./C./D., the line just before B is likely option A
-        # But question might also span multiple lines
-
-        # Find option A: look for "A." in pre_option, or the last line is option A
-        a_idx = None
-        for i, line in enumerate(pre_option):
-            m = OPTION_STRICT_RE.match(line)
-            if m and m.group(1) == "A":
-                a_idx = i
+    i = 0
+    while i < len(content_lines):
+        line = content_lines[i]
+        # 1) A line that starts with a letter + dot -> option
+        m_start = OPTION_STRICT_RE.match(line)
+        if m_start:
+            label = m_start.group(1)
+            text = m_start.group(2).strip()
+            # If we've already seen this label, it's likely a NEW question's
+            # first option. Stop collecting.
+            if label in seen_labels:
                 break
-            # Also check loose match like "A " (A followed by space but no dot)
-            m2 = OPTION_RE.match(line)
-            if m2 and m2.group(1) == "A":
-                a_idx = i
+            # If we've seen ANY options before but this label breaks A/B/C/D
+            # order (e.g. after "C." we see "A."), it's also a new question.
+            if seen_labels and (label <= max(seen_labels) or label not in "ABCDEFGH"):
                 break
+            seen_labels.add(label)
+            options.append({"label": label, "text": text})
+            first_option_found = True
+            i += 1
+            continue
 
-        if a_idx is not None:
-            # Lines before a_idx are question
-            question_parts = pre_option[:a_idx]
-            # Option A - check if it contains question text before "A."
-            a_line = pre_option[a_idx]
-            m = OPTION_RE.match(a_line)
-            if m:
-                a_text = m.group(2).strip()
-                # Check if option A text itself contains another option pattern
-                # e.g., "马克思主义是对自然...（ ）A.科学性" where the whole line
-                # starts with question text and A. is embedded
-                # In this case, a_idx is 0 and there's no question_parts
-                if not question_parts and a_text:
-                    # The option A text might contain the question before "A."
-                    # Look for pattern like "（ ）A." or question ending before A.
-                    # Split at the first occurrence of question-ending pattern
-                    # before the actual option content
-                    pass
+        # 2) Line does NOT start with a letter-dot, but CONTAINS one embedded
+        #    somewhere inside — only treat as option-A if it's the FIRST such
+        #    match (i.e. we haven't found any options yet).
+        if not first_option_found:
+            embedded_m = re.search(r'(?:[（(]\s*[）)]\s*)?([A-Z])[.、．]\s*', line)
+            if embedded_m and embedded_m.group(1) == "A":
+                split_pos = embedded_m.start(1)
+                question_tail = line[:split_pos].strip()
+                a_text = line[embedded_m.end():].strip()
+                if question_tail:
+                    question_parts.append(question_tail)
                 options.append({"label": "A", "text": a_text})
-            else:
-                options.append({"label": "A", "text": a_line})
-        else:
-            # No "A." found at start of line - check if last line contains embedded "A."
-            # e.g., "马克思主义是对自然...（ ）A.科学性"
-            if pre_option:
-                last_line = pre_option[-1]
-                # Check if this line contains an inline option pattern like "（ ）A.xxx" or just "A.xxx" near the end
-                # Try to split at "A." that appears after "（ ）" or near the end
-                split_idx = None
-                # Look for "（ ）A." or "( )A." pattern
-                inline_m = re.search(r'[（(]\s*[）)]\s*A[.、．]\s*', last_line)
-                if inline_m:
-                    split_idx = inline_m.start()
-                    a_text = last_line[inline_m.end():]
-                else:
-                    # Look for "A." that's not at the very start (embedded in text)
-                    # Find the last occurrence of "A." that's preceded by a space or parenthesis
-                    for m in re.finditer(r'(?:[）)\s])A[.、．]\s*', last_line):
-                        split_idx = m.start()
-                        a_text = last_line[m.end():]
+                seen_labels.add("A")
+                first_option_found = True
+                i += 1
+                continue
 
-                if split_idx is not None:
-                    question_parts = pre_option[:-1] + [last_line[:split_idx].strip()]
-                    options.append({"label": "A", "text": a_text.strip()})
-                else:
-                    # The last line before B/C/D is option A (without prefix)
-                    question_parts = pre_option[:-1]
-                    options.append({"label": "A", "text": pre_option[-1]})
-            else:
-                question_parts = []
-
-        # Parse remaining options (B, C, D, etc.)
-        for line in option_lines:
-            m = OPTION_RE.match(line)
-            if m:
-                options.append({"label": m.group(1), "text": m.group(2).strip()})
-            else:
-                # Continuation of previous option
-                if options:
-                    options[-1]["text"] += line
-    else:
-        # No B/C/D options found
-        # Check if there are any option lines at all
-        has_any_option = False
-        for line in content_lines:
-            if OPTION_RE.match(line):
-                has_any_option = True
-                break
-
-        if has_any_option:
-            # Only A option (unlikely but possible)
-            for i, line in enumerate(content_lines):
-                m = OPTION_RE.match(line)
-                if m:
-                    question_parts = content_lines[:i]
-                    options.append({"label": m.group(1), "text": m.group(2).strip()})
-                    break
-        else:
-            # True/false question - all content is the question
-            question_parts = content_lines
+        # 3) Otherwise it's either a question-stem line or a stray continuation
+        #    line. Append to question_parts (unless we already passed through
+        #    some options, in which case it's a leftover we ignore to avoid
+        #    swallowing neighboring-question stems).
+        if not first_option_found:
+            question_parts.append(line)
+        # If we HAVE started options, fall through silently — don't extend.
+        i += 1
 
     # Build question text
     question_text = " ".join(question_parts)
@@ -531,7 +479,7 @@ def main():
             import traceback
             traceback.print_exc()
 
-    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "questions.json")
+    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), EXPORT_NAME)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(all_questions, f, ensure_ascii=False, indent=2)
 
