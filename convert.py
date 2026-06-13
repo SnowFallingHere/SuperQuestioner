@@ -307,10 +307,6 @@ def parse_block(block):
             # first option. Stop collecting.
             if label in seen_labels:
                 break
-            # If we've seen ANY options before but this label breaks A/B/C/D
-            # order (e.g. after "C." we see "A."), it's also a new question.
-            if seen_labels and (label <= max(seen_labels) or label not in "ABCDEFGH"):
-                break
             seen_labels.add(label)
             options.append({"label": label, "text": text})
             first_option_found = True
@@ -346,6 +342,9 @@ def parse_block(block):
     # Build question text
     question_text = " ".join(question_parts)
 
+    # Sort options by label (source doc may have them in wrong order like A,C,B,D)
+    options.sort(key=lambda o: o['label'])
+
     # Check for inline answer and options in question text
     cleaned_text, inline_answer = extract_inline_answer(question_text)
     cleaned_text, inline_options = extract_inline_options(cleaned_text)
@@ -357,8 +356,82 @@ def parse_block(block):
 
     question_text = cleaned_text.strip()
 
+    # POST-PROCESSING FIX: Missing option A recovery
+    # If answer is letter-based, options exist but none labeled "A",
+    # option A text was likely absorbed into the question text
+    # (common when source has no "A." prefix before the option text).
+    if answer and re.match(r'^[A-Z]+$', answer) and options and not any(o['label'] == 'A' for o in options):
+        # Try to extract option A from the end of question text
+        q = question_text
+        recovered = False
+
+        # Strategy 1: Text after "（ ）" or "( )" at end of question
+        m = re.search(r'[（(]\s*[）)]\s*([^\s（(].*)$', q)
+        if m:
+            suffix = m.group(1).strip()
+            if suffix and len(suffix) >= 1:
+                prefix = q[:m.start()]
+                # Only accept if the suffix is option-length (shorter than typical question)
+                if len(suffix) <= 40:
+                    question_text = prefix.strip()
+                    options.insert(0, {"label": "A", "text": suffix})
+                    recovered = True
+
+        # Strategy 2: Last segment after "是" or "有" at line end, separated by space
+        if not recovered:
+            m = re.search(r'\s{2,}([^\s].{1,40})$', q)
+            if m:
+                suffix = m.group(1).strip()
+                # Verify it looks like an option (starts with a noun, not a question word)
+                if suffix and len(suffix) >= 2 and len(suffix) < len(q) * 0.5:
+                    prefix = q[:m.start()]
+                    question_text = prefix.strip()
+                    options.insert(0, {"label": "A", "text": suffix})
+                    recovered = True
+
+        # Strategy 3: Last single space before Chinese text (including punctuation)
+        if not recovered:
+            m = re.search(r' ([\u4e00-\u9fff\u3000-\u303f\uff00-\uffef\u2014\u2013]{2,40})$', q)
+            if m:
+                suffix = m.group(1).strip()
+                # Don't split if suffix is a known question-ending word
+                question_endings = {'是什么', '有哪些', '包括', '是指', '指的是', '是指什么', '是指哪些'}
+                if suffix not in question_endings and len(suffix) >= 2:
+                    question_text = q[:m.start()].strip()
+                    options.insert(0, {"label": "A", "text": suffix})
+                    recovered = True
+
     # Clean question text: remove section headers and question numbers
     question_text = clean_question_text(question_text)
+
+    # POST-PROCESSING: Auto-relabel non-sequential options
+    # (e.g. A, B, D → A, B, C) after verifying the answer still makes sense
+    # Also handles duplicate labels (e.g. A, B, B, D → A, B, C, D)
+    if options and answer and re.match(r'^[A-Z]+$', answer):
+        labels = [o['label'] for o in options]
+        expected = [chr(65 + i) for i in range(len(options))]
+        if labels != expected:
+            old_labels = [o['label'] for o in options]
+            new_labels = expected
+            # Positional mapping: for each char in answer, find its position in old_labels
+            # (tracking count for duplicates), then map to the new label at that position
+            used_count = {}
+            new_answer = ''
+            valid = True
+            for ch in answer:
+                # Find matching positions in old_labels
+                positions = [i for i, l in enumerate(old_labels) if l == ch]
+                count = used_count.get(ch, 0)
+                if count >= len(positions):
+                    valid = False
+                    break
+                pos = positions[count]
+                used_count[ch] = count + 1
+                new_answer += new_labels[pos]
+            if valid and all(l in new_labels for l in new_answer):
+                for i, o in enumerate(options):
+                    o['label'] = new_labels[i]
+                answer = new_answer
 
     # Split options that have embedded next-option markers in their text
     # e.g. "A.随机性选择的道路    B.英雄人物选择的道路" → A + B as separate options
@@ -503,11 +576,53 @@ def fix_missing_options(q):
         ]
 
 
+def validate_question(q):
+    """
+    Validate a parsed question for anomalies and return warning messages.
+    """
+    warnings = []
+    qtype = q.get("type", "")
+    options = q.get("options", [])
+    answer = q.get("answer", "")
+    seq = q.get("sequence", "?")
+
+    if qtype == "multiple_choice":
+        if len(options) <= 3:
+            warnings.append("seq=%s multiple_choice has <= 3 options (%d)" % (seq, len(options)))
+        if len(options) == 0:
+            warnings.append("seq=%s multiple_choice has ZERO options" % seq)
+
+    elif qtype == "true_false":
+        if len(options) > 0:
+            warnings.append("seq=%s true_false has %d options (should be 0)" % (seq, len(options)))
+        # Check answer is "正确" or "错误" (not a letter)
+        if answer and answer not in ("正确", "错误"):
+            warnings.append("seq=%s true_false answer is '%s' (should be 正确/错误)" % (seq, answer))
+
+    elif qtype == "single_choice":
+        if len(options) < 2:
+            warnings.append("seq=%s single_choice has < 2 options (%d)" % (seq, len(options)))
+        if len(options) == 0:
+            warnings.append("seq=%s single_choice has ZERO options" % seq)
+
+    # Generic: answer references non-existent option labels
+    if answer and re.match(r'^[A-Z]+$', answer) and options:
+        labels = {o['label'] for o in options}
+        for letter in re.findall(r'[A-Z]', answer):
+            if letter not in labels:
+                warnings.append("seq=%s answer '%s' references label '%s' not in options %s" %
+                                (seq, answer, letter, ''.join(sorted(labels))))
+                break
+
+    return warnings
+
+
 def process_file(filepath, chapter_name, global_seq):
     lines = read_file(filepath)
     raw_questions = parse_lines(lines)
 
     results = []
+    chapter_warnings = []
     for q in raw_questions:
         qtype = determine_type(q["answer"])
         difficulty = q.get("difficulty") or "unknown"
@@ -526,8 +641,17 @@ def process_file(filepath, chapter_name, global_seq):
         if q["options"]:
             entry["options"] = q["options"]
 
+        # Validate
+        entry_warnings = validate_question({**entry, "sequence": global_seq})
+        chapter_warnings.extend(entry_warnings)
+
         results.append(entry)
         global_seq += 1
+
+    if chapter_warnings:
+        print("  *** Validation warnings (%d):" % len(chapter_warnings))
+        for w in chapter_warnings:
+            print("    %s" % w)
 
     print("  Parsed %d questions (seq %d-%d)" % (len(results), global_seq - len(results), global_seq - 1))
     return results, global_seq

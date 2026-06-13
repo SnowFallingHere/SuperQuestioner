@@ -627,32 +627,6 @@
     "sequence": 25,
     "chapter": "导论",
     "type": "multiple_choice",
-    "difficulty": "hard",
-    "question": "19世纪欧洲空想社会主义的最杰出的代表是（  ）",
-    "answer": "ABC",
-    "options": [
-      {
-        "label": "A",
-        "text": "昂利.圣西门"
-      },
-      {
-        "label": "B",
-        "text": "沙尔.傅立叶"
-      },
-      {
-        "label": "C",
-        "text": "罗伯特.欧文"
-      },
-      {
-        "label": "D",
-        "text": "托马斯.莫尔"
-      }
-    ]
-  },
-  {
-    "sequence": 26,
-    "chapter": "导论",
-    "type": "multiple_choice",
     "difficulty": "easy",
     "question": "马克思主义的三个组成部分是（   ）",
     "answer": "ACD",
@@ -672,6 +646,32 @@
       {
         "label": "D",
         "text": "科学社会主义"
+      }
+    ]
+  },
+  {
+    "sequence": 26,
+    "chapter": "导论",
+    "type": "multiple_choice",
+    "difficulty": "hard",
+    "question": "19世纪欧洲空想社会主义的最杰出的代表是（  ）",
+    "answer": "ABC",
+    "options": [
+      {
+        "label": "A",
+        "text": "昂利.圣西门"
+      },
+      {
+        "label": "B",
+        "text": "沙尔.傅立叶"
+      },
+      {
+        "label": "C",
+        "text": "罗伯特.欧文"
+      },
+      {
+        "label": "D",
+        "text": "托马斯.莫尔"
       }
     ]
   },
@@ -2927,7 +2927,7 @@
     "sequence": 119,
     "chapter": "第一章",
     "type": "single_choice",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "question": "“如果'偶然性’不起任何作用的话，那世界历史就会带有非常神秘的性质”。这一观点是（ ）",
     "answer": "C",
     "options": [
@@ -2953,6 +2953,32 @@
     "sequence": 120,
     "chapter": "第一章",
     "type": "single_choice",
+    "difficulty": "medium",
+    "question": "鲁迅在评《三国演义》时说:“至于写人，亦颇有失，以致欲显刘备之长厚而似伪，状诸葛之多智而近妖”。这一评述所蕴含的哲理是（ ）",
+    "answer": "A",
+    "options": [
+      {
+        "label": "A",
+        "text": "要善于把握事物的度"
+      },
+      {
+        "label": "B",
+        "text": "要善于把握事物的质"
+      },
+      {
+        "label": "C",
+        "text": "要善于把握事物的量"
+      },
+      {
+        "label": "D",
+        "text": "要善于把握事物的二重性"
+      }
+    ]
+  },
+  {
+    "sequence": 121,
+    "chapter": "第一章",
+    "type": "single_choice",
     "difficulty": "easy",
     "question": "正确地发挥意识能动作用的客观前提是（ ）",
     "answer": "C",
@@ -2976,7 +3002,7 @@
     ]
   },
   {
-    "sequence": 121,
+    "sequence": 122,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -3002,7 +3028,7 @@
     ]
   },
   {
-    "sequence": 122,
+    "sequence": 123,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -3028,7 +3054,7 @@
     ]
   },
   {
-    "sequence": 123,
+    "sequence": 124,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -3054,7 +3080,7 @@
     ]
   },
   {
-    "sequence": 124,
+    "sequence": 125,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3080,7 +3106,7 @@
     ]
   },
   {
-    "sequence": 125,
+    "sequence": 126,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3106,7 +3132,7 @@
     ]
   },
   {
-    "sequence": 126,
+    "sequence": 127,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3132,7 +3158,7 @@
     ]
   },
   {
-    "sequence": 127,
+    "sequence": 128,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3158,7 +3184,7 @@
     ]
   },
   {
-    "sequence": 128,
+    "sequence": 129,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3184,7 +3210,7 @@
     ]
   },
   {
-    "sequence": 129,
+    "sequence": 130,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3210,7 +3236,7 @@
     ]
   },
   {
-    "sequence": 130,
+    "sequence": 131,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3236,7 +3262,7 @@
     ]
   },
   {
-    "sequence": 131,
+    "sequence": 132,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3262,7 +3288,7 @@
     ]
   },
   {
-    "sequence": 132,
+    "sequence": 133,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3288,7 +3314,7 @@
     ]
   },
   {
-    "sequence": 133,
+    "sequence": 134,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -3314,7 +3340,7 @@
     ]
   },
   {
-    "sequence": 134,
+    "sequence": 135,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3340,7 +3366,7 @@
     ]
   },
   {
-    "sequence": 135,
+    "sequence": 136,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3366,7 +3392,7 @@
     ]
   },
   {
-    "sequence": 136,
+    "sequence": 137,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3392,7 +3418,7 @@
     ]
   },
   {
-    "sequence": 137,
+    "sequence": 138,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3418,7 +3444,7 @@
     ]
   },
   {
-    "sequence": 138,
+    "sequence": 139,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3444,7 +3470,7 @@
     ]
   },
   {
-    "sequence": 139,
+    "sequence": 140,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3470,7 +3496,7 @@
     ]
   },
   {
-    "sequence": 140,
+    "sequence": 141,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3496,7 +3522,7 @@
     ]
   },
   {
-    "sequence": 141,
+    "sequence": 142,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -3522,7 +3548,7 @@
     ]
   },
   {
-    "sequence": 142,
+    "sequence": 143,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -3548,7 +3574,7 @@
     ]
   },
   {
-    "sequence": 143,
+    "sequence": 144,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3574,7 +3600,7 @@
     ]
   },
   {
-    "sequence": 144,
+    "sequence": 145,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3600,7 +3626,7 @@
     ]
   },
   {
-    "sequence": 145,
+    "sequence": 146,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3626,7 +3652,7 @@
     ]
   },
   {
-    "sequence": 146,
+    "sequence": 147,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3652,7 +3678,7 @@
     ]
   },
   {
-    "sequence": 147,
+    "sequence": 148,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3678,7 +3704,7 @@
     ]
   },
   {
-    "sequence": 148,
+    "sequence": 149,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3704,7 +3730,7 @@
     ]
   },
   {
-    "sequence": 149,
+    "sequence": 150,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3730,7 +3756,7 @@
     ]
   },
   {
-    "sequence": 150,
+    "sequence": 151,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3756,7 +3782,7 @@
     ]
   },
   {
-    "sequence": 151,
+    "sequence": 152,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3782,7 +3808,7 @@
     ]
   },
   {
-    "sequence": 152,
+    "sequence": 153,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3808,7 +3834,7 @@
     ]
   },
   {
-    "sequence": 153,
+    "sequence": 154,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3834,7 +3860,7 @@
     ]
   },
   {
-    "sequence": 154,
+    "sequence": 155,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3860,7 +3886,7 @@
     ]
   },
   {
-    "sequence": 155,
+    "sequence": 156,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3886,7 +3912,7 @@
     ]
   },
   {
-    "sequence": 156,
+    "sequence": 157,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3912,7 +3938,7 @@
     ]
   },
   {
-    "sequence": 157,
+    "sequence": 158,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3938,7 +3964,7 @@
     ]
   },
   {
-    "sequence": 158,
+    "sequence": 159,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3964,7 +3990,7 @@
     ]
   },
   {
-    "sequence": 159,
+    "sequence": 160,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3990,7 +4016,7 @@
     ]
   },
   {
-    "sequence": 160,
+    "sequence": 161,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4016,7 +4042,7 @@
     ]
   },
   {
-    "sequence": 161,
+    "sequence": 162,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4042,7 +4068,7 @@
     ]
   },
   {
-    "sequence": 162,
+    "sequence": 163,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4068,7 +4094,7 @@
     ]
   },
   {
-    "sequence": 163,
+    "sequence": 164,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4094,7 +4120,7 @@
     ]
   },
   {
-    "sequence": 164,
+    "sequence": 165,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4120,7 +4146,7 @@
     ]
   },
   {
-    "sequence": 165,
+    "sequence": 166,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4146,7 +4172,7 @@
     ]
   },
   {
-    "sequence": 166,
+    "sequence": 167,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4172,7 +4198,7 @@
     ]
   },
   {
-    "sequence": 167,
+    "sequence": 168,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4198,7 +4224,7 @@
     ]
   },
   {
-    "sequence": 168,
+    "sequence": 169,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4224,7 +4250,7 @@
     ]
   },
   {
-    "sequence": 169,
+    "sequence": 170,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4250,7 +4276,7 @@
     ]
   },
   {
-    "sequence": 170,
+    "sequence": 171,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4276,7 +4302,7 @@
     ]
   },
   {
-    "sequence": 171,
+    "sequence": 172,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4302,7 +4328,7 @@
     ]
   },
   {
-    "sequence": 172,
+    "sequence": 173,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4328,7 +4354,7 @@
     ]
   },
   {
-    "sequence": 173,
+    "sequence": 174,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4354,7 +4380,7 @@
     ]
   },
   {
-    "sequence": 174,
+    "sequence": 175,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4380,7 +4406,7 @@
     ]
   },
   {
-    "sequence": 175,
+    "sequence": 176,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4406,7 +4432,7 @@
     ]
   },
   {
-    "sequence": 176,
+    "sequence": 177,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4432,7 +4458,7 @@
     ]
   },
   {
-    "sequence": 177,
+    "sequence": 178,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4458,7 +4484,7 @@
     ]
   },
   {
-    "sequence": 178,
+    "sequence": 179,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4484,7 +4510,7 @@
     ]
   },
   {
-    "sequence": 179,
+    "sequence": 180,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4510,7 +4536,7 @@
     ]
   },
   {
-    "sequence": 180,
+    "sequence": 181,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4536,7 +4562,7 @@
     ]
   },
   {
-    "sequence": 181,
+    "sequence": 182,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4562,7 +4588,7 @@
     ]
   },
   {
-    "sequence": 182,
+    "sequence": 183,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4588,7 +4614,7 @@
     ]
   },
   {
-    "sequence": 183,
+    "sequence": 184,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4614,7 +4640,7 @@
     ]
   },
   {
-    "sequence": 184,
+    "sequence": 185,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4640,7 +4666,7 @@
     ]
   },
   {
-    "sequence": 185,
+    "sequence": 186,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4666,7 +4692,7 @@
     ]
   },
   {
-    "sequence": 186,
+    "sequence": 187,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4692,7 +4718,7 @@
     ]
   },
   {
-    "sequence": 187,
+    "sequence": 188,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4718,7 +4744,7 @@
     ]
   },
   {
-    "sequence": 188,
+    "sequence": 189,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4744,7 +4770,7 @@
     ]
   },
   {
-    "sequence": 189,
+    "sequence": 190,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4770,7 +4796,7 @@
     ]
   },
   {
-    "sequence": 190,
+    "sequence": 191,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4796,7 +4822,7 @@
     ]
   },
   {
-    "sequence": 191,
+    "sequence": 192,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4822,7 +4848,7 @@
     ]
   },
   {
-    "sequence": 192,
+    "sequence": 193,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4848,7 +4874,7 @@
     ]
   },
   {
-    "sequence": 193,
+    "sequence": 194,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4874,7 +4900,7 @@
     ]
   },
   {
-    "sequence": 194,
+    "sequence": 195,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4900,7 +4926,7 @@
     ]
   },
   {
-    "sequence": 195,
+    "sequence": 196,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4908,7 +4934,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 196,
+    "sequence": 197,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4916,7 +4942,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 197,
+    "sequence": 198,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4924,7 +4950,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 198,
+    "sequence": 199,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -4932,7 +4958,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 199,
+    "sequence": 200,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4940,7 +4966,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 200,
+    "sequence": 201,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4948,7 +4974,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 201,
+    "sequence": 202,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4956,7 +4982,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 202,
+    "sequence": 203,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -4964,7 +4990,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 203,
+    "sequence": 204,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -4972,7 +4998,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 204,
+    "sequence": 205,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4980,7 +5006,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 205,
+    "sequence": 206,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -4988,7 +5014,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 206,
+    "sequence": 207,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4996,7 +5022,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 207,
+    "sequence": 208,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5004,7 +5030,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 208,
+    "sequence": 209,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5012,7 +5038,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 209,
+    "sequence": 210,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5020,7 +5046,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 210,
+    "sequence": 211,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5028,7 +5054,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 211,
+    "sequence": 212,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5036,7 +5062,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 212,
+    "sequence": 213,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5044,7 +5070,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 213,
+    "sequence": 214,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5052,7 +5078,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 214,
+    "sequence": 215,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5060,7 +5086,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 215,
+    "sequence": 216,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5068,7 +5094,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 216,
+    "sequence": 217,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5076,7 +5102,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 217,
+    "sequence": 218,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5084,7 +5110,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 218,
+    "sequence": 219,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5092,7 +5118,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 219,
+    "sequence": 220,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5100,7 +5126,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 220,
+    "sequence": 221,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5108,7 +5134,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 221,
+    "sequence": 222,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5116,7 +5142,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 222,
+    "sequence": 223,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5124,7 +5150,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 223,
+    "sequence": 224,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5132,7 +5158,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 224,
+    "sequence": 225,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5140,7 +5166,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 225,
+    "sequence": 226,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5148,7 +5174,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 226,
+    "sequence": 227,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5156,7 +5182,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 227,
+    "sequence": 228,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5164,7 +5190,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 228,
+    "sequence": 229,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5172,7 +5198,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 229,
+    "sequence": 230,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5180,7 +5206,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 230,
+    "sequence": 231,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5188,19 +5214,11 @@
     "answer": "正确"
   },
   {
-    "sequence": 231,
-    "chapter": "第一章",
-    "type": "true_false",
-    "difficulty": "medium",
-    "question": "矛盾的普遍性和特殊性的关系是整体和部分的关系。",
-    "answer": "错误"
-  },
-  {
     "sequence": 232,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
-    "question": "尊重客观规律就会妨碍主观能动性的发挥。",
+    "question": "矛盾的普遍性和特殊性的关系是整体和部分的关系。",
     "answer": "错误"
   },
   {
@@ -5208,11 +5226,19 @@
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
+    "question": "尊重客观规律就会妨碍主观能动性的发挥。",
+    "answer": "错误"
+  },
+  {
+    "sequence": 234,
+    "chapter": "第一章",
+    "type": "true_false",
+    "difficulty": "medium",
     "question": "哲学基本问题是解决和回答其他一切哲学问题的前提和基础。",
     "answer": "正确"
   },
   {
-    "sequence": 234,
+    "sequence": 235,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5220,7 +5246,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 235,
+    "sequence": 236,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5228,7 +5254,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 236,
+    "sequence": 237,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5236,7 +5262,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 237,
+    "sequence": 238,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5244,7 +5270,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 238,
+    "sequence": 239,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5252,7 +5278,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 239,
+    "sequence": 240,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5260,7 +5286,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 240,
+    "sequence": 241,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5268,7 +5294,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 241,
+    "sequence": 242,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5276,7 +5302,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 242,
+    "sequence": 243,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5284,7 +5310,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 243,
+    "sequence": 244,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5292,7 +5318,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 244,
+    "sequence": 245,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5300,7 +5326,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 245,
+    "sequence": 246,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5326,7 +5352,7 @@
     ]
   },
   {
-    "sequence": 246,
+    "sequence": 247,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5352,7 +5378,7 @@
     ]
   },
   {
-    "sequence": 247,
+    "sequence": 248,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5378,7 +5404,7 @@
     ]
   },
   {
-    "sequence": 248,
+    "sequence": 249,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5404,7 +5430,7 @@
     ]
   },
   {
-    "sequence": 249,
+    "sequence": 250,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5430,7 +5456,7 @@
     ]
   },
   {
-    "sequence": 250,
+    "sequence": 251,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5456,7 +5482,7 @@
     ]
   },
   {
-    "sequence": 251,
+    "sequence": 252,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5482,7 +5508,7 @@
     ]
   },
   {
-    "sequence": 252,
+    "sequence": 253,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5508,7 +5534,7 @@
     ]
   },
   {
-    "sequence": 253,
+    "sequence": 254,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5534,7 +5560,7 @@
     ]
   },
   {
-    "sequence": 254,
+    "sequence": 255,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5560,7 +5586,7 @@
     ]
   },
   {
-    "sequence": 255,
+    "sequence": 256,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5586,7 +5612,7 @@
     ]
   },
   {
-    "sequence": 256,
+    "sequence": 257,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5612,7 +5638,7 @@
     ]
   },
   {
-    "sequence": 257,
+    "sequence": 258,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5638,7 +5664,7 @@
     ]
   },
   {
-    "sequence": 258,
+    "sequence": 259,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5664,7 +5690,7 @@
     ]
   },
   {
-    "sequence": 259,
+    "sequence": 260,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5690,7 +5716,7 @@
     ]
   },
   {
-    "sequence": 260,
+    "sequence": 261,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5716,7 +5742,7 @@
     ]
   },
   {
-    "sequence": 261,
+    "sequence": 262,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5742,7 +5768,7 @@
     ]
   },
   {
-    "sequence": 262,
+    "sequence": 263,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5768,7 +5794,7 @@
     ]
   },
   {
-    "sequence": 263,
+    "sequence": 264,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5794,7 +5820,7 @@
     ]
   },
   {
-    "sequence": 264,
+    "sequence": 265,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5820,7 +5846,7 @@
     ]
   },
   {
-    "sequence": 265,
+    "sequence": 266,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5846,7 +5872,7 @@
     ]
   },
   {
-    "sequence": 266,
+    "sequence": 267,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5872,7 +5898,7 @@
     ]
   },
   {
-    "sequence": 267,
+    "sequence": 268,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5898,7 +5924,7 @@
     ]
   },
   {
-    "sequence": 268,
+    "sequence": 269,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5924,7 +5950,7 @@
     ]
   },
   {
-    "sequence": 269,
+    "sequence": 270,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5950,7 +5976,7 @@
     ]
   },
   {
-    "sequence": 270,
+    "sequence": 271,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5976,12 +6002,12 @@
     ]
   },
   {
-    "sequence": 271,
+    "sequence": 272,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
     "question": "中国共产党思想路线的理论基础是",
-    "answer": "D",
+    "answer": "C",
     "options": [
       {
         "label": "A",
@@ -5992,13 +6018,13 @@
         "text": "马克思主义运动观"
       },
       {
-        "label": "D",
+        "label": "C",
         "text": "马克思主义认识论"
       }
     ]
   },
   {
-    "sequence": 272,
+    "sequence": 273,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6024,7 +6050,7 @@
     ]
   },
   {
-    "sequence": 273,
+    "sequence": 274,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6050,7 +6076,7 @@
     ]
   },
   {
-    "sequence": 274,
+    "sequence": 275,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6076,7 +6102,7 @@
     ]
   },
   {
-    "sequence": 275,
+    "sequence": 276,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6102,7 +6128,7 @@
     ]
   },
   {
-    "sequence": 276,
+    "sequence": 277,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6128,7 +6154,7 @@
     ]
   },
   {
-    "sequence": 277,
+    "sequence": 278,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6154,7 +6180,7 @@
     ]
   },
   {
-    "sequence": 278,
+    "sequence": 279,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6180,7 +6206,7 @@
     ]
   },
   {
-    "sequence": 279,
+    "sequence": 280,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -6206,13 +6232,17 @@
     ]
   },
   {
-    "sequence": 280,
+    "sequence": 281,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
-    "question": "下列各项中，属于辩证唯物主义认识论区别于旧唯物主义认识论的观点是 认识客体具有客观性的观点",
+    "question": "下列各项中，属于辩证唯物主义认识论区别于旧唯物主义认识论的观点是",
     "answer": "D",
     "options": [
+      {
+        "label": "A",
+        "text": "认识客体具有客观性的观点"
+      },
       {
         "label": "B",
         "text": "认识是主体对客体的反映的观点"
@@ -6228,13 +6258,17 @@
     ]
   },
   {
-    "sequence": 281,
+    "sequence": 282,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
-    "question": "一个完整的认识过程是（  ） 感觉—知觉—表象",
+    "question": "一个完整的认识过程是",
     "answer": "D",
     "options": [
+      {
+        "label": "A",
+        "text": "感觉—知觉—表象"
+      },
       {
         "label": "B",
         "text": "概念—判断—推理"
@@ -6250,13 +6284,17 @@
     ]
   },
   {
-    "sequence": 282,
+    "sequence": 283,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
-    "question": "与理性认识相比较，感性认识有两个特点，一个是直接性，另一个是 形象性",
+    "question": "与理性认识相比较，感性认识有两个特点，一个是直接性，另一个是",
     "answer": "A",
     "options": [
+      {
+        "label": "A",
+        "text": "形象性"
+      },
       {
         "label": "B",
         "text": "能动性"
@@ -6272,13 +6310,17 @@
     ]
   },
   {
-    "sequence": 283,
+    "sequence": 284,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
-    "question": "感觉、知觉、表象是 社会心理的三种形式",
+    "question": "感觉、知觉、表象是",
     "answer": "C",
     "options": [
+      {
+        "label": "A",
+        "text": "社会心理的三种形式"
+      },
       {
         "label": "B",
         "text": "社会意识形态的三种形式"
@@ -6294,7 +6336,7 @@
     ]
   },
   {
-    "sequence": 284,
+    "sequence": 285,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6320,35 +6362,39 @@
     ]
   },
   {
-    "sequence": 285,
+    "sequence": 286,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
     "question": "检验认识的真理性，就是要检验人们的认识时是否（  ）",
-    "answer": "C",
+    "answer": "B",
     "options": [
       {
         "label": "A",
         "text": "与多数人的愿望和要求相符合"
       },
       {
-        "label": "C",
+        "label": "B",
         "text": "与客观事物及其规律相符合"
       },
       {
-        "label": "D",
+        "label": "C",
         "text": "与党的路线方针政策相符合"
       }
     ]
   },
   {
-    "sequence": 286,
+    "sequence": 287,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
-    "question": "理性认识由低级到高级的发展过程是 实践——认识——实践",
+    "question": "理性认识由低级到高级的发展过程是",
     "answer": "D",
     "options": [
+      {
+        "label": "A",
+        "text": "实践——认识——实践"
+      },
       {
         "label": "B",
         "text": "认识——实践——认识"
@@ -6364,7 +6410,7 @@
     ]
   },
   {
-    "sequence": 287,
+    "sequence": 288,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6390,7 +6436,7 @@
     ]
   },
   {
-    "sequence": 288,
+    "sequence": 289,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6416,13 +6462,17 @@
     ]
   },
   {
-    "sequence": 289,
+    "sequence": 290,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
-    "question": "认识世界的根本目的在于 激发求知欲望",
+    "question": "认识世界的根本目的在于",
     "answer": "B",
     "options": [
+      {
+        "label": "A",
+        "text": "激发求知欲望"
+      },
       {
         "label": "B",
         "text": "指导社会实践"
@@ -6438,7 +6488,7 @@
     ]
   },
   {
-    "sequence": 290,
+    "sequence": 291,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6464,7 +6514,7 @@
     ]
   },
   {
-    "sequence": 291,
+    "sequence": 292,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6490,7 +6540,7 @@
     ]
   },
   {
-    "sequence": 292,
+    "sequence": 293,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6516,7 +6566,7 @@
     ]
   },
   {
-    "sequence": 293,
+    "sequence": 294,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6542,7 +6592,7 @@
     ]
   },
   {
-    "sequence": 294,
+    "sequence": 295,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6568,7 +6618,7 @@
     ]
   },
   {
-    "sequence": 295,
+    "sequence": 296,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6594,7 +6644,7 @@
     ]
   },
   {
-    "sequence": 296,
+    "sequence": 297,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6620,7 +6670,7 @@
     ]
   },
   {
-    "sequence": 297,
+    "sequence": 298,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6646,7 +6696,7 @@
     ]
   },
   {
-    "sequence": 298,
+    "sequence": 299,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6672,7 +6722,7 @@
     ]
   },
   {
-    "sequence": 299,
+    "sequence": 300,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -6698,7 +6748,7 @@
     ]
   },
   {
-    "sequence": 300,
+    "sequence": 301,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6724,7 +6774,7 @@
     ]
   },
   {
-    "sequence": 301,
+    "sequence": 302,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6750,7 +6800,7 @@
     ]
   },
   {
-    "sequence": 302,
+    "sequence": 303,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6776,7 +6826,7 @@
     ]
   },
   {
-    "sequence": 303,
+    "sequence": 304,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6802,7 +6852,7 @@
     ]
   },
   {
-    "sequence": 304,
+    "sequence": 305,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6828,7 +6878,7 @@
     ]
   },
   {
-    "sequence": 305,
+    "sequence": 306,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6854,7 +6904,7 @@
     ]
   },
   {
-    "sequence": 306,
+    "sequence": 307,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6880,7 +6930,7 @@
     ]
   },
   {
-    "sequence": 307,
+    "sequence": 308,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6906,7 +6956,7 @@
     ]
   },
   {
-    "sequence": 308,
+    "sequence": 309,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6932,7 +6982,7 @@
     ]
   },
   {
-    "sequence": 309,
+    "sequence": 310,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6958,7 +7008,7 @@
     ]
   },
   {
-    "sequence": 310,
+    "sequence": 311,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6984,7 +7034,7 @@
     ]
   },
   {
-    "sequence": 311,
+    "sequence": 312,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -7010,7 +7060,7 @@
     ]
   },
   {
-    "sequence": 312,
+    "sequence": 313,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -7036,7 +7086,7 @@
     ]
   },
   {
-    "sequence": 313,
+    "sequence": 314,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7062,7 +7112,7 @@
     ]
   },
   {
-    "sequence": 314,
+    "sequence": 315,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7088,7 +7138,7 @@
     ]
   },
   {
-    "sequence": 315,
+    "sequence": 316,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7114,7 +7164,7 @@
     ]
   },
   {
-    "sequence": 316,
+    "sequence": 317,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7140,7 +7190,7 @@
     ]
   },
   {
-    "sequence": 317,
+    "sequence": 318,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7166,7 +7216,7 @@
     ]
   },
   {
-    "sequence": 318,
+    "sequence": 319,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7192,7 +7242,7 @@
     ]
   },
   {
-    "sequence": 319,
+    "sequence": 320,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7218,7 +7268,7 @@
     ]
   },
   {
-    "sequence": 320,
+    "sequence": 321,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7244,7 +7294,7 @@
     ]
   },
   {
-    "sequence": 321,
+    "sequence": 322,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7270,7 +7320,7 @@
     ]
   },
   {
-    "sequence": 322,
+    "sequence": 323,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7296,7 +7346,7 @@
     ]
   },
   {
-    "sequence": 323,
+    "sequence": 324,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7322,7 +7372,7 @@
     ]
   },
   {
-    "sequence": 324,
+    "sequence": 325,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7348,7 +7398,7 @@
     ]
   },
   {
-    "sequence": 325,
+    "sequence": 326,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7374,7 +7424,7 @@
     ]
   },
   {
-    "sequence": 326,
+    "sequence": 327,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7400,7 +7450,7 @@
     ]
   },
   {
-    "sequence": 327,
+    "sequence": 328,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7426,7 +7476,7 @@
     ]
   },
   {
-    "sequence": 328,
+    "sequence": 329,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7452,7 +7502,7 @@
     ]
   },
   {
-    "sequence": 329,
+    "sequence": 330,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7478,7 +7528,7 @@
     ]
   },
   {
-    "sequence": 330,
+    "sequence": 331,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7504,7 +7554,7 @@
     ]
   },
   {
-    "sequence": 331,
+    "sequence": 332,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7530,7 +7580,7 @@
     ]
   },
   {
-    "sequence": 332,
+    "sequence": 333,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7556,7 +7606,7 @@
     ]
   },
   {
-    "sequence": 333,
+    "sequence": 334,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7582,7 +7632,7 @@
     ]
   },
   {
-    "sequence": 334,
+    "sequence": 335,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7608,7 +7658,7 @@
     ]
   },
   {
-    "sequence": 335,
+    "sequence": 336,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7634,7 +7684,7 @@
     ]
   },
   {
-    "sequence": 336,
+    "sequence": 337,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7660,7 +7710,7 @@
     ]
   },
   {
-    "sequence": 337,
+    "sequence": 338,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7686,7 +7736,7 @@
     ]
   },
   {
-    "sequence": 338,
+    "sequence": 339,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7712,7 +7762,7 @@
     ]
   },
   {
-    "sequence": 339,
+    "sequence": 340,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7738,7 +7788,7 @@
     ]
   },
   {
-    "sequence": 340,
+    "sequence": 341,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7764,7 +7814,7 @@
     ]
   },
   {
-    "sequence": 341,
+    "sequence": 342,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7790,7 +7840,7 @@
     ]
   },
   {
-    "sequence": 342,
+    "sequence": 343,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7816,7 +7866,7 @@
     ]
   },
   {
-    "sequence": 343,
+    "sequence": 344,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7842,7 +7892,7 @@
     ]
   },
   {
-    "sequence": 344,
+    "sequence": 345,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7868,13 +7918,17 @@
     ]
   },
   {
-    "sequence": 345,
+    "sequence": 346,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
-    "question": "下列各项属于感性认识形式的有 概念",
+    "question": "下列各项属于感性认识形式的有",
     "answer": "BCD",
     "options": [
+      {
+        "label": "A",
+        "text": "概念"
+      },
       {
         "label": "B",
         "text": "感觉"
@@ -7890,7 +7944,7 @@
     ]
   },
   {
-    "sequence": 346,
+    "sequence": 347,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7916,7 +7970,7 @@
     ]
   },
   {
-    "sequence": 347,
+    "sequence": 348,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7942,7 +7996,7 @@
     ]
   },
   {
-    "sequence": 348,
+    "sequence": 349,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7968,7 +8022,7 @@
     ]
   },
   {
-    "sequence": 349,
+    "sequence": 350,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -7976,7 +8030,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 350,
+    "sequence": 351,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -7984,7 +8038,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 351,
+    "sequence": 352,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -7992,7 +8046,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 352,
+    "sequence": 353,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8000,7 +8054,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 353,
+    "sequence": 354,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8008,7 +8062,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 354,
+    "sequence": 355,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8016,7 +8070,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 355,
+    "sequence": 356,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8024,7 +8078,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 356,
+    "sequence": 357,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8032,7 +8086,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 357,
+    "sequence": 358,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8040,7 +8094,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 358,
+    "sequence": 359,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8048,7 +8102,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 359,
+    "sequence": 360,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8056,7 +8110,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 360,
+    "sequence": 361,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8064,7 +8118,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 361,
+    "sequence": 362,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8072,7 +8126,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 362,
+    "sequence": 363,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8080,7 +8134,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 363,
+    "sequence": 364,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8088,7 +8142,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 364,
+    "sequence": 365,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8114,7 +8168,7 @@
     ]
   },
   {
-    "sequence": 365,
+    "sequence": 366,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8140,7 +8194,7 @@
     ]
   },
   {
-    "sequence": 366,
+    "sequence": 367,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8166,7 +8220,7 @@
     ]
   },
   {
-    "sequence": 367,
+    "sequence": 368,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8192,7 +8246,7 @@
     ]
   },
   {
-    "sequence": 368,
+    "sequence": 369,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8218,12 +8272,12 @@
     ]
   },
   {
-    "sequence": 369,
+    "sequence": 370,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
     "question": "社会形态依次更替的过程和规律是客观的，但是社会发展的道路往往是有着多种选择的。下列符合历史发展规律的是",
-    "answer": "C",
+    "answer": "B",
     "options": [
       {
         "label": "A",
@@ -8244,7 +8298,7 @@
     ]
   },
   {
-    "sequence": 370,
+    "sequence": 371,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8270,7 +8324,7 @@
     ]
   },
   {
-    "sequence": 371,
+    "sequence": 372,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8296,7 +8350,7 @@
     ]
   },
   {
-    "sequence": 372,
+    "sequence": 373,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -8322,7 +8376,7 @@
     ]
   },
   {
-    "sequence": 373,
+    "sequence": 374,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -8348,7 +8402,7 @@
     ]
   },
   {
-    "sequence": 374,
+    "sequence": 375,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -8374,7 +8428,7 @@
     ]
   },
   {
-    "sequence": 375,
+    "sequence": 376,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -8400,7 +8454,7 @@
     ]
   },
   {
-    "sequence": 376,
+    "sequence": 377,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -8426,7 +8480,7 @@
     ]
   },
   {
-    "sequence": 377,
+    "sequence": 378,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -8452,7 +8506,7 @@
     ]
   },
   {
-    "sequence": 378,
+    "sequence": 379,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8460,7 +8514,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 379,
+    "sequence": 380,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8468,7 +8522,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 380,
+    "sequence": 381,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8476,7 +8530,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 381,
+    "sequence": 382,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8484,7 +8538,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 382,
+    "sequence": 383,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8492,7 +8546,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 383,
+    "sequence": 384,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8518,7 +8572,7 @@
     ]
   },
   {
-    "sequence": 384,
+    "sequence": 385,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8544,7 +8598,7 @@
     ]
   },
   {
-    "sequence": 385,
+    "sequence": 386,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8570,7 +8624,7 @@
     ]
   },
   {
-    "sequence": 386,
+    "sequence": 387,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8596,7 +8650,7 @@
     ]
   },
   {
-    "sequence": 387,
+    "sequence": 388,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8622,7 +8676,7 @@
     ]
   },
   {
-    "sequence": 388,
+    "sequence": 389,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8648,7 +8702,7 @@
     ]
   },
   {
-    "sequence": 389,
+    "sequence": 390,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8674,7 +8728,7 @@
     ]
   },
   {
-    "sequence": 390,
+    "sequence": 391,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8700,7 +8754,7 @@
     ]
   },
   {
-    "sequence": 391,
+    "sequence": 392,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8726,7 +8780,7 @@
     ]
   },
   {
-    "sequence": 392,
+    "sequence": 393,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8752,7 +8806,7 @@
     ]
   },
   {
-    "sequence": 393,
+    "sequence": 394,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8778,7 +8832,7 @@
     ]
   },
   {
-    "sequence": 394,
+    "sequence": 395,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8804,7 +8858,7 @@
     ]
   },
   {
-    "sequence": 395,
+    "sequence": 396,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8830,7 +8884,7 @@
     ]
   },
   {
-    "sequence": 396,
+    "sequence": 397,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8856,7 +8910,7 @@
     ]
   },
   {
-    "sequence": 397,
+    "sequence": 398,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8882,7 +8936,7 @@
     ]
   },
   {
-    "sequence": 398,
+    "sequence": 399,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8908,7 +8962,7 @@
     ]
   },
   {
-    "sequence": 399,
+    "sequence": 400,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8934,7 +8988,7 @@
     ]
   },
   {
-    "sequence": 400,
+    "sequence": 401,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8960,7 +9014,7 @@
     ]
   },
   {
-    "sequence": 401,
+    "sequence": 402,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8986,7 +9040,7 @@
     ]
   },
   {
-    "sequence": 402,
+    "sequence": 403,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9012,7 +9066,7 @@
     ]
   },
   {
-    "sequence": 403,
+    "sequence": 404,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9038,7 +9092,7 @@
     ]
   },
   {
-    "sequence": 404,
+    "sequence": 405,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9064,7 +9118,7 @@
     ]
   },
   {
-    "sequence": 405,
+    "sequence": 406,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9090,7 +9144,7 @@
     ]
   },
   {
-    "sequence": 406,
+    "sequence": 407,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9116,7 +9170,7 @@
     ]
   },
   {
-    "sequence": 407,
+    "sequence": 408,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9142,7 +9196,7 @@
     ]
   },
   {
-    "sequence": 408,
+    "sequence": 409,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9168,7 +9222,7 @@
     ]
   },
   {
-    "sequence": 409,
+    "sequence": 410,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9194,7 +9248,7 @@
     ]
   },
   {
-    "sequence": 410,
+    "sequence": 411,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9220,7 +9274,7 @@
     ]
   },
   {
-    "sequence": 411,
+    "sequence": 412,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9246,7 +9300,7 @@
     ]
   },
   {
-    "sequence": 412,
+    "sequence": 413,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9272,7 +9326,7 @@
     ]
   },
   {
-    "sequence": 413,
+    "sequence": 414,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9298,7 +9352,7 @@
     ]
   },
   {
-    "sequence": 414,
+    "sequence": 415,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9324,7 +9378,7 @@
     ]
   },
   {
-    "sequence": 415,
+    "sequence": 416,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9350,7 +9404,7 @@
     ]
   },
   {
-    "sequence": 416,
+    "sequence": 417,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9376,7 +9430,7 @@
     ]
   },
   {
-    "sequence": 417,
+    "sequence": 418,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9402,7 +9456,7 @@
     ]
   },
   {
-    "sequence": 418,
+    "sequence": 419,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9428,7 +9482,7 @@
     ]
   },
   {
-    "sequence": 419,
+    "sequence": 420,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9454,7 +9508,7 @@
     ]
   },
   {
-    "sequence": 420,
+    "sequence": 421,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9480,7 +9534,7 @@
     ]
   },
   {
-    "sequence": 421,
+    "sequence": 422,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9506,7 +9560,7 @@
     ]
   },
   {
-    "sequence": 422,
+    "sequence": 423,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9532,7 +9586,7 @@
     ]
   },
   {
-    "sequence": 423,
+    "sequence": 424,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9558,7 +9612,7 @@
     ]
   },
   {
-    "sequence": 424,
+    "sequence": 425,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9584,7 +9638,7 @@
     ]
   },
   {
-    "sequence": 425,
+    "sequence": 426,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9610,7 +9664,7 @@
     ]
   },
   {
-    "sequence": 426,
+    "sequence": 427,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9636,7 +9690,7 @@
     ]
   },
   {
-    "sequence": 427,
+    "sequence": 428,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9662,7 +9716,7 @@
     ]
   },
   {
-    "sequence": 428,
+    "sequence": 429,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9688,7 +9742,7 @@
     ]
   },
   {
-    "sequence": 429,
+    "sequence": 430,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9714,7 +9768,7 @@
     ]
   },
   {
-    "sequence": 430,
+    "sequence": 431,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9740,7 +9794,7 @@
     ]
   },
   {
-    "sequence": 431,
+    "sequence": 432,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9766,7 +9820,7 @@
     ]
   },
   {
-    "sequence": 432,
+    "sequence": 433,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9792,7 +9846,7 @@
     ]
   },
   {
-    "sequence": 433,
+    "sequence": 434,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9818,7 +9872,7 @@
     ]
   },
   {
-    "sequence": 434,
+    "sequence": 435,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9844,7 +9898,7 @@
     ]
   },
   {
-    "sequence": 435,
+    "sequence": 436,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9870,7 +9924,7 @@
     ]
   },
   {
-    "sequence": 436,
+    "sequence": 437,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9882,13 +9936,21 @@
         "text": "利已主义"
       },
       {
+        "label": "B",
+        "text": "民主法治原则"
+      },
+      {
         "label": "C",
         "text": "个人主义"
+      },
+      {
+        "label": "D",
+        "text": "自由平等博爱"
       }
     ]
   },
   {
-    "sequence": 437,
+    "sequence": 438,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9914,7 +9976,7 @@
     ]
   },
   {
-    "sequence": 438,
+    "sequence": 439,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9940,7 +10002,7 @@
     ]
   },
   {
-    "sequence": 439,
+    "sequence": 440,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9966,7 +10028,7 @@
     ]
   },
   {
-    "sequence": 440,
+    "sequence": 441,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9992,7 +10054,7 @@
     ]
   },
   {
-    "sequence": 441,
+    "sequence": 442,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -10018,7 +10080,7 @@
     ]
   },
   {
-    "sequence": 442,
+    "sequence": 443,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -10044,7 +10106,7 @@
     ]
   },
   {
-    "sequence": 443,
+    "sequence": 444,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10070,7 +10132,7 @@
     ]
   },
   {
-    "sequence": 444,
+    "sequence": 445,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10096,7 +10158,7 @@
     ]
   },
   {
-    "sequence": 445,
+    "sequence": 446,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10122,7 +10184,7 @@
     ]
   },
   {
-    "sequence": 446,
+    "sequence": 447,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10148,7 +10210,7 @@
     ]
   },
   {
-    "sequence": 447,
+    "sequence": 448,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10174,7 +10236,7 @@
     ]
   },
   {
-    "sequence": 448,
+    "sequence": 449,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10200,7 +10262,7 @@
     ]
   },
   {
-    "sequence": 449,
+    "sequence": 450,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10226,7 +10288,7 @@
     ]
   },
   {
-    "sequence": 450,
+    "sequence": 451,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10252,7 +10314,7 @@
     ]
   },
   {
-    "sequence": 451,
+    "sequence": 452,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10278,7 +10340,7 @@
     ]
   },
   {
-    "sequence": 452,
+    "sequence": 453,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10304,7 +10366,7 @@
     ]
   },
   {
-    "sequence": 453,
+    "sequence": 454,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10330,7 +10392,7 @@
     ]
   },
   {
-    "sequence": 454,
+    "sequence": 455,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10356,7 +10418,7 @@
     ]
   },
   {
-    "sequence": 455,
+    "sequence": 456,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10382,7 +10444,7 @@
     ]
   },
   {
-    "sequence": 456,
+    "sequence": 457,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10408,7 +10470,7 @@
     ]
   },
   {
-    "sequence": 457,
+    "sequence": 458,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10434,7 +10496,7 @@
     ]
   },
   {
-    "sequence": 458,
+    "sequence": 459,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10460,7 +10522,7 @@
     ]
   },
   {
-    "sequence": 459,
+    "sequence": 460,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10486,7 +10548,7 @@
     ]
   },
   {
-    "sequence": 460,
+    "sequence": 461,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10512,7 +10574,7 @@
     ]
   },
   {
-    "sequence": 461,
+    "sequence": 462,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10538,7 +10600,7 @@
     ]
   },
   {
-    "sequence": 462,
+    "sequence": 463,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10564,7 +10626,7 @@
     ]
   },
   {
-    "sequence": 463,
+    "sequence": 464,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10590,7 +10652,7 @@
     ]
   },
   {
-    "sequence": 464,
+    "sequence": 465,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10616,7 +10678,7 @@
     ]
   },
   {
-    "sequence": 465,
+    "sequence": 466,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10642,7 +10704,7 @@
     ]
   },
   {
-    "sequence": 466,
+    "sequence": 467,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10668,7 +10730,7 @@
     ]
   },
   {
-    "sequence": 467,
+    "sequence": 468,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10694,7 +10756,7 @@
     ]
   },
   {
-    "sequence": 468,
+    "sequence": 469,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10720,7 +10782,7 @@
     ]
   },
   {
-    "sequence": 469,
+    "sequence": 470,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10746,7 +10808,7 @@
     ]
   },
   {
-    "sequence": 470,
+    "sequence": 471,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10772,7 +10834,7 @@
     ]
   },
   {
-    "sequence": 471,
+    "sequence": 472,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10798,7 +10860,7 @@
     ]
   },
   {
-    "sequence": 472,
+    "sequence": 473,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10824,7 +10886,7 @@
     ]
   },
   {
-    "sequence": 473,
+    "sequence": 474,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10850,7 +10912,7 @@
     ]
   },
   {
-    "sequence": 474,
+    "sequence": 475,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10876,7 +10938,7 @@
     ]
   },
   {
-    "sequence": 475,
+    "sequence": 476,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10902,7 +10964,7 @@
     ]
   },
   {
-    "sequence": 476,
+    "sequence": 477,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10928,7 +10990,7 @@
     ]
   },
   {
-    "sequence": 477,
+    "sequence": 478,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10954,7 +11016,7 @@
     ]
   },
   {
-    "sequence": 478,
+    "sequence": 479,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10980,7 +11042,7 @@
     ]
   },
   {
-    "sequence": 479,
+    "sequence": 480,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -11006,7 +11068,7 @@
     ]
   },
   {
-    "sequence": 480,
+    "sequence": 481,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11032,7 +11094,7 @@
     ]
   },
   {
-    "sequence": 481,
+    "sequence": 482,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -11058,7 +11120,7 @@
     ]
   },
   {
-    "sequence": 482,
+    "sequence": 483,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11084,7 +11146,7 @@
     ]
   },
   {
-    "sequence": 483,
+    "sequence": 484,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11110,7 +11172,7 @@
     ]
   },
   {
-    "sequence": 484,
+    "sequence": 485,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11136,7 +11198,7 @@
     ]
   },
   {
-    "sequence": 485,
+    "sequence": 486,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -11162,7 +11224,7 @@
     ]
   },
   {
-    "sequence": 486,
+    "sequence": 487,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11170,7 +11232,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 487,
+    "sequence": 488,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11178,7 +11240,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 488,
+    "sequence": 489,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11186,7 +11248,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 489,
+    "sequence": 490,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11194,7 +11256,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 490,
+    "sequence": 491,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11202,7 +11264,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 491,
+    "sequence": 492,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11210,7 +11272,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 492,
+    "sequence": 493,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11218,7 +11280,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 493,
+    "sequence": 494,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11226,7 +11288,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 494,
+    "sequence": 495,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11234,7 +11296,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 495,
+    "sequence": 496,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11242,7 +11304,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 496,
+    "sequence": 497,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11250,7 +11312,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 497,
+    "sequence": 498,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11258,7 +11320,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 498,
+    "sequence": 499,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11266,7 +11328,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 499,
+    "sequence": 500,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11274,7 +11336,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 500,
+    "sequence": 501,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11282,7 +11344,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 501,
+    "sequence": 502,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11290,7 +11352,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 502,
+    "sequence": 503,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11298,7 +11360,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 503,
+    "sequence": 504,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11306,7 +11368,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 504,
+    "sequence": 505,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11314,7 +11376,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 505,
+    "sequence": 506,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11322,7 +11384,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 506,
+    "sequence": 507,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11330,7 +11392,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 507,
+    "sequence": 508,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11338,7 +11400,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 508,
+    "sequence": 509,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11346,7 +11408,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 509,
+    "sequence": 510,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11354,7 +11416,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 510,
+    "sequence": 511,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11362,7 +11424,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 511,
+    "sequence": 512,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11370,7 +11432,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 512,
+    "sequence": 513,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11378,7 +11440,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 513,
+    "sequence": 514,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11386,7 +11448,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 514,
+    "sequence": 515,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11394,7 +11456,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 515,
+    "sequence": 516,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11402,7 +11464,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 516,
+    "sequence": 517,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11410,7 +11472,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 517,
+    "sequence": 518,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11418,7 +11480,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 518,
+    "sequence": 519,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11444,7 +11506,7 @@
     ]
   },
   {
-    "sequence": 519,
+    "sequence": 520,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11470,7 +11532,7 @@
     ]
   },
   {
-    "sequence": 520,
+    "sequence": 521,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11496,7 +11558,7 @@
     ]
   },
   {
-    "sequence": 521,
+    "sequence": 522,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11522,7 +11584,7 @@
     ]
   },
   {
-    "sequence": 522,
+    "sequence": 523,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11548,7 +11610,7 @@
     ]
   },
   {
-    "sequence": 523,
+    "sequence": 524,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11574,7 +11636,7 @@
     ]
   },
   {
-    "sequence": 524,
+    "sequence": 525,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11600,7 +11662,7 @@
     ]
   },
   {
-    "sequence": 525,
+    "sequence": 526,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11626,7 +11688,7 @@
     ]
   },
   {
-    "sequence": 526,
+    "sequence": 527,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11652,7 +11714,7 @@
     ]
   },
   {
-    "sequence": 527,
+    "sequence": 528,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11678,7 +11740,7 @@
     ]
   },
   {
-    "sequence": 528,
+    "sequence": 529,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11704,7 +11766,7 @@
     ]
   },
   {
-    "sequence": 529,
+    "sequence": 530,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11730,7 +11792,7 @@
     ]
   },
   {
-    "sequence": 530,
+    "sequence": 531,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11756,7 +11818,7 @@
     ]
   },
   {
-    "sequence": 531,
+    "sequence": 532,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11782,7 +11844,7 @@
     ]
   },
   {
-    "sequence": 532,
+    "sequence": 533,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11808,7 +11870,7 @@
     ]
   },
   {
-    "sequence": 533,
+    "sequence": 534,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11834,7 +11896,7 @@
     ]
   },
   {
-    "sequence": 534,
+    "sequence": 535,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11860,7 +11922,7 @@
     ]
   },
   {
-    "sequence": 535,
+    "sequence": 536,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11886,7 +11948,7 @@
     ]
   },
   {
-    "sequence": 536,
+    "sequence": 537,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11912,7 +11974,7 @@
     ]
   },
   {
-    "sequence": 537,
+    "sequence": 538,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11938,7 +12000,7 @@
     ]
   },
   {
-    "sequence": 538,
+    "sequence": 539,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11964,7 +12026,7 @@
     ]
   },
   {
-    "sequence": 539,
+    "sequence": 540,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11990,7 +12052,7 @@
     ]
   },
   {
-    "sequence": 540,
+    "sequence": 541,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12016,7 +12078,7 @@
     ]
   },
   {
-    "sequence": 541,
+    "sequence": 542,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12042,7 +12104,7 @@
     ]
   },
   {
-    "sequence": 542,
+    "sequence": 543,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12068,7 +12130,7 @@
     ]
   },
   {
-    "sequence": 543,
+    "sequence": 544,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12094,7 +12156,7 @@
     ]
   },
   {
-    "sequence": 544,
+    "sequence": 545,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12120,7 +12182,7 @@
     ]
   },
   {
-    "sequence": 545,
+    "sequence": 546,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12146,7 +12208,7 @@
     ]
   },
   {
-    "sequence": 546,
+    "sequence": 547,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12172,7 +12234,7 @@
     ]
   },
   {
-    "sequence": 547,
+    "sequence": 548,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12198,7 +12260,7 @@
     ]
   },
   {
-    "sequence": 548,
+    "sequence": 549,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12224,7 +12286,7 @@
     ]
   },
   {
-    "sequence": 549,
+    "sequence": 550,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12250,7 +12312,7 @@
     ]
   },
   {
-    "sequence": 550,
+    "sequence": 551,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12276,7 +12338,7 @@
     ]
   },
   {
-    "sequence": 551,
+    "sequence": 552,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12302,7 +12364,7 @@
     ]
   },
   {
-    "sequence": 552,
+    "sequence": 553,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12328,7 +12390,7 @@
     ]
   },
   {
-    "sequence": 553,
+    "sequence": 554,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12354,7 +12416,7 @@
     ]
   },
   {
-    "sequence": 554,
+    "sequence": 555,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12380,7 +12442,7 @@
     ]
   },
   {
-    "sequence": 555,
+    "sequence": 556,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12406,7 +12468,7 @@
     ]
   },
   {
-    "sequence": 556,
+    "sequence": 557,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12432,7 +12494,7 @@
     ]
   },
   {
-    "sequence": 557,
+    "sequence": 558,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12458,7 +12520,7 @@
     ]
   },
   {
-    "sequence": 558,
+    "sequence": 559,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12484,7 +12546,7 @@
     ]
   },
   {
-    "sequence": 559,
+    "sequence": 560,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12492,7 +12554,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 560,
+    "sequence": 561,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12500,7 +12562,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 561,
+    "sequence": 562,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12508,7 +12570,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 562,
+    "sequence": 563,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12516,7 +12578,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 563,
+    "sequence": 564,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "easy",
@@ -12524,7 +12586,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 564,
+    "sequence": 565,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "hard",
@@ -12532,7 +12594,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 565,
+    "sequence": 566,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12540,7 +12602,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 566,
+    "sequence": 567,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -12548,7 +12610,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 567,
+    "sequence": 568,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12556,7 +12618,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 568,
+    "sequence": 569,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12564,7 +12626,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 569,
+    "sequence": 570,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12572,7 +12634,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 570,
+    "sequence": 571,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12580,7 +12642,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 571,
+    "sequence": 572,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12588,7 +12650,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 572,
+    "sequence": 573,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12614,7 +12676,7 @@
     ]
   },
   {
-    "sequence": 573,
+    "sequence": 574,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12640,7 +12702,7 @@
     ]
   },
   {
-    "sequence": 574,
+    "sequence": 575,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12666,7 +12728,7 @@
     ]
   },
   {
-    "sequence": 575,
+    "sequence": 576,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12692,7 +12754,7 @@
     ]
   },
   {
-    "sequence": 576,
+    "sequence": 577,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12718,7 +12780,7 @@
     ]
   },
   {
-    "sequence": 577,
+    "sequence": 578,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12744,7 +12806,7 @@
     ]
   },
   {
-    "sequence": 578,
+    "sequence": 579,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12770,7 +12832,7 @@
     ]
   },
   {
-    "sequence": 579,
+    "sequence": 580,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12796,7 +12858,7 @@
     ]
   },
   {
-    "sequence": 580,
+    "sequence": 581,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12822,7 +12884,7 @@
     ]
   },
   {
-    "sequence": 581,
+    "sequence": 582,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12848,7 +12910,7 @@
     ]
   },
   {
-    "sequence": 582,
+    "sequence": 583,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12874,7 +12936,7 @@
     ]
   },
   {
-    "sequence": 583,
+    "sequence": 584,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12900,7 +12962,7 @@
     ]
   },
   {
-    "sequence": 584,
+    "sequence": 585,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12926,7 +12988,7 @@
     ]
   },
   {
-    "sequence": 585,
+    "sequence": 586,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12952,7 +13014,7 @@
     ]
   },
   {
-    "sequence": 586,
+    "sequence": 587,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -12978,7 +13040,7 @@
     ]
   },
   {
-    "sequence": 587,
+    "sequence": 588,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13004,7 +13066,7 @@
     ]
   },
   {
-    "sequence": 588,
+    "sequence": 589,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13030,7 +13092,7 @@
     ]
   },
   {
-    "sequence": 589,
+    "sequence": 590,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13056,7 +13118,7 @@
     ]
   },
   {
-    "sequence": 590,
+    "sequence": 591,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13082,7 +13144,7 @@
     ]
   },
   {
-    "sequence": 591,
+    "sequence": 592,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13108,7 +13170,7 @@
     ]
   },
   {
-    "sequence": 592,
+    "sequence": 593,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13134,7 +13196,7 @@
     ]
   },
   {
-    "sequence": 593,
+    "sequence": 594,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13160,7 +13222,7 @@
     ]
   },
   {
-    "sequence": 594,
+    "sequence": 595,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13186,7 +13248,7 @@
     ]
   },
   {
-    "sequence": 595,
+    "sequence": 596,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13212,7 +13274,7 @@
     ]
   },
   {
-    "sequence": 596,
+    "sequence": 597,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13238,7 +13300,7 @@
     ]
   },
   {
-    "sequence": 597,
+    "sequence": 598,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13264,7 +13326,7 @@
     ]
   },
   {
-    "sequence": 598,
+    "sequence": 599,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13290,7 +13352,7 @@
     ]
   },
   {
-    "sequence": 599,
+    "sequence": 600,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13316,7 +13378,7 @@
     ]
   },
   {
-    "sequence": 600,
+    "sequence": 601,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13342,7 +13404,7 @@
     ]
   },
   {
-    "sequence": 601,
+    "sequence": 602,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13368,7 +13430,7 @@
     ]
   },
   {
-    "sequence": 602,
+    "sequence": 603,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13394,7 +13456,7 @@
     ]
   },
   {
-    "sequence": 603,
+    "sequence": 604,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13420,7 +13482,7 @@
     ]
   },
   {
-    "sequence": 604,
+    "sequence": 605,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13428,7 +13490,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 605,
+    "sequence": 606,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13436,7 +13498,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 606,
+    "sequence": 607,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13444,7 +13506,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 607,
+    "sequence": 608,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13452,7 +13514,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 608,
+    "sequence": 609,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13460,7 +13522,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 609,
+    "sequence": 610,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13468,7 +13530,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 610,
+    "sequence": 611,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13476,7 +13538,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 611,
+    "sequence": 612,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13484,7 +13546,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 612,
+    "sequence": 613,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13492,7 +13554,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 613,
+    "sequence": 614,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13500,7 +13562,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 614,
+    "sequence": 615,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13508,7 +13570,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 615,
+    "sequence": 616,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13516,7 +13578,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 616,
+    "sequence": 617,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13524,7 +13586,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 617,
+    "sequence": 618,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13532,7 +13594,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 618,
+    "sequence": 619,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13540,7 +13602,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 619,
+    "sequence": 620,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -13566,7 +13628,7 @@
     ]
   },
   {
-    "sequence": 620,
+    "sequence": 621,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -13592,7 +13654,7 @@
     ]
   },
   {
-    "sequence": 621,
+    "sequence": 622,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -13618,7 +13680,7 @@
     ]
   },
   {
-    "sequence": 622,
+    "sequence": 623,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -13644,12 +13706,12 @@
     ]
   },
   {
-    "sequence": 623,
+    "sequence": 624,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "easy",
     "question": "共产主义社会是人类社会发展的最高社会形态，这一社会实现的必要条件是",
-    "answer": "C",
+    "answer": "B",
     "options": [
       {
         "label": "A",
@@ -13670,7 +13732,7 @@
     ]
   },
   {
-    "sequence": 624,
+    "sequence": 625,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -13696,7 +13758,7 @@
     ]
   },
   {
-    "sequence": 625,
+    "sequence": 626,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -13722,7 +13784,7 @@
     ]
   },
   {
-    "sequence": 626,
+    "sequence": 627,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -13748,7 +13810,7 @@
     ]
   },
   {
-    "sequence": 627,
+    "sequence": 628,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -13774,7 +13836,7 @@
     ]
   },
   {
-    "sequence": 628,
+    "sequence": 629,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -13800,7 +13862,7 @@
     ]
   },
   {
-    "sequence": 629,
+    "sequence": 630,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "easy",
@@ -13808,7 +13870,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 630,
+    "sequence": 631,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "easy",
@@ -13816,7 +13878,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 631,
+    "sequence": 632,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "medium",
@@ -13824,7 +13886,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 632,
+    "sequence": 633,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "hard",
@@ -13832,506 +13894,11 @@
     "answer": "正确"
   },
   {
-    "sequence": 633,
+    "sequence": 634,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "medium",
     "question": "马克思恩格斯对未来社会的预测是不仅是原则性的， 也包含具体细节的描述",
     "answer": "错误"
-  },
-  {
-    "sequence": 634,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述马克思主义的三个基本组成部分及其关系。",
-    "answer": {
-      "reference": "马克思主义由马克思主义哲学、政治经济学和科学社会主义三个部分组成。马克思主义哲学是理论基础，政治经济学是中介，科学社会主义是核心。三者相互联系、不可分割，构成一个有机统一的整体。",
-      "min_match": 0.48
-    }
-  },
-  {
-    "sequence": 635,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "如何理解\"物质决定意识\"这一哲学命题？",
-    "answer": {
-      "reference": "物质决定意识是指物质是世界本原，意识是物质世界长期发展的产物，是人脑对客观世界的反映。意识的内容来源于客观物质世界，意识是物质世界发展到一定阶段的产物，意识依赖于物质。",
-      "min_match": 0.48
-    }
-  },
-  {
-    "sequence": 636,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "试述矛盾的普遍性和特殊性的辩证关系及其方法论意义。",
-    "answer": {
-      "reference": "矛盾的普遍性是指矛盾存在于一切事物中并贯穿始终；矛盾的特殊性是指不同事物的矛盾各有其特点。二者相互联结：普遍性寓于特殊性之中，特殊性包含着普遍性。方法论意义：坚持具体问题具体分析，把普遍原理与具体实际相结合。",
-      "min_match": 0.48
-    }
-  },
-  {
-    "sequence": 637,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "结合实际，说明实践是检验真理的唯一标准。",
-    "answer": {
-      "reference": "实践是检验真理的唯一标准，因为：第一，真理的本性在于主观与客观相符合；第二，实践具有直接现实性的特点，能够把主观认识与客观实际联系起来加以对照；第三，只有实践才能证明认识是否具有真理性。脱离实践的思想理论和逻辑证明都不能作为检验真理的标准。",
-      "min_match": 0.48
-    }
-  },
-  {
-    "sequence": 638,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述价值规律在商品经济中的作用。",
-    "answer": {
-      "reference": "价值规律在商品经济中的作用：第一，自发地调节生产资料和劳动力在社会各生产部门之间的分配比例（调节资源配置）；第二，自发地刺激社会生产力的发展（刺激技术进步）；第三，自发地调节社会收入的分配，引起商品生产者的优胜劣汰。",
-      "min_match": 0.48
-    }
-  },
-  {
-    "sequence": 639,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "什么是马克思主义？简述马克思主义的理论来源。",
-    "answer": {
-      "reference": "马克思主义是由马克思和恩格斯创立的科学理论体系，是关于无产阶级和人类解放的学说。其理论来源包括德国古典哲学、英国古典政治经济学和英法空想社会主义。马克思主义哲学、政治经济学和科学社会主义是其三个基本组成部分。",
-      "min_match": 0.4
-    }
-  },
-  {
-    "sequence": 640,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述哲学的基本问题及其内容。",
-    "answer": {
-      "reference": "哲学的基本问题是思维和存在的关系问题，主要包括两个方面：第一，思维和存在何者是本原的问题，即物质和意识谁是第一性的问题，这是划分唯物主义和唯心主义的标准；第二，思维和存在有无同一性的问题，即意识能否正确认识物质世界的问题，这是划分可知论和不可知论的标准。",
-      "min_match": 0.4
-    }
-  },
-  {
-    "sequence": 641,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述唯物主义和唯心主义的根本区别。",
-    "answer": {
-      "reference": "唯物主义认为物质是世界本原，物质决定意识，意识是物质的产物和反映。唯心主义认为意识是世界本原，意识决定物质，物质是意识的产物和表现。划分二者的唯一标准是对思维和存在何者为第一性的不同回答。唯物主义经历了古代朴素唯物主义、近代形而上学唯物主义和辩证唯物主义三个阶段。",
-      "min_match": 0.4
-    }
-  },
-  {
-    "sequence": 642,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "什么是运动？为什么说运动是物质的根本属性？",
-    "answer": {
-      "reference": "运动是标志物质存在状态的哲学范畴，指宇宙间一切事物和现象的变化和过程。运动是物质的根本属性，因为物质和运动不可分割：物质是运动的物质，不存在不运动的物质；运动是物质的运动，物质是运动的承担者。离开物质谈运动会导致唯心主义，离开运动谈物质会导致形而上学。",
-      "min_match": 0.35
-    }
-  },
-  {
-    "sequence": 643,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述意识的本质及其能动作用。",
-    "answer": {
-      "reference": "意识的本质是人脑的机能和属性，是对客观世界的主观映像。意识的内容来源于客观物质世界，形式是主观的。意识的能动作用表现为：意识活动具有目的性和计划性；具有创造性；能够指导实践改造客观世界；能够调控人的行为和生理活动。正确发挥意识能动性的前提是尊重客观规律。",
-      "min_match": 0.35
-    }
-  },
-  {
-    "sequence": 644,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "试用物质和意识的辩证关系原理说明加强精神文明建设的重要性。",
-    "answer": {
-      "reference": "物质决定意识，意识对物质具有能动的反作用。正确意识促进事物发展，错误意识阻碍事物发展。因此，在抓好物质文明建设的同时，必须加强精神文明建设，充分发挥正确意识对物质建设的促进和指导作用。二者相互促进、协调发展，统一于社会主义现代化建设的实践之中。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 645,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述联系的观点及其方法论意义。",
-    "answer": {
-      "reference": "联系是指事物内部各要素之间和事物之间相互影响、相互制约和相互作用的关系。联系具有客观性、普遍性、多样性和条件性。方法论意义：要用联系的观点看问题，反对孤立的形而上学观点；要把握事物联系的多样性，具体分析事物之间的各种联系；要从整体出发，处理好整体与部分的关系。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 646,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述发展的实质及其方法论意义。",
-    "answer": {
-      "reference": "发展的实质是新事物的产生和旧事物的灭亡。新事物是指符合历史发展趋势、具有强大生命力和远大前途的事物；旧事物是指丧失历史必然性、日趋灭亡的事物。方法论意义：要用发展的眼光看问题，反对静止的观点；要勇于创新，积极支持新事物的成长；要正确对待新事物发展过程中遇到的困难和挫折。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 647,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "试述量变和质变的辩证关系及其对个人成长的启示。",
-    "answer": {
-      "reference": "量变是质变的必要准备，质变是量变的必然结果；量变和质变相互渗透，总的量变中有部分质变，质变中有量的扩张。方法论意义：要重视量的积累，从小事做起；在关键时刻要抓住机遇促成质的飞跃；既要反对急于求成，又要反对消极保守。对个人成长而言，只有脚踏实地积累知识能力，才能实现人生的飞跃。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 648,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述否定之否定规律的基本内容。",
-    "answer": {
-      "reference": "否定之否定规律揭示了事物发展的前进性和曲折性的统一。事物的发展经过两次否定、三个阶段：肯定—否定—否定之否定，呈现螺旋式上升或波浪式前进的过程。每一次否定都是扬弃，既克服又保留。这一规律说明事物发展的总方向是前进的、上升的，但具体道路是曲折的、迂回的。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 649,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "试述内因和外因的辩证关系及其现实意义。",
-    "answer": {
-      "reference": "内因是事物变化的根据，外因是事物变化的条件，外因通过内因而起作用。内因决定事物发展的根本方向和性质，外因加速或延缓事物发展的进程。现实意义：在个人成长中要充分发挥自身主观能动性；在工作中要立足于自力更生；在对外开放中要坚持独立自主的原则，把立足点放在依靠自身力量的基础上。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 650,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "试述矛盾普遍性和特殊性辩证关系原理的实践意义。",
-    "answer": {
-      "reference": "矛盾的普遍性和特殊性相互联结：普遍性寓于特殊性之中，特殊性中包含着普遍性。二者在一定条件下相互转化。这一原理是马克思主义基本原理同中国具体实际相结合的哲学基础。中国特色社会主义就是这一原理的生动体现，既坚持了社会主义的普遍原则，又体现了中国国情的特殊要求。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 651,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "运用矛盾的主要方面和次要方面原理，说明如何正确看待改革开放中的问题。",
-    "answer": {
-      "reference": "矛盾的主要方面在矛盾中起主导作用，决定事物的性质；次要方面处于被支配地位。二者相互影响、相互转化。在改革开放中，我们要分清主流和支流：改革开放取得的巨大成就是主流，存在的问题是支流。既要充分肯定成绩，坚定信心；又要重视问题，积极加以解决，防止支流影响全局。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 652,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述实践的基本形式及其相互关系。",
-    "answer": {
-      "reference": "实践的基本形式包括物质生产实践、社会政治实践和科学文化实践。其中物质生产实践是最基本的实践活动，是其他一切实践活动的基础。社会政治实践是调整和改革社会关系的活动，科学文化实践是探索和认识世界规律的活动。三者相互联系、相互促进，共同推动社会发展。",
-      "min_match": 0.35
-    }
-  },
-  {
-    "sequence": 653,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述实践在认识过程中的决定作用。",
-    "answer": {
-      "reference": "实践是认识的基础，对认识起决定作用：第一，实践是认识的来源；第二，实践是认识发展的动力；第三，实践是检验认识真理性的唯一标准；第四，实践是认识的目的和归宿。认识依赖于实践，离开实践的认识是空洞的、无意义的。因此必须坚持实践第一的观点。",
-      "min_match": 0.28
-    }
-  },
-  {
-    "sequence": 654,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述感性认识和理性认识的辩证关系。",
-    "answer": {
-      "reference": "感性认识是认识的初级阶段，是对事物表面现象的反映；理性认识是认识的高级阶段，是对事物本质和规律的把握。二者相互依赖：理性认识依赖于感性认识，感性认识有待于发展到理性认识。二者相互渗透：感性认识中渗透着理性因素，理性认识中也包含感性成分。割裂二者的关系会导致经验论或唯理论的错误。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 655,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "试述真理的绝对性和相对性的辩证关系及其意义。",
-    "answer": {
-      "reference": "真理的绝对性是指真理内容的客观性和无限性；真理的相对性是指真理的条件性和近似性。二者相互渗透、相互包含：相对真理中包含着绝对真理的颗粒，绝对真理通过相对真理表现出来。这一原理要求我们既要坚持真理，又要发展真理，反对绝对主义和相对主义两种错误倾向。认识真理是一个不断从相对走向绝对的过程。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 656,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "运用真理与谬误的辩证关系原理，说明如何正确对待错误。",
-    "answer": {
-      "reference": "真理和谬误是对立统一的关系。二者有原则区别，在一定范围内对立；二者相互依存、相互转化，超出一定范围真理可能变为谬误，谬误也可能转化为真理。正确态度：要勇于坚持真理、修正错误；要善于从错误中学习，通过对谬误的分析深化对真理的认识；要坚持实践标准，在实践中检验和发展真理。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 657,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "试述认识的辩证运动过程及其对学习的启示。",
-    "answer": {
-      "reference": "认识的辩证运动是实践、认识、再实践、再认识的循环往复过程。从实践到认识包括从感性认识到理性认识的第一次飞跃，从认识到实践是第二次飞跃。这一过程充分体现了主观和客观、认识和实践的具体的历史的统一。对学习的启示：要重视实践，做到知行合一；要不断深化认识，追求真理。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 658,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述社会存在和社会意识的关系。",
-    "answer": {
-      "reference": "社会存在是社会生活的物质方面，社会意识是社会生活的精神方面。社会存在决定社会意识：社会存在是社会意识内容的客观来源，社会意识随着社会存在的变化而变化。社会意识对社会存在具有相对独立性和能动的反作用：先进的社会意识促进社会发展，落后的社会意识阻碍社会发展。",
-      "min_match": 0.35
-    }
-  },
-  {
-    "sequence": 659,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述生产力与生产关系的辩证关系。",
-    "answer": {
-      "reference": "生产力决定生产关系：生产力的性质和水平决定生产关系的性质和形式，生产力的发展变化决定生产关系的变革。生产关系对生产力具有能动的反作用：当生产关系适合生产力发展状况时，会促进生产力的发展；当生产关系不适合生产力发展状况时，会阻碍生产力的发展。生产力和生产关系的矛盾运动推动社会进步。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 660,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述经济基础与上层建筑的辩证关系。",
-    "answer": {
-      "reference": "经济基础决定上层建筑：经济基础的性质决定上层建筑的性质，经济基础的变化决定上层建筑的调整和变革。上层建筑对经济基础具有反作用：当上层建筑适合经济基础状况时，会巩固和促进经济基础的发展；当不适合时，会阻碍经济基础的发展。上层建筑的反作用归根到底取决于和服务于经济基础发展的客观要求。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 661,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "运用社会基本矛盾原理，说明我国进行改革的必要性。",
-    "answer": {
-      "reference": "生产力与生产关系的矛盾、经济基础与上层建筑的矛盾是社会基本矛盾。当生产关系不适应生产力发展、上层建筑不适应经济基础发展时，就需要进行改革。我国的改革是社会主义制度的自我完善和发展，是通过调整生产关系不适应生产力发展的环节、调整上层建筑不适应经济基础的方面，来解放和发展社会生产力。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 662,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述人民群众在历史发展中的作用。",
-    "answer": {
-      "reference": "人民群众是历史的创造者。人民群众是社会物质财富的创造者，是社会精神财富的创造者，是社会变革的决定力量。人民群众创造历史的活动受社会历史条件的制约，包括经济条件、政治条件和精神条件。这一原理要求我们坚持群众观点和群众路线，一切为了群众、一切依靠群众。",
-      "min_match": 0.35
-    }
-  },
-  {
-    "sequence": 663,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述个人在历史发展中的作用及其评价原则。",
-    "answer": {
-      "reference": "个人在历史发展中有重要作用，特别是杰出人物能够影响历史事件的进程和结局。评价历史人物的原则：坚持历史分析法，把人物放在特定历史条件下评价；坚持阶级分析法，分析人物代表哪个阶级的利益；坚持辩证分析法，全面评价人物的功过是非；要正确认识个人与群众的关系，不能夸大个人的作用。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 664,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述商品的二因素及其相互关系。",
-    "answer": {
-      "reference": "商品的二因素是使用价值和价值。使用价值是商品能满足人们某种需要的属性，是商品的自然属性；价值是凝结在商品中的无差别的一般人类劳动，是商品的社会属性。使用价值和价值是对立统一的关系：二者统一于商品之中，缺一不可；二者相互排斥，交换时只能取其一。价值是商品的本质属性。",
-      "min_match": 0.28
-    }
-  },
-  {
-    "sequence": 665,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述劳动的二重性及其理论意义。",
-    "answer": {
-      "reference": "劳动的二重性是指具体劳动和抽象劳动。具体劳动创造商品的使用价值，抽象劳动形成商品的价值。劳动二重性理论是理解政治经济学的枢纽，它科学地解释了商品二因素的根源，为剩余价值理论奠定了科学基础，是马克思经济理论的重要贡献。具体劳动和抽象劳动是同一劳动过程的两个不同方面。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 666,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "试述价值规律的作用及其在社会主义市场经济中的表现。",
-    "answer": {
-      "reference": "价值规律的作用：自发调节生产资料和劳动力在社会各部门的分配；刺激商品生产者改进技术，提高劳动生产率；导致商品生产者优胜劣汰。在社会主义市场经济中，价值规律仍然发挥基础性作用，但政府通过宏观调控弥补市场自发调节的缺陷，实现资源配置的优化和国民经济的协调发展。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 667,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "试述剩余价值的生产过程及其基本方法。",
-    "answer": {
-      "reference": "剩余价值是雇佣工人创造的被资本家无偿占有的超过劳动力价值的价值。剩余价值的生产过程是劳动过程和价值增殖过程的统一。基本方法有两种：绝对剩余价值生产是通过延长工作日长度来增加剩余价值；相对剩余价值生产是通过提高劳动生产率、缩短必要劳动时间来增加剩余价值。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 668,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述资本主义经济危机的根源和实质。",
-    "answer": {
-      "reference": "资本主义经济危机的根源在于资本主义基本矛盾，即生产社会化与生产资料资本主义私人占有之间的矛盾。这一矛盾表现为个别企业生产的有组织性和整个社会生产的无政府状态之间的矛盾，以及生产无限扩大的趋势与劳动人民有支付能力的需求相对缩小之间的矛盾。经济危机的实质是生产相对过剩的危机。",
-      "min_match": 0.3
-    }
-  },
-  {
-    "sequence": 669,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述垄断资本主义的基本特征。",
-    "answer": {
-      "reference": "垄断资本主义的基本特征包括：第一，垄断组织在经济生活中起决定作用；第二，金融资本和金融寡头的统治；第三，资本输出具有特别重要的意义；第四，瓜分世界的资本家国际垄断同盟已经形成；第五，最大资本主义列强已把世界领土分割完毕。这些特征表明垄断资本主义是资本主义发展的最高阶段。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 670,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述科学社会主义与空想社会主义的区别。",
-    "answer": {
-      "reference": "空想社会主义看到了资本主义的弊端和矛盾，但无法揭示资本主义的本质规律，找不到实现社会变革的正确途径和依靠力量。科学社会主义在唯物史观和剩余价值学说的基础上，揭示了资本主义必然灭亡、社会主义必然胜利的客观规律，找到了实现社会主义的阶级力量即无产阶级，指明了无产阶级革命的道路。",
-      "min_match": 0.3
-    }
-  },
-  {
-    "sequence": 671,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述无产阶级革命的特点和基本形式。",
-    "answer": {
-      "reference": "无产阶级革命是消灭一切私有制、解放全人类的革命，与以往的革命有本质区别。其基本形式包括暴力革命与和平过渡两种方式。马克思主义认为暴力革命是无产阶级革命的一般规律，但在特定历史条件下也不排除和平发展的可能性。革命的根本问题是国家政权问题，无产阶级革命的首要任务是打碎旧的国家机器。",
-      "min_match": 0.25
-    }
-  },
-  {
-    "sequence": 672,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述社会主义的本质及其根本任务。",
-    "answer": {
-      "reference": "社会主义的本质是解放生产力，发展生产力，消灭剥削，消除两极分化，最终达到共同富裕。社会主义的根本任务是发展生产力，因为生产力是社会发展的最终决定力量。只有大力发展生产力，才能为社会主义制度奠定坚实的物质基础，不断满足人民日益增长的美好生活需要，最终实现共同富裕的目标。",
-      "min_match": 0.28
-    }
-  },
-  {
-    "sequence": 673,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "试述经济全球化背景下中国如何坚持独立自主与参与全球化的统一。",
-    "answer": {
-      "reference": "经济全球化是生产力发展的客观要求，是历史发展的必然趋势。中国积极参与经济全球化，充分利用国内外两个市场、两种资源。同时必须坚持独立自主的原则，把立足点放在依靠自身力量的基础上。要维护国家经济安全，增强自主创新能力，推动经济全球化朝着更加开放、包容、普惠、平衡、共赢的方向发展。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 674,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述共产主义的特征和实现条件。",
-    "answer": {
-      "reference": "共产主义社会的基本特征：物质财富极大丰富，生产资料公有制，个人全面发展，三大差别消灭，劳动成为第一需要。其实现条件包括社会生产力的高度发展、社会制度的全面进步、人们思想道德觉悟的极大提高。共产主义是远大的理想，需要一代又一代人的长期奋斗和努力。",
-      "min_match": 0.35
-    }
-  },
-  {
-    "sequence": 675,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "hard",
-    "question": "运用社会形态更替的规律，说明中国特色社会主义的历史必然性。",
-    "answer": {
-      "reference": "社会形态更替既遵循统一规律又呈现多样性。社会主义代替资本主义是历史发展的大趋势。各国走什么样的道路，取决于该国的历史条件和具体国情。中国特色社会主义是马克思主义基本原理与中国具体实际相结合的产物，既遵循了社会发展的一般规律，又体现了中国国情特殊性，是历史的必然选择。",
-      "min_match": 0.18
-    }
-  },
-  {
-    "sequence": 676,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "easy",
-    "question": "简述尊重客观规律和发挥主观能动性的辩证关系。",
-    "answer": {
-      "reference": "尊重客观规律是发挥主观能动性的前提，只有尊重规律才能正确发挥能动性。发挥主观能动性是认识和利用客观规律的必要条件，只有充分发挥主观能动性才能认识和把握规律。这一原理要求我们在工作中既要尊重科学、按规律办事，又要积极进取、勇于创新，把严谨的科学态度和冲天的革命干劲结合起来。",
-      "min_match": 0.35
-    }
-  },
-  {
-    "sequence": 677,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述真理和价值的辩证关系。",
-    "answer": {
-      "reference": "真理是人们对客观事物及其规律的正确认识，价值是事物满足人们需要的属性。真理和价值相互区别又相互统一：真理是价值的基础，有价值的事物必须符合客观规律；价值是真理的目的和归宿，追求真理是为了满足人的需要。实践是真理和价值的统一基础，要求我们在追求真理的同时关注价值。",
-      "min_match": 0.28
-    }
-  },
-  {
-    "sequence": 678,
-    "chapter": "主观题",
-    "type": "subjective",
-    "difficulty": "medium",
-    "question": "简述资本主义基本矛盾在经济全球化中的表现。",
-    "answer": {
-      "reference": "资本主义基本矛盾即生产社会化与生产资料资本主义私人占有之间的矛盾。在经济全球化中这一矛盾表现为：第一，全球生产的高度社会化与资本主义私有制的矛盾更加尖锐；第二，各国经济相互依存加深与民族国家利益冲突加剧的矛盾；第三，全球范围内生产的无政府状态加剧经济危机风险。这些矛盾推动着全球治理体系的变革。",
-      "min_match": 0.25
-    }
   }
 ]
