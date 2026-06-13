@@ -44,6 +44,17 @@ function playBreak() {
 
 let ALL_QUESTIONS = [];
 let sourceData = {};
+let sourceSelection = {}; // {[sourceName]: true/false}
+
+function loadSourceSelection() {
+  try {
+    const raw = localStorage.getItem('sourceSelection');
+    if (raw) sourceSelection = JSON.parse(raw);
+  } catch(e) {}
+  // 确保所有 source 都有记录
+  QUIZ_SOURCES.forEach(s => { if (sourceSelection[s.name] === undefined) sourceSelection[s.name] = true; });
+}
+loadSourceSelection();
 
 let mode, quizQueue, currentIndex, wrongCount, correctCount, totalAnswered;
 let timerInterval, timeLeft, timerPaused;
@@ -234,7 +245,8 @@ function renderSourceSelector() {
   let html = '<div class="source-section"><h3>选择题库</h3><div class="source-chips">';
   QUIZ_SOURCES.forEach((s, i) => {
     const count = sourceData[s.name] ? sourceData[s.name].length : 0;
-    html += '<div class="source-chip active" data-idx="'+i+'" data-type="source" onclick="toggleSource(this)">' +
+    const active = sourceSelection[s.name] !== false ? ' active' : '';
+    html += '<div class="source-chip' + active + '" data-idx="'+i+'" data-type="source" onclick="toggleSource(this)">' +
       s.name + '<span class="count">(' + count + '题)</span></div>';
   });
   // Wrong book chip - green, clickable to browse
@@ -243,12 +255,19 @@ function renderSourceSelector() {
     '<span class="count-detail">暂' + tempCount + '/长' + longCount + '</span></div>';
   html += '</div></div>';
   area.innerHTML = html;
+  refreshWrongBookHome();
   document.getElementById('mode-area').classList.remove('hidden');
   updateActiveQuestions();
 }
 
 function toggleSource(el) {
   el.classList.toggle('active');
+  const idx = el.dataset.idx;
+  if (idx !== undefined) {
+    const name = QUIZ_SOURCES[parseInt(idx)].name;
+    sourceSelection[name] = el.classList.contains('active');
+    localStorage.setItem('sourceSelection', JSON.stringify(sourceSelection));
+  }
   updateActiveQuestions();
 }
 
@@ -328,12 +347,16 @@ function qObj(q) {
 }
 
 // ====== Challenge Mode ======
+function getActiveQuestions() {
+  return ALL_QUESTIONS.filter(q => sourceSelection[q.source] !== false);
+}
+
 function startChallenge() {
   if (ALL_QUESTIONS.length === 0) return;
   mode = 'challenge';
   wrongCount = 0; correctCount = 0; totalAnswered = 0; streak = 0;
   wrongList = [];
-  quizQueue = shuffle(ALL_QUESTIONS);
+  quizQueue = shuffle(getActiveQuestions());
   currentIndex = 0;
   show('page-quiz');
   document.getElementById('gear-btn').classList.add('hidden');
@@ -354,7 +377,7 @@ function startInfinite(freshStart) {
     localStorage.removeItem('infiniteProgress');
     localStorage.removeItem('infiniteStats');
     localStorage.removeItem('infiniteSession');
-    ALL_QUESTIONS.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+    getActiveQuestions().forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
   } else {
     const savedProgress = localStorage.getItem('infiniteProgress');
     const savedStats = localStorage.getItem('infiniteStats');
@@ -370,10 +393,10 @@ function startInfinite(freshStart) {
           infiniteMap[k] = parsed[k] ? parsed[k] : {correctCount: 0};
         });
       } catch(e) {
-        ALL_QUESTIONS.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+        getActiveQuestions().forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
       }
     } else {
-      ALL_QUESTIONS.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+      getActiveQuestions().forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
     }
     if (loadedStats && typeof loadedStats === 'object') {
       if (typeof loadedStats.totalAnswered === 'number' && isFinite(loadedStats.totalAnswered)) {
@@ -445,7 +468,7 @@ function showTimedConfig() {
   if (ALL_QUESTIONS.length === 0) return;
   show('page-config');
   const chapterSection = document.getElementById('config-chapter-section');
-  const sources = Object.keys(sourceData);
+  const sources = Object.keys(sourceData).filter(src => sourceSelection[src] !== false);
   if (sources.length > 0) {
     chapterSection.classList.remove('hidden');
     let html = '';
@@ -552,7 +575,7 @@ function startTimed() {
   const chSelected = [...document.querySelectorAll('#chapter-chips .chip.active')].map(e => e.dataset.val);
   const dfSelected = [...document.querySelectorAll('#difficulty-chips .chip.active')].map(e => e.dataset.val);
   const tpSelected = [...document.querySelectorAll('#type-chips .chip.active')].map(e => e.dataset.val);
-  let pool = ALL_QUESTIONS;
+  let pool = ALL_QUESTIONS.filter(q => sourceSelection[q.source] !== false);
   if (chSelected.length > 0) pool = pool.filter(q => chSelected.includes(q.chapter));
   if (dfSelected.length > 0) pool = pool.filter(q => dfSelected.includes(getDifficulty(q)));
   if (tpSelected.length > 0) pool = pool.filter(q => tpSelected.includes(q.type));
@@ -880,8 +903,8 @@ function renderQuestion() {
   let info = '';
   if (mode === 'challenge') info = '闯关 | 对' + correctCount + ' 错' + wrongCount;
   else if (mode === 'infinite') {
-    const mastered = ALL_QUESTIONS.filter(x => infiniteMap[qKey(x)].correctCount >= 3).length;
-    info = '无限 | 已掌握 ' + mastered + '/' + ALL_QUESTIONS.length + ' | 已答题 ' + totalAnswered + '/∞';
+    const mastered = getActiveQuestions().filter(x => infiniteMap[qKey(x)].correctCount >= 3).length;
+    info = '无限 | 已掌握 ' + mastered + '/' + getActiveQuestions().length + ' | 已答题 ' + totalAnswered + '/∞';
   }
   else if (mode === 'timed') info = '限时 | ' + (currentIndex + 1) + '/' + quizQueue.length;
   else if (mode === 'wrongbook') info = '错题本 | ' + (currentIndex + 1) + '/' + quizQueue.length;
@@ -1422,6 +1445,7 @@ function nextQuestion() {
 function quitQuiz() {
   clearTimeout(autoNextTimeout);
   clearInterval(timerInterval);
+  recordQuizSession();
   if (mode === 'infinite') saveInfiniteProgress();
   if (totalAnswered > 0) showResult();
   else showHome();
@@ -1431,6 +1455,7 @@ function quitQuiz() {
 function showResult() {
   clearTimeout(autoNextTimeout);
   clearInterval(timerInterval);
+  recordQuizSession();
   if (mode === 'infinite') saveInfiniteProgress();
 
   show('page-result');
@@ -1442,11 +1467,11 @@ function showResult() {
   if (mode === 'challenge') {
     title.textContent = wrongCount >= 100 ? '闯关失败' : '已退出';
   } else if (mode === 'infinite') {
-    const mastered = ALL_QUESTIONS.filter(q => infiniteMap[qKey(q)].correctCount >= 3).length;
-    title.textContent = mastered === ALL_QUESTIONS.length ? '全部掌握！' : '已退出';
+    const mastered = getActiveQuestions().filter(q => infiniteMap[qKey(q)].correctCount >= 3).length;
+    title.textContent = mastered === getActiveQuestions().length ? '全部掌握！' : '已退出';
     stats.innerHTML =
       '<div class="stat"><div class="stat-num green">' + mastered + '</div><div class="stat-label">已掌握</div></div>' +
-      '<div class="stat"><div class="stat-num red">' + (ALL_QUESTIONS.length - mastered) + '</div><div class="stat-label">未掌握</div></div>' +
+      '<div class="stat"><div class="stat-num red">' + (getActiveQuestions().length - mastered) + '</div><div class="stat-label">未掌握</div></div>' +
       '<div class="stat"><div class="stat-num">' + totalAnswered + '</div><div class="stat-label">总答题</div></div>';
   } else if (mode === 'wrongbook') {
     title.textContent = '错题重做完成';
@@ -1703,28 +1728,54 @@ function backToResult() {
 let wbList = [];
 let wbIndex = 0;
 let wbFilter = 'all'; // 'all', 'temp', 'long'
+let wbSourceFilter = 'all'; // 'all' or source name
 
 function openWrongBook() {
   const tempCount = Object.keys(wrongBookTemp).length;
   const longCount = Object.keys(wrongBookLong).length;
   if (tempCount + longCount === 0) return;
   wbFilter = 'all';
+  wbSourceFilter = 'all';
   wbIndex = 0;
   buildWbList();
   show('page-wrongbook');
+  renderWbSourceFilters();
+  renderWbView();
+}
+
+function renderWbSourceFilters() {
+  const container = document.getElementById('wb-source-filter-row');
+  const sources = new Set();
+  Object.values(wrongBookTemp).forEach(q => sources.add(q.source || '未分类'));
+  Object.values(wrongBookLong).forEach(q => sources.add(q.source || '未分类'));
+  const sorted = ['all', ...Array.from(sources).sort()];
+  container.innerHTML = sorted.map(src => {
+    const label = src === 'all' ? '全部题库' : src;
+    const active = src === wbSourceFilter;
+    return '<span class="chip source-chip' + (active ? ' active' : '') + '" data-source="' + src + '" onclick="setWbSourceFilter(this,\'' + src + '\')">' + label + '</span>';
+  }).join('');
+}
+
+function setWbSourceFilter(el, src) {
+  wbSourceFilter = src;
+  document.querySelectorAll('#wb-source-filter-row .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  buildWbList();
   renderWbView();
 }
 
 function buildWbList() {
   wbList = [];
+  const sourceFilter = wbSourceFilter !== 'all' ? wbSourceFilter : null;
+  function matches(q) { return !sourceFilter || (q.source || '未分类') === sourceFilter; }
   if (wbFilter === 'all' || wbFilter === 'temp') {
     Object.entries(wrongBookTemp).forEach(([key, q]) => {
-      wbList.push({ key, q, cat: 'temp' });
+      if (matches(q)) wbList.push({ key, q, cat: 'temp' });
     });
   }
   if (wbFilter === 'all' || wbFilter === 'long') {
     Object.entries(wrongBookLong).forEach(([key, q]) => {
-      wbList.push({ key, q, cat: 'long' });
+      if (matches(q)) wbList.push({ key, q, cat: 'long' });
     });
   }
 }
@@ -1739,13 +1790,23 @@ function setWbFilter(el) {
   wbIndex = 0;
   const card = document.getElementById('wb-card');
   const analysis = document.getElementById('wb-analysis');
+  const statsEl = document.getElementById('wb-stats');
   if (wbFilter === 'analysis') {
     card.classList.add('hidden');
+    statsEl.classList.add('hidden');
     analysis.classList.remove('hidden');
     renderAnalysis();
+  } else if (wbFilter === 'stats') {
+    card.classList.add('hidden');
+    analysis.classList.add('hidden');
+    statsEl.classList.remove('hidden');
+    renderStatsPage(statsEl);
   } else {
     analysis.classList.add('hidden');
+    statsEl.classList.add('hidden');
     card.classList.remove('hidden');
+    renderWbSourceFilters();
+    wbSourceFilter = 'all';
     buildWbList();
     renderWbView();
   }
@@ -2135,6 +2196,32 @@ function wbNext() {
   if (wbIndex < wbList.length - 1) { wbIndex++; renderWbItem(); }
 }
 
+function refreshWrongBookHome() {
+  const tempCount = Object.keys(wrongBookTemp).length;
+  const longCount = Object.keys(wrongBookLong).length;
+  const totalCount = tempCount + longCount;
+  const card = document.getElementById('card-wrongbook');
+  if (!card) return;
+  if (totalCount === 0) {
+    card.classList.add('disabled');
+    card.querySelector('p').textContent = '错题本为空';
+  } else {
+    card.classList.remove('disabled');
+    const includeLong = document.getElementById('wb-include-long')?.checked;
+    card.querySelector('p').textContent = includeLong
+      ? '错题本共 ' + totalCount + ' 道题（暂' + tempCount + ' + 长' + longCount + '）'
+      : '暂时错题共 ' + tempCount + ' 道题';
+  }
+  // 同时更新首页的错题本 chip
+  const chip = document.querySelector('.source-chip[data-type="wrongbook"]');
+  if (chip) {
+    chip.classList.toggle('active', totalCount > 0);
+    chip.querySelector('.count').textContent = '(' + totalCount + '题)';
+    const detail = chip.querySelector('.count-detail');
+    if (detail) detail.textContent = '暂' + tempCount + '/长' + longCount;
+  }
+}
+
 function wbRemove() {
   if (wbList.length === 0) return;
   const item = wbList[wbIndex];
@@ -2146,8 +2233,13 @@ function wbRemove() {
   }
   localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
   localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
+  refreshWrongBookHome();
   buildWbList();
   if (wbIndex >= wbList.length) wbIndex = wbList.length - 1;
+  if (wbList.length === 0) {
+    showHome();
+    return;
+  }
   renderWbItem();
 }
 
@@ -2165,9 +2257,198 @@ function wbToggleCategory() {
   }
   localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
   localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
+  refreshWrongBookHome();
   buildWbList();
   renderWbItem();
 }
+
+// ====== 答题历史统计（正确率图表） ======
+let statsScope = 'all', statsTime = 'day';
+
+function renderStatsPage(container) {
+  let html = '<div class="stats-filter-row">';
+  html += '<span class="chip' + (statsScope === 'all' ? ' active' : '') + '" onclick="setStatsScope(this,\'all\')">全部</span>';
+  html += '<span class="chip' + (statsScope === 'chapter' ? ' active' : '') + '" onclick="setStatsScope(this,\'chapter\')">分章节</span>';
+  html += '<span style="width:12px;display:inline-block"></span>';
+  html += '<span class="chip' + (statsTime === 'day' ? ' active' : '') + '" onclick="setStatsTime(this,\'day\')">按天</span>';
+  html += '<span class="chip' + (statsTime === 'week' ? ' active' : '') + '" onclick="setStatsTime(this,\'week\')">按周</span>';
+  html += '</div><div class="stats-chart" id="stats-chart"></div>';
+  container.innerHTML = html;
+  renderStatsChart(document.getElementById('stats-chart'), statsScope, statsTime);
+}
+
+function setStatsScope(el, val) {
+  statsScope = val;
+  document.querySelectorAll('#wb-stats .stats-filter-row .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderStatsChart(document.getElementById('stats-chart'), statsScope, statsTime);
+}
+
+function setStatsTime(el, val) {
+  statsTime = val;
+  document.querySelectorAll('#wb-stats .stats-filter-row .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderStatsChart(document.getElementById('stats-chart'), statsScope, statsTime);
+}
+function recordQuizSession() {
+  if (totalAnswered <= 0) return;
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  const entry = {
+    date: dateStr,
+    chapter: quizQueue?.[0]?.chapter || '未知',
+    source: quizQueue?.[0]?.source || '未知',
+    total: totalAnswered,
+    correct: correctCount,
+    accuracy: totalAnswered > 0 ? Math.round(correctCount / totalAnswered * 100) : 0,
+  };
+  let history = [];
+  try { history = JSON.parse(localStorage.getItem('quizHistory') || '[]'); } catch(e) {}
+  history.push(entry);
+  localStorage.setItem('quizHistory', JSON.stringify(history));
+}
+
+function renderStatsChart(container, filterScope, filterTime) {
+  let history = [];
+  try { history = JSON.parse(localStorage.getItem('quizHistory') || '[]'); } catch(e) {}
+  if (history.length === 0) { container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">暂无答题记录</div>'; return; }
+
+  // 按题库筛选（只显示已选题库）
+  const activeSources = new Set(Object.keys(sourceData).filter(s => sourceSelection[s] !== false));
+  history = history.filter(h => activeSources.has(h.source));
+  if (history.length === 0) { container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">当前题库无答题记录</div>'; return; }
+
+  // 分组
+  let groups;
+  if (filterScope === 'chapter') {
+    // 分章节：每个 chapter 一条线，按天聚合
+    const byChapter = {};
+    history.forEach(h => {
+      const ch = h.chapter || '未知';
+      if (!byChapter[ch]) byChapter[ch] = {};
+      const key = filterTime === 'week' ? getWeekKey(h.date) : h.date;
+      if (!byChapter[ch][key]) byChapter[ch][key] = { total: 0, correct: 0 };
+      byChapter[ch][key].total += h.total;
+      byChapter[ch][key].correct += h.correct;
+    });
+    groups = byChapter;
+  } else {
+    // 全部：按天/周聚合
+    const byTime = {};
+    history.forEach(h => {
+      const key = filterTime === 'week' ? getWeekKey(h.date) : h.date;
+      if (!byTime[key]) byTime[key] = { total: 0, correct: 0 };
+      byTime[key].total += h.total;
+      byTime[key].correct += h.correct;
+    });
+    groups = { '正确率': byTime };
+  }
+
+  // 收集所有时间点
+  const allKeys = new Set();
+  Object.values(groups).forEach(g => Object.keys(g).forEach(k => allKeys.add(k)));
+  const sortedKeys = Array.from(allKeys).sort();
+  if (sortedKeys.length === 0) { container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">暂无数据</div>'; return; }
+
+  const W = 560, H = 280, PAD = { top: 20, right: 20, bottom: 45, left: 45 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+  const barW = Math.max(8, Math.min(36, chartW / sortedKeys.length * 0.6));
+  const gap = chartW / sortedKeys.length;
+
+  // 计算全局最大正确率
+  let maxVal = 100;
+  Object.values(groups).forEach(g => {
+    sortedKeys.forEach(k => { if (g[k]) maxVal = Math.max(maxVal, Math.ceil(g[k].correct / g[k].total * 100 / 10) * 10); });
+  });
+  if (maxVal < 50) maxVal = 50;
+
+  // 颜色
+  const colors = ['#4a90d9', '#27ae60', '#e74c3c', '#f39c12', '#8e44ad', '#2c3e50', '#1abc9c', '#e67e22'];
+  let colorIdx = 0;
+
+  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
+
+  // Y 轴网格
+  for (let v = 0; v <= maxVal; v += 10) {
+    const y = chartH - (v / maxVal) * chartH;
+    svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#e0e0e0" stroke-dasharray="4,3"/>`;
+    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#888">${v}%</text>`;
+  }
+
+  // X 轴标签
+  sortedKeys.forEach((k, i) => {
+    const cx = i * gap + gap / 2;
+    const label = filterTime === 'week' ? k.replace('W', '') : k.slice(5);
+    svg += `<text x="${cx}" y="${chartH + 18}" text-anchor="end" font-size="10" fill="#888" transform="rotate(-30,${cx},${chartH + 18})">${label}</text>`;
+  });
+
+  // 绘制各组数据
+  const series = Object.entries(groups);
+  series.forEach(([name, data], si) => {
+    const color = colors[colorIdx % colors.length];
+    colorIdx++;
+    const points = [];
+
+    sortedKeys.forEach((k, i) => {
+      const d = data[k];
+      if (!d || d.total === 0) return;
+      const cx = i * gap + gap / 2;
+      const acc = d.correct / d.total * 100;
+      const barH = (acc / maxVal) * chartH;
+      const y = chartH - barH;
+      points.push({ x: cx, y, acc });
+
+      // 柱状图
+      if (filterScope !== 'chapter' || series.length <= 3) {
+        const w = si === 0 ? barW : barW * 0.5;
+        const offset = si === 0 ? -w / 2 : (si === 1 ? 2 : -w - 2);
+        svg += `<rect x="${cx + offset}" y="${y}" width="${w}" height="${barH}" fill="${color}" opacity=".7" rx="2"/>`;
+      }
+    });
+
+    // 趋势线
+    if (points.length >= 2) {
+      const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
+      svg += `<path d="${d}" stroke="${color}" stroke-width="2" fill="none" stroke-linejoin="round"/>`;
+      // 数据点
+      points.forEach(p => {
+        svg += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
+      });
+    }
+
+    // 图例
+    if (filterScope === 'chapter') {
+      const ly = -10 - si * 18;
+      svg += `<rect x="${chartW - 120}" y="${ly}" width="12" height="12" fill="${color}" rx="2"/>
+        <text x="${chartW - 104}" y="${ly + 10}" font-size="11" fill="var(--text, #333)">${name}</text>`;
+    }
+  });
+
+  svg += '</g></svg>';
+  container.innerHTML = svg;
+}
+
+function getWeekKey(dateStr) {
+  const d = new Date(dateStr);
+  const dayOfYear = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  const week = Math.ceil(dayOfYear / 7);
+  return d.getFullYear() + 'W' + String(week).padStart(2, '0');
+}
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', isDark ? '' : 'dark');
+}
+(function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.body.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  }
+})();
 
 // ====== Start ======
 init();

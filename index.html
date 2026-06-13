@@ -9,6 +9,7 @@
 </head>
 <body>
 <div class="container">
+  <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀️</div>
 
 <!-- Home -->
 <div id="page-home">
@@ -156,9 +157,12 @@
     <span class="chip active-green" data-filter="temp" onclick="setWbFilter(this)">暂时错题</span>
     <span class="chip" data-filter="long" onclick="setWbFilter(this)" style="background:#f39c12;color:#fff;border-color:#f39c12">长期记忆</span>
     <span class="chip" data-filter="analysis" onclick="setWbFilter(this)" style="background:#3498db;color:#fff;border-color:#3498db">分析</span>
+    <span class="chip" data-filter="stats" onclick="setWbFilter(this)" style="background:#8e44ad;color:#fff;border-color:#8e44ad">统计</span>
   </div>
+  <div class="wb-source-filter-row" id="wb-source-filter-row"></div>
   <div class="review-card" id="wb-card"></div>
   <div class="review-card hidden" id="wb-analysis"></div>
+  <div class="review-card hidden" id="wb-stats"></div>
   <div class="btn-row btn-row-wrongbook">
     <button class="btn btn-secondary btn-wb-shrinkable" id="btn-wb-prev" onclick="wbPrev()" data-text-full="上一题" data-text-short="&lt;"></button>
     <button class="btn btn-book-green btn-wb-shrinkable" id="btn-wb-action" onclick="wbToggleCategory()" data-text-full="转为长期记忆" data-text-short="长期记忆"></button>

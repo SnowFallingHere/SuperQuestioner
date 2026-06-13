@@ -21,9 +21,9 @@ DIFFICULTY_MAP = {"易": "easy", "中": "medium", "难": "hard"}
 
 # Match various answer formats.  The separator (冒号 or space) is required —
 # without it we'd mis-parse sentences containing bare "答案".
-ANSWER_RE = re.compile(r"^(?:正确)?答案[：:\s]\s*([A-Z]+|正确|错误)$")
+ANSWER_RE = re.compile(r"^(?:正确)?答案[^A-Za-z]*([A-Z]+|正确|错误)")
 # Match difficulty
-DIFFICULTY_RE = re.compile(r"^难(?:易程度|度)[：:]\s*(.+)$")
+DIFFICULTY_RE = re.compile(r"^难(?:易程度|度)[：:]\s*([易中难])")
 # Match option line: "A.xxx" or "A、xxx" or "A．xxx" or "D矛盾" (missing dot)
 OPTION_RE = re.compile(r"^([A-Z])[.、．\s]\s*(.*)")
 # Strict option: must have a separator
@@ -61,12 +61,30 @@ def convert_doc_to_docx(doc_path):
 
 def read_docx(filepath):
     from docx import Document
+    from docx.oxml.ns import qn
     doc = Document(filepath)
     lines = []
-    for p in doc.paragraphs:
-        text = p.text
-        for sub_line in text.split("\n"):
-            lines.append(sub_line)
+    # Iterate document body elements in order: paragraphs and tables interspersed
+    body = doc.element.body
+    for child in body:
+        if child.tag == qn('w:p'):
+            # Find the corresponding paragraph object
+            for p in doc.paragraphs:
+                if p._element is child:
+                    text = p.text
+                    for sub_line in text.split("\n"):
+                        lines.append(sub_line)
+                    break
+        elif child.tag == qn('w:tbl'):
+            for table in doc.tables:
+                if table._element is child:
+                    for row in table.rows:
+                        for cell in row.cells:
+                            text = cell.text.strip()
+                            if text:
+                                for sub_line in text.split("\n"):
+                                    lines.append(sub_line)
+                    break
     return lines
 
 
@@ -138,6 +156,14 @@ def parse_lines(lines):
         if is_answer_line(line):
             answer_indices.append(i)
 
+    if not hasattr(parse_lines, '_first_done'):
+        print("  DEBUG: filtered=%d lines, answers=%d" % (len(filtered), len(answer_indices)))
+        parse_lines._first_done = True
+        # For 导论, save lines to a file to inspect
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "_debug_lines.txt"), "w", encoding="utf-8") as f:
+            for i, line in enumerate(filtered):
+                f.write("%4d: [%s]\n" % (i, line))
+
     # Build blocks: for each answer, collect from previous answer's end to this answer
     # plus any difficulty line after them. The answer line is ALWAYS the boundary of a
     # question — even if the following "difficulty line" contains A/B/C/D letters
@@ -159,6 +185,8 @@ def parse_lines(lines):
         q = parse_block(block)
         if q:
             questions.append(q)
+        else:
+            print("    DROPPED block (%d lines): %s..." % (len(block), block[0][:60] if block else 'empty'))
 
     return questions
 
@@ -220,6 +248,10 @@ def parse_block(block):
             break
 
     if answer is None:
+        # Debug: show the block for troubleshooting
+        print("    WARNING: No answer found in block:")
+        for bl in block:
+            print("      |%s|" % bl)
         return None
 
     # Extract difficulty (after answer)
@@ -497,6 +529,7 @@ def process_file(filepath, chapter_name, global_seq):
         results.append(entry)
         global_seq += 1
 
+    print("  Parsed %d questions (seq %d-%d)" % (len(results), global_seq - len(results), global_seq - 1))
     return results, global_seq
 
 

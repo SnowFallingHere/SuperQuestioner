@@ -600,10 +600,10 @@
   {
     "sequence": 24,
     "chapter": "导论",
-    "type": "multiple_choice",
+    "type": "single_choice",
     "difficulty": "easy",
     "question": "中国共产党从成立之日起就把马克思列宁主义确立为指导思想，并在不断探索中把马克思主义基本原理同中国具体实际相结合，领导全国各族人民取得了革命、建设、改革的伟大胜利，丰富和发展了马克思主义。21世纪的马克思主义、当代中国的马克思主义是（   ）",
-    "answer": "ACD",
+    "answer": "D",
     "options": [
       {
         "label": "A",
@@ -653,6 +653,32 @@
     "sequence": 26,
     "chapter": "导论",
     "type": "multiple_choice",
+    "difficulty": "easy",
+    "question": "马克思主义的三个组成部分是（   ）",
+    "answer": "ACD",
+    "options": [
+      {
+        "label": "A",
+        "text": "马克思主义哲学"
+      },
+      {
+        "label": "B",
+        "text": "马克思主义社会学"
+      },
+      {
+        "label": "C",
+        "text": "马克思主义政治经济学"
+      },
+      {
+        "label": "D",
+        "text": "科学社会主义"
+      }
+    ]
+  },
+  {
+    "sequence": 27,
+    "chapter": "导论",
+    "type": "multiple_choice",
     "difficulty": "hard",
     "question": "马克思主义产生的自然科学前提是（   ）",
     "answer": "ACD",
@@ -676,7 +702,7 @@
     ]
   },
   {
-    "sequence": 27,
+    "sequence": 28,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -702,7 +728,7 @@
     ]
   },
   {
-    "sequence": 28,
+    "sequence": 29,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -728,7 +754,7 @@
     ]
   },
   {
-    "sequence": 29,
+    "sequence": 30,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -754,7 +780,7 @@
     ]
   },
   {
-    "sequence": 30,
+    "sequence": 31,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -780,7 +806,7 @@
     ]
   },
   {
-    "sequence": 31,
+    "sequence": 32,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -806,7 +832,7 @@
     ]
   },
   {
-    "sequence": 32,
+    "sequence": 33,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -832,7 +858,7 @@
     ]
   },
   {
-    "sequence": 33,
+    "sequence": 34,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -858,7 +884,7 @@
     ]
   },
   {
-    "sequence": 34,
+    "sequence": 35,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -884,7 +910,7 @@
     ]
   },
   {
-    "sequence": 35,
+    "sequence": 36,
     "chapter": "导论",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -910,7 +936,7 @@
     ]
   },
   {
-    "sequence": 36,
+    "sequence": 37,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "easy",
@@ -918,7 +944,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 37,
+    "sequence": 38,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "medium",
@@ -926,7 +952,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 38,
+    "sequence": 39,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "hard",
@@ -934,7 +960,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 39,
+    "sequence": 40,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "easy",
@@ -942,7 +968,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 40,
+    "sequence": 41,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "medium",
@@ -950,7 +976,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 41,
+    "sequence": 42,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "medium",
@@ -958,7 +984,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 42,
+    "sequence": 43,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "medium",
@@ -966,7 +992,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 43,
+    "sequence": 44,
     "chapter": "导论",
     "type": "true_false",
     "difficulty": "easy",
@@ -974,7 +1000,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 44,
+    "sequence": 45,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1000,7 +1026,7 @@
     ]
   },
   {
-    "sequence": 45,
+    "sequence": 46,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1026,7 +1052,7 @@
     ]
   },
   {
-    "sequence": 46,
+    "sequence": 47,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1052,7 +1078,7 @@
     ]
   },
   {
-    "sequence": 47,
+    "sequence": 48,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1078,7 +1104,7 @@
     ]
   },
   {
-    "sequence": 48,
+    "sequence": 49,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1104,7 +1130,7 @@
     ]
   },
   {
-    "sequence": 49,
+    "sequence": 50,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1130,7 +1156,7 @@
     ]
   },
   {
-    "sequence": 50,
+    "sequence": 51,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1156,7 +1182,7 @@
     ]
   },
   {
-    "sequence": 51,
+    "sequence": 52,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1182,7 +1208,7 @@
     ]
   },
   {
-    "sequence": 52,
+    "sequence": 53,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -1208,7 +1234,7 @@
     ]
   },
   {
-    "sequence": 53,
+    "sequence": 54,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -1234,7 +1260,7 @@
     ]
   },
   {
-    "sequence": 54,
+    "sequence": 55,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1260,7 +1286,7 @@
     ]
   },
   {
-    "sequence": 55,
+    "sequence": 56,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1286,7 +1312,7 @@
     ]
   },
   {
-    "sequence": 56,
+    "sequence": 57,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1312,7 +1338,7 @@
     ]
   },
   {
-    "sequence": 57,
+    "sequence": 58,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1338,7 +1364,7 @@
     ]
   },
   {
-    "sequence": 58,
+    "sequence": 59,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1364,7 +1390,7 @@
     ]
   },
   {
-    "sequence": 59,
+    "sequence": 60,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1390,7 +1416,7 @@
     ]
   },
   {
-    "sequence": 60,
+    "sequence": 61,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1416,7 +1442,7 @@
     ]
   },
   {
-    "sequence": 61,
+    "sequence": 62,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1442,7 +1468,7 @@
     ]
   },
   {
-    "sequence": 62,
+    "sequence": 63,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1468,7 +1494,7 @@
     ]
   },
   {
-    "sequence": 63,
+    "sequence": 64,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1494,7 +1520,7 @@
     ]
   },
   {
-    "sequence": 64,
+    "sequence": 65,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1520,7 +1546,7 @@
     ]
   },
   {
-    "sequence": 65,
+    "sequence": 66,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1546,7 +1572,7 @@
     ]
   },
   {
-    "sequence": 66,
+    "sequence": 67,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1572,7 +1598,7 @@
     ]
   },
   {
-    "sequence": 67,
+    "sequence": 68,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1598,7 +1624,7 @@
     ]
   },
   {
-    "sequence": 68,
+    "sequence": 69,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1624,7 +1650,7 @@
     ]
   },
   {
-    "sequence": 69,
+    "sequence": 70,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -1650,7 +1676,7 @@
     ]
   },
   {
-    "sequence": 70,
+    "sequence": 71,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1676,7 +1702,7 @@
     ]
   },
   {
-    "sequence": 71,
+    "sequence": 72,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1702,7 +1728,7 @@
     ]
   },
   {
-    "sequence": 72,
+    "sequence": 73,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -1728,7 +1754,7 @@
     ]
   },
   {
-    "sequence": 73,
+    "sequence": 74,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -1754,7 +1780,7 @@
     ]
   },
   {
-    "sequence": 74,
+    "sequence": 75,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1780,7 +1806,7 @@
     ]
   },
   {
-    "sequence": 75,
+    "sequence": 76,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1806,7 +1832,7 @@
     ]
   },
   {
-    "sequence": 76,
+    "sequence": 77,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1832,7 +1858,7 @@
     ]
   },
   {
-    "sequence": 77,
+    "sequence": 78,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1858,7 +1884,7 @@
     ]
   },
   {
-    "sequence": 78,
+    "sequence": 79,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -1884,7 +1910,7 @@
     ]
   },
   {
-    "sequence": 79,
+    "sequence": 80,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -1910,7 +1936,7 @@
     ]
   },
   {
-    "sequence": 80,
+    "sequence": 81,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -1936,7 +1962,7 @@
     ]
   },
   {
-    "sequence": 81,
+    "sequence": 82,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1962,7 +1988,7 @@
     ]
   },
   {
-    "sequence": 82,
+    "sequence": 83,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -1988,7 +2014,7 @@
     ]
   },
   {
-    "sequence": 83,
+    "sequence": 84,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2014,7 +2040,7 @@
     ]
   },
   {
-    "sequence": 84,
+    "sequence": 85,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2040,7 +2066,7 @@
     ]
   },
   {
-    "sequence": 85,
+    "sequence": 86,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -2066,7 +2092,7 @@
     ]
   },
   {
-    "sequence": 86,
+    "sequence": 87,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2092,7 +2118,7 @@
     ]
   },
   {
-    "sequence": 87,
+    "sequence": 88,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2118,7 +2144,7 @@
     ]
   },
   {
-    "sequence": 88,
+    "sequence": 89,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2144,7 +2170,7 @@
     ]
   },
   {
-    "sequence": 89,
+    "sequence": 90,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2170,7 +2196,7 @@
     ]
   },
   {
-    "sequence": 90,
+    "sequence": 91,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -2196,7 +2222,7 @@
     ]
   },
   {
-    "sequence": 91,
+    "sequence": 92,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2222,7 +2248,7 @@
     ]
   },
   {
-    "sequence": 92,
+    "sequence": 93,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2248,7 +2274,7 @@
     ]
   },
   {
-    "sequence": 93,
+    "sequence": 94,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2274,7 +2300,7 @@
     ]
   },
   {
-    "sequence": 94,
+    "sequence": 95,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2300,7 +2326,7 @@
     ]
   },
   {
-    "sequence": 95,
+    "sequence": 96,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2326,7 +2352,7 @@
     ]
   },
   {
-    "sequence": 96,
+    "sequence": 97,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2352,7 +2378,7 @@
     ]
   },
   {
-    "sequence": 97,
+    "sequence": 98,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2378,7 +2404,7 @@
     ]
   },
   {
-    "sequence": 98,
+    "sequence": 99,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2404,7 +2430,7 @@
     ]
   },
   {
-    "sequence": 99,
+    "sequence": 100,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2430,7 +2456,7 @@
     ]
   },
   {
-    "sequence": 100,
+    "sequence": 101,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2456,7 +2482,7 @@
     ]
   },
   {
-    "sequence": 101,
+    "sequence": 102,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2482,7 +2508,7 @@
     ]
   },
   {
-    "sequence": 102,
+    "sequence": 103,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2508,7 +2534,7 @@
     ]
   },
   {
-    "sequence": 103,
+    "sequence": 104,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2534,7 +2560,7 @@
     ]
   },
   {
-    "sequence": 104,
+    "sequence": 105,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2560,7 +2586,7 @@
     ]
   },
   {
-    "sequence": 105,
+    "sequence": 106,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2586,7 +2612,7 @@
     ]
   },
   {
-    "sequence": 106,
+    "sequence": 107,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2612,7 +2638,7 @@
     ]
   },
   {
-    "sequence": 107,
+    "sequence": 108,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2638,7 +2664,7 @@
     ]
   },
   {
-    "sequence": 108,
+    "sequence": 109,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2664,7 +2690,7 @@
     ]
   },
   {
-    "sequence": 109,
+    "sequence": 110,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2690,7 +2716,7 @@
     ]
   },
   {
-    "sequence": 110,
+    "sequence": 111,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2716,7 +2742,7 @@
     ]
   },
   {
-    "sequence": 111,
+    "sequence": 112,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -2742,7 +2768,7 @@
     ]
   },
   {
-    "sequence": 112,
+    "sequence": 113,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -2768,7 +2794,7 @@
     ]
   },
   {
-    "sequence": 113,
+    "sequence": 114,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2794,7 +2820,7 @@
     ]
   },
   {
-    "sequence": 114,
+    "sequence": 115,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -2820,7 +2846,7 @@
     ]
   },
   {
-    "sequence": 115,
+    "sequence": 116,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2846,7 +2872,7 @@
     ]
   },
   {
-    "sequence": 116,
+    "sequence": 117,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2872,7 +2898,7 @@
     ]
   },
   {
-    "sequence": 117,
+    "sequence": 118,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -2898,7 +2924,7 @@
     ]
   },
   {
-    "sequence": 118,
+    "sequence": 119,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2924,7 +2950,7 @@
     ]
   },
   {
-    "sequence": 119,
+    "sequence": 120,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -2950,7 +2976,7 @@
     ]
   },
   {
-    "sequence": 120,
+    "sequence": 121,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -2976,7 +3002,7 @@
     ]
   },
   {
-    "sequence": 121,
+    "sequence": 122,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -3002,7 +3028,7 @@
     ]
   },
   {
-    "sequence": 122,
+    "sequence": 123,
     "chapter": "第一章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -3028,7 +3054,7 @@
     ]
   },
   {
-    "sequence": 123,
+    "sequence": 124,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3054,7 +3080,7 @@
     ]
   },
   {
-    "sequence": 124,
+    "sequence": 125,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3080,7 +3106,7 @@
     ]
   },
   {
-    "sequence": 125,
+    "sequence": 126,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3106,7 +3132,7 @@
     ]
   },
   {
-    "sequence": 126,
+    "sequence": 127,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3132,7 +3158,7 @@
     ]
   },
   {
-    "sequence": 127,
+    "sequence": 128,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3158,7 +3184,7 @@
     ]
   },
   {
-    "sequence": 128,
+    "sequence": 129,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3184,7 +3210,7 @@
     ]
   },
   {
-    "sequence": 129,
+    "sequence": 130,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3210,7 +3236,7 @@
     ]
   },
   {
-    "sequence": 130,
+    "sequence": 131,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3236,7 +3262,7 @@
     ]
   },
   {
-    "sequence": 131,
+    "sequence": 132,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3262,7 +3288,7 @@
     ]
   },
   {
-    "sequence": 132,
+    "sequence": 133,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -3288,7 +3314,7 @@
     ]
   },
   {
-    "sequence": 133,
+    "sequence": 134,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3314,7 +3340,7 @@
     ]
   },
   {
-    "sequence": 134,
+    "sequence": 135,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3340,7 +3366,7 @@
     ]
   },
   {
-    "sequence": 135,
+    "sequence": 136,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3366,7 +3392,7 @@
     ]
   },
   {
-    "sequence": 136,
+    "sequence": 137,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3392,7 +3418,7 @@
     ]
   },
   {
-    "sequence": 137,
+    "sequence": 138,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3418,7 +3444,7 @@
     ]
   },
   {
-    "sequence": 138,
+    "sequence": 139,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3444,7 +3470,7 @@
     ]
   },
   {
-    "sequence": 139,
+    "sequence": 140,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3470,7 +3496,7 @@
     ]
   },
   {
-    "sequence": 140,
+    "sequence": 141,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -3496,7 +3522,7 @@
     ]
   },
   {
-    "sequence": 141,
+    "sequence": 142,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -3522,7 +3548,7 @@
     ]
   },
   {
-    "sequence": 142,
+    "sequence": 143,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3548,7 +3574,7 @@
     ]
   },
   {
-    "sequence": 143,
+    "sequence": 144,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3574,7 +3600,7 @@
     ]
   },
   {
-    "sequence": 144,
+    "sequence": 145,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3600,7 +3626,7 @@
     ]
   },
   {
-    "sequence": 145,
+    "sequence": 146,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3626,7 +3652,7 @@
     ]
   },
   {
-    "sequence": 146,
+    "sequence": 147,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3652,7 +3678,7 @@
     ]
   },
   {
-    "sequence": 147,
+    "sequence": 148,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3678,7 +3704,7 @@
     ]
   },
   {
-    "sequence": 148,
+    "sequence": 149,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3704,7 +3730,7 @@
     ]
   },
   {
-    "sequence": 149,
+    "sequence": 150,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3730,7 +3756,7 @@
     ]
   },
   {
-    "sequence": 150,
+    "sequence": 151,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3756,7 +3782,7 @@
     ]
   },
   {
-    "sequence": 151,
+    "sequence": 152,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3782,7 +3808,7 @@
     ]
   },
   {
-    "sequence": 152,
+    "sequence": 153,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3808,7 +3834,7 @@
     ]
   },
   {
-    "sequence": 153,
+    "sequence": 154,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3834,7 +3860,7 @@
     ]
   },
   {
-    "sequence": 154,
+    "sequence": 155,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3860,7 +3886,7 @@
     ]
   },
   {
-    "sequence": 155,
+    "sequence": 156,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3886,7 +3912,7 @@
     ]
   },
   {
-    "sequence": 156,
+    "sequence": 157,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -3912,7 +3938,7 @@
     ]
   },
   {
-    "sequence": 157,
+    "sequence": 158,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3938,7 +3964,7 @@
     ]
   },
   {
-    "sequence": 158,
+    "sequence": 159,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3964,7 +3990,7 @@
     ]
   },
   {
-    "sequence": 159,
+    "sequence": 160,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -3990,7 +4016,7 @@
     ]
   },
   {
-    "sequence": 160,
+    "sequence": 161,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4016,7 +4042,7 @@
     ]
   },
   {
-    "sequence": 161,
+    "sequence": 162,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4042,7 +4068,7 @@
     ]
   },
   {
-    "sequence": 162,
+    "sequence": 163,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4068,7 +4094,7 @@
     ]
   },
   {
-    "sequence": 163,
+    "sequence": 164,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4094,7 +4120,7 @@
     ]
   },
   {
-    "sequence": 164,
+    "sequence": 165,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4120,7 +4146,7 @@
     ]
   },
   {
-    "sequence": 165,
+    "sequence": 166,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4146,7 +4172,7 @@
     ]
   },
   {
-    "sequence": 166,
+    "sequence": 167,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4172,7 +4198,7 @@
     ]
   },
   {
-    "sequence": 167,
+    "sequence": 168,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4198,7 +4224,7 @@
     ]
   },
   {
-    "sequence": 168,
+    "sequence": 169,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4224,7 +4250,7 @@
     ]
   },
   {
-    "sequence": 169,
+    "sequence": 170,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -4250,7 +4276,7 @@
     ]
   },
   {
-    "sequence": 170,
+    "sequence": 171,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4276,7 +4302,7 @@
     ]
   },
   {
-    "sequence": 171,
+    "sequence": 172,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4302,7 +4328,7 @@
     ]
   },
   {
-    "sequence": 172,
+    "sequence": 173,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4328,7 +4354,7 @@
     ]
   },
   {
-    "sequence": 173,
+    "sequence": 174,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4354,7 +4380,7 @@
     ]
   },
   {
-    "sequence": 174,
+    "sequence": 175,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4380,7 +4406,7 @@
     ]
   },
   {
-    "sequence": 175,
+    "sequence": 176,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4406,7 +4432,7 @@
     ]
   },
   {
-    "sequence": 176,
+    "sequence": 177,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4432,7 +4458,7 @@
     ]
   },
   {
-    "sequence": 177,
+    "sequence": 178,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4458,7 +4484,7 @@
     ]
   },
   {
-    "sequence": 178,
+    "sequence": 179,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4484,7 +4510,7 @@
     ]
   },
   {
-    "sequence": 179,
+    "sequence": 180,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4510,7 +4536,7 @@
     ]
   },
   {
-    "sequence": 180,
+    "sequence": 181,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4536,7 +4562,7 @@
     ]
   },
   {
-    "sequence": 181,
+    "sequence": 182,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4562,7 +4588,7 @@
     ]
   },
   {
-    "sequence": 182,
+    "sequence": 183,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4588,7 +4614,7 @@
     ]
   },
   {
-    "sequence": 183,
+    "sequence": 184,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4614,7 +4640,7 @@
     ]
   },
   {
-    "sequence": 184,
+    "sequence": 185,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4640,7 +4666,7 @@
     ]
   },
   {
-    "sequence": 185,
+    "sequence": 186,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4666,7 +4692,7 @@
     ]
   },
   {
-    "sequence": 186,
+    "sequence": 187,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4692,7 +4718,7 @@
     ]
   },
   {
-    "sequence": 187,
+    "sequence": 188,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4718,7 +4744,7 @@
     ]
   },
   {
-    "sequence": 188,
+    "sequence": 189,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -4744,7 +4770,7 @@
     ]
   },
   {
-    "sequence": 189,
+    "sequence": 190,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4770,7 +4796,7 @@
     ]
   },
   {
-    "sequence": 190,
+    "sequence": 191,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4796,7 +4822,7 @@
     ]
   },
   {
-    "sequence": 191,
+    "sequence": 192,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4822,7 +4848,7 @@
     ]
   },
   {
-    "sequence": 192,
+    "sequence": 193,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4848,7 +4874,7 @@
     ]
   },
   {
-    "sequence": 193,
+    "sequence": 194,
     "chapter": "第一章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -4874,7 +4900,7 @@
     ]
   },
   {
-    "sequence": 194,
+    "sequence": 195,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4882,7 +4908,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 195,
+    "sequence": 196,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4890,7 +4916,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 196,
+    "sequence": 197,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4898,7 +4924,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 197,
+    "sequence": 198,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -4906,7 +4932,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 198,
+    "sequence": 199,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4914,7 +4940,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 199,
+    "sequence": 200,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4922,7 +4948,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 200,
+    "sequence": 201,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4930,7 +4956,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 201,
+    "sequence": 202,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -4938,7 +4964,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 202,
+    "sequence": 203,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -4946,7 +4972,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 203,
+    "sequence": 204,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4954,7 +4980,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 204,
+    "sequence": 205,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -4962,7 +4988,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 205,
+    "sequence": 206,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -4970,7 +4996,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 206,
+    "sequence": 207,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -4978,7 +5004,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 207,
+    "sequence": 208,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -4986,7 +5012,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 208,
+    "sequence": 209,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -4994,7 +5020,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 209,
+    "sequence": 210,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5002,7 +5028,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 210,
+    "sequence": 211,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5010,7 +5036,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 211,
+    "sequence": 212,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5018,7 +5044,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 212,
+    "sequence": 213,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5026,7 +5052,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 213,
+    "sequence": 214,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5034,7 +5060,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 214,
+    "sequence": 215,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5042,7 +5068,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 215,
+    "sequence": 216,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5050,7 +5076,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 216,
+    "sequence": 217,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5058,7 +5084,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 217,
+    "sequence": 218,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5066,7 +5092,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 218,
+    "sequence": 219,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5074,7 +5100,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 219,
+    "sequence": 220,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5082,7 +5108,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 220,
+    "sequence": 221,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5090,7 +5116,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 221,
+    "sequence": 222,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5098,7 +5124,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 222,
+    "sequence": 223,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5106,7 +5132,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 223,
+    "sequence": 224,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5114,7 +5140,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 224,
+    "sequence": 225,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5122,7 +5148,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 225,
+    "sequence": 226,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5130,7 +5156,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 226,
+    "sequence": 227,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5138,7 +5164,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 227,
+    "sequence": 228,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5146,7 +5172,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 228,
+    "sequence": 229,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5154,7 +5180,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 229,
+    "sequence": 230,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5162,19 +5188,11 @@
     "answer": "正确"
   },
   {
-    "sequence": 230,
-    "chapter": "第一章",
-    "type": "true_false",
-    "difficulty": "medium",
-    "question": "矛盾的普遍性和特殊性的关系是整体和部分的关系。",
-    "answer": "错误"
-  },
-  {
     "sequence": 231,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
-    "question": "尊重客观规律就会妨碍主观能动性的发挥。",
+    "question": "矛盾的普遍性和特殊性的关系是整体和部分的关系。",
     "answer": "错误"
   },
   {
@@ -5182,11 +5200,19 @@
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
+    "question": "尊重客观规律就会妨碍主观能动性的发挥。",
+    "answer": "错误"
+  },
+  {
+    "sequence": 233,
+    "chapter": "第一章",
+    "type": "true_false",
+    "difficulty": "medium",
     "question": "哲学基本问题是解决和回答其他一切哲学问题的前提和基础。",
     "answer": "正确"
   },
   {
-    "sequence": 233,
+    "sequence": 234,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "hard",
@@ -5194,7 +5220,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 234,
+    "sequence": 235,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5202,7 +5228,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 235,
+    "sequence": 236,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5210,7 +5236,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 236,
+    "sequence": 237,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5218,7 +5244,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 237,
+    "sequence": 238,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5226,7 +5252,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 238,
+    "sequence": 239,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5234,7 +5260,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 239,
+    "sequence": 240,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "medium",
@@ -5242,7 +5268,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 240,
+    "sequence": 241,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5250,7 +5276,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 241,
+    "sequence": 242,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5258,7 +5284,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 242,
+    "sequence": 243,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5266,7 +5292,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 243,
+    "sequence": 244,
     "chapter": "第一章",
     "type": "true_false",
     "difficulty": "easy",
@@ -5274,7 +5300,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 244,
+    "sequence": 245,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5300,7 +5326,7 @@
     ]
   },
   {
-    "sequence": 245,
+    "sequence": 246,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5326,7 +5352,7 @@
     ]
   },
   {
-    "sequence": 246,
+    "sequence": 247,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5352,7 +5378,7 @@
     ]
   },
   {
-    "sequence": 247,
+    "sequence": 248,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5378,7 +5404,7 @@
     ]
   },
   {
-    "sequence": 248,
+    "sequence": 249,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5404,7 +5430,7 @@
     ]
   },
   {
-    "sequence": 249,
+    "sequence": 250,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5430,7 +5456,7 @@
     ]
   },
   {
-    "sequence": 250,
+    "sequence": 251,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5456,7 +5482,7 @@
     ]
   },
   {
-    "sequence": 251,
+    "sequence": 252,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5482,7 +5508,7 @@
     ]
   },
   {
-    "sequence": 252,
+    "sequence": 253,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5508,7 +5534,7 @@
     ]
   },
   {
-    "sequence": 253,
+    "sequence": 254,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5534,7 +5560,7 @@
     ]
   },
   {
-    "sequence": 254,
+    "sequence": 255,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5560,7 +5586,7 @@
     ]
   },
   {
-    "sequence": 255,
+    "sequence": 256,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5586,7 +5612,7 @@
     ]
   },
   {
-    "sequence": 256,
+    "sequence": 257,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5612,7 +5638,7 @@
     ]
   },
   {
-    "sequence": 257,
+    "sequence": 258,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5638,7 +5664,7 @@
     ]
   },
   {
-    "sequence": 258,
+    "sequence": 259,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5664,7 +5690,7 @@
     ]
   },
   {
-    "sequence": 259,
+    "sequence": 260,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5690,7 +5716,7 @@
     ]
   },
   {
-    "sequence": 260,
+    "sequence": 261,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5716,7 +5742,7 @@
     ]
   },
   {
-    "sequence": 261,
+    "sequence": 262,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5742,7 +5768,7 @@
     ]
   },
   {
-    "sequence": 262,
+    "sequence": 263,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5768,7 +5794,7 @@
     ]
   },
   {
-    "sequence": 263,
+    "sequence": 264,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5794,7 +5820,7 @@
     ]
   },
   {
-    "sequence": 264,
+    "sequence": 265,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5820,7 +5846,7 @@
     ]
   },
   {
-    "sequence": 265,
+    "sequence": 266,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5846,7 +5872,7 @@
     ]
   },
   {
-    "sequence": 266,
+    "sequence": 267,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5872,7 +5898,7 @@
     ]
   },
   {
-    "sequence": 267,
+    "sequence": 268,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5898,7 +5924,7 @@
     ]
   },
   {
-    "sequence": 268,
+    "sequence": 269,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5924,7 +5950,7 @@
     ]
   },
   {
-    "sequence": 269,
+    "sequence": 270,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -5950,7 +5976,7 @@
     ]
   },
   {
-    "sequence": 270,
+    "sequence": 271,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -5972,7 +5998,7 @@
     ]
   },
   {
-    "sequence": 271,
+    "sequence": 272,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -5998,7 +6024,7 @@
     ]
   },
   {
-    "sequence": 272,
+    "sequence": 273,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6024,7 +6050,7 @@
     ]
   },
   {
-    "sequence": 273,
+    "sequence": 274,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6050,7 +6076,7 @@
     ]
   },
   {
-    "sequence": 274,
+    "sequence": 275,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6076,7 +6102,7 @@
     ]
   },
   {
-    "sequence": 275,
+    "sequence": 276,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6102,7 +6128,7 @@
     ]
   },
   {
-    "sequence": 276,
+    "sequence": 277,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6128,7 +6154,7 @@
     ]
   },
   {
-    "sequence": 277,
+    "sequence": 278,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6154,7 +6180,7 @@
     ]
   },
   {
-    "sequence": 278,
+    "sequence": 279,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -6180,7 +6206,7 @@
     ]
   },
   {
-    "sequence": 279,
+    "sequence": 280,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6202,7 +6228,7 @@
     ]
   },
   {
-    "sequence": 280,
+    "sequence": 281,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6224,7 +6250,7 @@
     ]
   },
   {
-    "sequence": 281,
+    "sequence": 282,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6246,7 +6272,7 @@
     ]
   },
   {
-    "sequence": 282,
+    "sequence": 283,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6268,7 +6294,7 @@
     ]
   },
   {
-    "sequence": 283,
+    "sequence": 284,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6294,7 +6320,7 @@
     ]
   },
   {
-    "sequence": 284,
+    "sequence": 285,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6316,7 +6342,7 @@
     ]
   },
   {
-    "sequence": 285,
+    "sequence": 286,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6338,7 +6364,7 @@
     ]
   },
   {
-    "sequence": 286,
+    "sequence": 287,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6364,7 +6390,7 @@
     ]
   },
   {
-    "sequence": 287,
+    "sequence": 288,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6390,7 +6416,7 @@
     ]
   },
   {
-    "sequence": 288,
+    "sequence": 289,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6412,7 +6438,7 @@
     ]
   },
   {
-    "sequence": 289,
+    "sequence": 290,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6438,7 +6464,7 @@
     ]
   },
   {
-    "sequence": 290,
+    "sequence": 291,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6464,7 +6490,7 @@
     ]
   },
   {
-    "sequence": 291,
+    "sequence": 292,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6490,7 +6516,7 @@
     ]
   },
   {
-    "sequence": 292,
+    "sequence": 293,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6516,7 +6542,7 @@
     ]
   },
   {
-    "sequence": 293,
+    "sequence": 294,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6542,7 +6568,7 @@
     ]
   },
   {
-    "sequence": 294,
+    "sequence": 295,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6568,7 +6594,7 @@
     ]
   },
   {
-    "sequence": 295,
+    "sequence": 296,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6594,7 +6620,7 @@
     ]
   },
   {
-    "sequence": 296,
+    "sequence": 297,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6620,7 +6646,7 @@
     ]
   },
   {
-    "sequence": 297,
+    "sequence": 298,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6646,7 +6672,7 @@
     ]
   },
   {
-    "sequence": 298,
+    "sequence": 299,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -6672,7 +6698,7 @@
     ]
   },
   {
-    "sequence": 299,
+    "sequence": 300,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6698,7 +6724,7 @@
     ]
   },
   {
-    "sequence": 300,
+    "sequence": 301,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6724,7 +6750,7 @@
     ]
   },
   {
-    "sequence": 301,
+    "sequence": 302,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6750,7 +6776,7 @@
     ]
   },
   {
-    "sequence": 302,
+    "sequence": 303,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6776,7 +6802,7 @@
     ]
   },
   {
-    "sequence": 303,
+    "sequence": 304,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6802,7 +6828,7 @@
     ]
   },
   {
-    "sequence": 304,
+    "sequence": 305,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6828,7 +6854,7 @@
     ]
   },
   {
-    "sequence": 305,
+    "sequence": 306,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6854,7 +6880,7 @@
     ]
   },
   {
-    "sequence": 306,
+    "sequence": 307,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6880,7 +6906,7 @@
     ]
   },
   {
-    "sequence": 307,
+    "sequence": 308,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6906,7 +6932,7 @@
     ]
   },
   {
-    "sequence": 308,
+    "sequence": 309,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6932,7 +6958,7 @@
     ]
   },
   {
-    "sequence": 309,
+    "sequence": 310,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -6958,7 +6984,7 @@
     ]
   },
   {
-    "sequence": 310,
+    "sequence": 311,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -6984,7 +7010,7 @@
     ]
   },
   {
-    "sequence": 311,
+    "sequence": 312,
     "chapter": "第二章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -7010,7 +7036,7 @@
     ]
   },
   {
-    "sequence": 312,
+    "sequence": 313,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7036,7 +7062,7 @@
     ]
   },
   {
-    "sequence": 313,
+    "sequence": 314,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7062,7 +7088,7 @@
     ]
   },
   {
-    "sequence": 314,
+    "sequence": 315,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7088,7 +7114,7 @@
     ]
   },
   {
-    "sequence": 315,
+    "sequence": 316,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7114,7 +7140,7 @@
     ]
   },
   {
-    "sequence": 316,
+    "sequence": 317,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7140,7 +7166,7 @@
     ]
   },
   {
-    "sequence": 317,
+    "sequence": 318,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7166,7 +7192,7 @@
     ]
   },
   {
-    "sequence": 318,
+    "sequence": 319,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7192,7 +7218,7 @@
     ]
   },
   {
-    "sequence": 319,
+    "sequence": 320,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7218,7 +7244,7 @@
     ]
   },
   {
-    "sequence": 320,
+    "sequence": 321,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7244,7 +7270,7 @@
     ]
   },
   {
-    "sequence": 321,
+    "sequence": 322,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7270,7 +7296,7 @@
     ]
   },
   {
-    "sequence": 322,
+    "sequence": 323,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7296,7 +7322,7 @@
     ]
   },
   {
-    "sequence": 323,
+    "sequence": 324,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7322,7 +7348,7 @@
     ]
   },
   {
-    "sequence": 324,
+    "sequence": 325,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7348,7 +7374,7 @@
     ]
   },
   {
-    "sequence": 325,
+    "sequence": 326,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7374,7 +7400,7 @@
     ]
   },
   {
-    "sequence": 326,
+    "sequence": 327,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7400,7 +7426,7 @@
     ]
   },
   {
-    "sequence": 327,
+    "sequence": 328,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7426,7 +7452,7 @@
     ]
   },
   {
-    "sequence": 328,
+    "sequence": 329,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7452,7 +7478,7 @@
     ]
   },
   {
-    "sequence": 329,
+    "sequence": 330,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7478,7 +7504,7 @@
     ]
   },
   {
-    "sequence": 330,
+    "sequence": 331,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7504,7 +7530,7 @@
     ]
   },
   {
-    "sequence": 331,
+    "sequence": 332,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7530,7 +7556,7 @@
     ]
   },
   {
-    "sequence": 332,
+    "sequence": 333,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7556,7 +7582,7 @@
     ]
   },
   {
-    "sequence": 333,
+    "sequence": 334,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7582,7 +7608,7 @@
     ]
   },
   {
-    "sequence": 334,
+    "sequence": 335,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7608,7 +7634,7 @@
     ]
   },
   {
-    "sequence": 335,
+    "sequence": 336,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7634,7 +7660,7 @@
     ]
   },
   {
-    "sequence": 336,
+    "sequence": 337,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7660,7 +7686,7 @@
     ]
   },
   {
-    "sequence": 337,
+    "sequence": 338,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7686,7 +7712,7 @@
     ]
   },
   {
-    "sequence": 338,
+    "sequence": 339,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7712,7 +7738,7 @@
     ]
   },
   {
-    "sequence": 339,
+    "sequence": 340,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7738,7 +7764,7 @@
     ]
   },
   {
-    "sequence": 340,
+    "sequence": 341,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7764,7 +7790,7 @@
     ]
   },
   {
-    "sequence": 341,
+    "sequence": 342,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7790,7 +7816,7 @@
     ]
   },
   {
-    "sequence": 342,
+    "sequence": 343,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -7816,7 +7842,7 @@
     ]
   },
   {
-    "sequence": 343,
+    "sequence": 344,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7842,7 +7868,7 @@
     ]
   },
   {
-    "sequence": 344,
+    "sequence": 345,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -7864,7 +7890,7 @@
     ]
   },
   {
-    "sequence": 345,
+    "sequence": 346,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7890,7 +7916,7 @@
     ]
   },
   {
-    "sequence": 346,
+    "sequence": 347,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7916,7 +7942,7 @@
     ]
   },
   {
-    "sequence": 347,
+    "sequence": 348,
     "chapter": "第二章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -7942,7 +7968,7 @@
     ]
   },
   {
-    "sequence": 348,
+    "sequence": 349,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -7950,7 +7976,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 349,
+    "sequence": 350,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -7958,7 +7984,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 350,
+    "sequence": 351,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -7966,7 +7992,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 351,
+    "sequence": 352,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -7974,7 +8000,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 352,
+    "sequence": 353,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -7982,7 +8008,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 353,
+    "sequence": 354,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -7990,7 +8016,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 354,
+    "sequence": 355,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -7998,7 +8024,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 355,
+    "sequence": 356,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8006,7 +8032,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 356,
+    "sequence": 357,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8014,7 +8040,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 357,
+    "sequence": 358,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8022,7 +8048,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 358,
+    "sequence": 359,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8030,7 +8056,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 359,
+    "sequence": 360,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8038,7 +8064,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 360,
+    "sequence": 361,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8046,7 +8072,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 361,
+    "sequence": 362,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8054,7 +8080,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 362,
+    "sequence": 363,
     "chapter": "第二章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8062,7 +8088,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 363,
+    "sequence": 364,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8088,7 +8114,7 @@
     ]
   },
   {
-    "sequence": 364,
+    "sequence": 365,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8114,7 +8140,7 @@
     ]
   },
   {
-    "sequence": 365,
+    "sequence": 366,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8140,7 +8166,7 @@
     ]
   },
   {
-    "sequence": 366,
+    "sequence": 367,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8166,7 +8192,7 @@
     ]
   },
   {
-    "sequence": 367,
+    "sequence": 368,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8192,7 +8218,7 @@
     ]
   },
   {
-    "sequence": 368,
+    "sequence": 369,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8218,7 +8244,7 @@
     ]
   },
   {
-    "sequence": 369,
+    "sequence": 370,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8244,7 +8270,7 @@
     ]
   },
   {
-    "sequence": 370,
+    "sequence": 371,
     "chapter": "第三章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8270,7 +8296,7 @@
     ]
   },
   {
-    "sequence": 371,
+    "sequence": 372,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -8296,7 +8322,7 @@
     ]
   },
   {
-    "sequence": 372,
+    "sequence": 373,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -8322,7 +8348,7 @@
     ]
   },
   {
-    "sequence": 373,
+    "sequence": 374,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -8348,7 +8374,7 @@
     ]
   },
   {
-    "sequence": 374,
+    "sequence": 375,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -8374,7 +8400,7 @@
     ]
   },
   {
-    "sequence": 375,
+    "sequence": 376,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -8400,7 +8426,7 @@
     ]
   },
   {
-    "sequence": 376,
+    "sequence": 377,
     "chapter": "第三章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -8426,7 +8452,7 @@
     ]
   },
   {
-    "sequence": 377,
+    "sequence": 378,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8434,7 +8460,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 378,
+    "sequence": 379,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8442,7 +8468,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 379,
+    "sequence": 380,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "medium",
@@ -8450,7 +8476,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 380,
+    "sequence": 381,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "hard",
@@ -8458,7 +8484,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 381,
+    "sequence": 382,
     "chapter": "第三章",
     "type": "true_false",
     "difficulty": "easy",
@@ -8466,7 +8492,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 382,
+    "sequence": 383,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8492,7 +8518,7 @@
     ]
   },
   {
-    "sequence": 383,
+    "sequence": 384,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8518,7 +8544,7 @@
     ]
   },
   {
-    "sequence": 384,
+    "sequence": 385,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8544,7 +8570,7 @@
     ]
   },
   {
-    "sequence": 385,
+    "sequence": 386,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8570,7 +8596,7 @@
     ]
   },
   {
-    "sequence": 386,
+    "sequence": 387,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8596,7 +8622,7 @@
     ]
   },
   {
-    "sequence": 387,
+    "sequence": 388,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8622,7 +8648,7 @@
     ]
   },
   {
-    "sequence": 388,
+    "sequence": 389,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8648,7 +8674,7 @@
     ]
   },
   {
-    "sequence": 389,
+    "sequence": 390,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8674,7 +8700,7 @@
     ]
   },
   {
-    "sequence": 390,
+    "sequence": 391,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -8700,7 +8726,7 @@
     ]
   },
   {
-    "sequence": 391,
+    "sequence": 392,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8726,7 +8752,7 @@
     ]
   },
   {
-    "sequence": 392,
+    "sequence": 393,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8752,7 +8778,7 @@
     ]
   },
   {
-    "sequence": 393,
+    "sequence": 394,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8778,7 +8804,7 @@
     ]
   },
   {
-    "sequence": 394,
+    "sequence": 395,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8804,7 +8830,7 @@
     ]
   },
   {
-    "sequence": 395,
+    "sequence": 396,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8830,7 +8856,7 @@
     ]
   },
   {
-    "sequence": 396,
+    "sequence": 397,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8856,7 +8882,7 @@
     ]
   },
   {
-    "sequence": 397,
+    "sequence": 398,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8882,7 +8908,7 @@
     ]
   },
   {
-    "sequence": 398,
+    "sequence": 399,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8908,7 +8934,7 @@
     ]
   },
   {
-    "sequence": 399,
+    "sequence": 400,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8934,7 +8960,7 @@
     ]
   },
   {
-    "sequence": 400,
+    "sequence": 401,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -8960,7 +8986,7 @@
     ]
   },
   {
-    "sequence": 401,
+    "sequence": 402,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -8986,7 +9012,7 @@
     ]
   },
   {
-    "sequence": 402,
+    "sequence": 403,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9012,7 +9038,7 @@
     ]
   },
   {
-    "sequence": 403,
+    "sequence": 404,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9038,7 +9064,7 @@
     ]
   },
   {
-    "sequence": 404,
+    "sequence": 405,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9064,7 +9090,7 @@
     ]
   },
   {
-    "sequence": 405,
+    "sequence": 406,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9090,7 +9116,7 @@
     ]
   },
   {
-    "sequence": 406,
+    "sequence": 407,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9116,7 +9142,7 @@
     ]
   },
   {
-    "sequence": 407,
+    "sequence": 408,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9142,7 +9168,7 @@
     ]
   },
   {
-    "sequence": 408,
+    "sequence": 409,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9168,7 +9194,7 @@
     ]
   },
   {
-    "sequence": 409,
+    "sequence": 410,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9194,7 +9220,7 @@
     ]
   },
   {
-    "sequence": 410,
+    "sequence": 411,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9220,7 +9246,7 @@
     ]
   },
   {
-    "sequence": 411,
+    "sequence": 412,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9246,7 +9272,7 @@
     ]
   },
   {
-    "sequence": 412,
+    "sequence": 413,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9272,7 +9298,7 @@
     ]
   },
   {
-    "sequence": 413,
+    "sequence": 414,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9298,7 +9324,7 @@
     ]
   },
   {
-    "sequence": 414,
+    "sequence": 415,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9324,7 +9350,7 @@
     ]
   },
   {
-    "sequence": 415,
+    "sequence": 416,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9350,7 +9376,7 @@
     ]
   },
   {
-    "sequence": 416,
+    "sequence": 417,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9376,7 +9402,7 @@
     ]
   },
   {
-    "sequence": 417,
+    "sequence": 418,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9402,7 +9428,7 @@
     ]
   },
   {
-    "sequence": 418,
+    "sequence": 419,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9428,7 +9454,7 @@
     ]
   },
   {
-    "sequence": 419,
+    "sequence": 420,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9454,7 +9480,7 @@
     ]
   },
   {
-    "sequence": 420,
+    "sequence": 421,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9480,7 +9506,7 @@
     ]
   },
   {
-    "sequence": 421,
+    "sequence": 422,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9506,7 +9532,7 @@
     ]
   },
   {
-    "sequence": 422,
+    "sequence": 423,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9532,7 +9558,7 @@
     ]
   },
   {
-    "sequence": 423,
+    "sequence": 424,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9558,7 +9584,7 @@
     ]
   },
   {
-    "sequence": 424,
+    "sequence": 425,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9584,7 +9610,7 @@
     ]
   },
   {
-    "sequence": 425,
+    "sequence": 426,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9610,7 +9636,7 @@
     ]
   },
   {
-    "sequence": 426,
+    "sequence": 427,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9636,7 +9662,7 @@
     ]
   },
   {
-    "sequence": 427,
+    "sequence": 428,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9662,7 +9688,7 @@
     ]
   },
   {
-    "sequence": 428,
+    "sequence": 429,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9688,7 +9714,7 @@
     ]
   },
   {
-    "sequence": 429,
+    "sequence": 430,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9714,7 +9740,7 @@
     ]
   },
   {
-    "sequence": 430,
+    "sequence": 431,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9740,7 +9766,7 @@
     ]
   },
   {
-    "sequence": 431,
+    "sequence": 432,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9766,7 +9792,7 @@
     ]
   },
   {
-    "sequence": 432,
+    "sequence": 433,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9792,7 +9818,7 @@
     ]
   },
   {
-    "sequence": 433,
+    "sequence": 434,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9818,7 +9844,7 @@
     ]
   },
   {
-    "sequence": 434,
+    "sequence": 435,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9844,7 +9870,7 @@
     ]
   },
   {
-    "sequence": 435,
+    "sequence": 436,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9862,7 +9888,7 @@
     ]
   },
   {
-    "sequence": 436,
+    "sequence": 437,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9888,7 +9914,7 @@
     ]
   },
   {
-    "sequence": 437,
+    "sequence": 438,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -9914,7 +9940,7 @@
     ]
   },
   {
-    "sequence": 438,
+    "sequence": 439,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9940,7 +9966,7 @@
     ]
   },
   {
-    "sequence": 439,
+    "sequence": 440,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -9966,7 +9992,7 @@
     ]
   },
   {
-    "sequence": 440,
+    "sequence": 441,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -9992,7 +10018,7 @@
     ]
   },
   {
-    "sequence": 441,
+    "sequence": 442,
     "chapter": "第四章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -10018,7 +10044,7 @@
     ]
   },
   {
-    "sequence": 442,
+    "sequence": 443,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10044,7 +10070,7 @@
     ]
   },
   {
-    "sequence": 443,
+    "sequence": 444,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10070,7 +10096,7 @@
     ]
   },
   {
-    "sequence": 444,
+    "sequence": 445,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10096,7 +10122,7 @@
     ]
   },
   {
-    "sequence": 445,
+    "sequence": 446,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10122,7 +10148,7 @@
     ]
   },
   {
-    "sequence": 446,
+    "sequence": 447,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10148,7 +10174,7 @@
     ]
   },
   {
-    "sequence": 447,
+    "sequence": 448,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10174,7 +10200,7 @@
     ]
   },
   {
-    "sequence": 448,
+    "sequence": 449,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10200,7 +10226,7 @@
     ]
   },
   {
-    "sequence": 449,
+    "sequence": 450,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10226,7 +10252,7 @@
     ]
   },
   {
-    "sequence": 450,
+    "sequence": 451,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10252,7 +10278,7 @@
     ]
   },
   {
-    "sequence": 451,
+    "sequence": 452,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10278,7 +10304,7 @@
     ]
   },
   {
-    "sequence": 452,
+    "sequence": 453,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10304,7 +10330,7 @@
     ]
   },
   {
-    "sequence": 453,
+    "sequence": 454,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10330,7 +10356,7 @@
     ]
   },
   {
-    "sequence": 454,
+    "sequence": 455,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10356,7 +10382,7 @@
     ]
   },
   {
-    "sequence": 455,
+    "sequence": 456,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10382,7 +10408,7 @@
     ]
   },
   {
-    "sequence": 456,
+    "sequence": 457,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10408,7 +10434,7 @@
     ]
   },
   {
-    "sequence": 457,
+    "sequence": 458,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10434,7 +10460,7 @@
     ]
   },
   {
-    "sequence": 458,
+    "sequence": 459,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10460,7 +10486,7 @@
     ]
   },
   {
-    "sequence": 459,
+    "sequence": 460,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10486,7 +10512,7 @@
     ]
   },
   {
-    "sequence": 460,
+    "sequence": 461,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10512,7 +10538,7 @@
     ]
   },
   {
-    "sequence": 461,
+    "sequence": 462,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10538,7 +10564,7 @@
     ]
   },
   {
-    "sequence": 462,
+    "sequence": 463,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10564,7 +10590,7 @@
     ]
   },
   {
-    "sequence": 463,
+    "sequence": 464,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10590,7 +10616,7 @@
     ]
   },
   {
-    "sequence": 464,
+    "sequence": 465,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10616,7 +10642,7 @@
     ]
   },
   {
-    "sequence": 465,
+    "sequence": 466,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10642,7 +10668,7 @@
     ]
   },
   {
-    "sequence": 466,
+    "sequence": 467,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10668,7 +10694,7 @@
     ]
   },
   {
-    "sequence": 467,
+    "sequence": 468,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10694,7 +10720,7 @@
     ]
   },
   {
-    "sequence": 468,
+    "sequence": 469,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10720,7 +10746,7 @@
     ]
   },
   {
-    "sequence": 469,
+    "sequence": 470,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10746,7 +10772,7 @@
     ]
   },
   {
-    "sequence": 470,
+    "sequence": 471,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10772,7 +10798,7 @@
     ]
   },
   {
-    "sequence": 471,
+    "sequence": 472,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10798,7 +10824,7 @@
     ]
   },
   {
-    "sequence": 472,
+    "sequence": 473,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10824,7 +10850,7 @@
     ]
   },
   {
-    "sequence": 473,
+    "sequence": 474,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10850,7 +10876,7 @@
     ]
   },
   {
-    "sequence": 474,
+    "sequence": 475,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -10876,7 +10902,7 @@
     ]
   },
   {
-    "sequence": 475,
+    "sequence": 476,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10902,7 +10928,7 @@
     ]
   },
   {
-    "sequence": 476,
+    "sequence": 477,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10928,7 +10954,7 @@
     ]
   },
   {
-    "sequence": 477,
+    "sequence": 478,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -10954,7 +10980,7 @@
     ]
   },
   {
-    "sequence": 478,
+    "sequence": 479,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -10980,7 +11006,7 @@
     ]
   },
   {
-    "sequence": 479,
+    "sequence": 480,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11006,7 +11032,7 @@
     ]
   },
   {
-    "sequence": 480,
+    "sequence": 481,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -11032,7 +11058,7 @@
     ]
   },
   {
-    "sequence": 481,
+    "sequence": 482,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11058,7 +11084,7 @@
     ]
   },
   {
-    "sequence": 482,
+    "sequence": 483,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11084,7 +11110,7 @@
     ]
   },
   {
-    "sequence": 483,
+    "sequence": 484,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -11110,7 +11136,7 @@
     ]
   },
   {
-    "sequence": 484,
+    "sequence": 485,
     "chapter": "第四章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -11136,7 +11162,7 @@
     ]
   },
   {
-    "sequence": 485,
+    "sequence": 486,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11144,7 +11170,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 486,
+    "sequence": 487,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11152,7 +11178,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 487,
+    "sequence": 488,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11160,7 +11186,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 488,
+    "sequence": 489,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11168,7 +11194,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 489,
+    "sequence": 490,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11176,7 +11202,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 490,
+    "sequence": 491,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11184,7 +11210,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 491,
+    "sequence": 492,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11192,7 +11218,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 492,
+    "sequence": 493,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11200,7 +11226,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 493,
+    "sequence": 494,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11208,7 +11234,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 494,
+    "sequence": 495,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11216,7 +11242,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 495,
+    "sequence": 496,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11224,7 +11250,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 496,
+    "sequence": 497,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11232,7 +11258,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 497,
+    "sequence": 498,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11240,7 +11266,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 498,
+    "sequence": 499,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11248,7 +11274,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 499,
+    "sequence": 500,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11256,7 +11282,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 500,
+    "sequence": 501,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11264,7 +11290,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 501,
+    "sequence": 502,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11272,7 +11298,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 502,
+    "sequence": 503,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11280,7 +11306,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 503,
+    "sequence": 504,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11288,7 +11314,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 504,
+    "sequence": 505,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11296,7 +11322,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 505,
+    "sequence": 506,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11304,7 +11330,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 506,
+    "sequence": 507,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11312,7 +11338,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 507,
+    "sequence": 508,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11320,7 +11346,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 508,
+    "sequence": 509,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11328,7 +11354,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 509,
+    "sequence": 510,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11336,7 +11362,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 510,
+    "sequence": 511,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11344,7 +11370,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 511,
+    "sequence": 512,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11352,7 +11378,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 512,
+    "sequence": 513,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11360,7 +11386,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 513,
+    "sequence": 514,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11368,7 +11394,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 514,
+    "sequence": 515,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "hard",
@@ -11376,7 +11402,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 515,
+    "sequence": 516,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "easy",
@@ -11384,7 +11410,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 516,
+    "sequence": 517,
     "chapter": "第四章",
     "type": "true_false",
     "difficulty": "medium",
@@ -11392,7 +11418,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 517,
+    "sequence": 518,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11418,7 +11444,7 @@
     ]
   },
   {
-    "sequence": 518,
+    "sequence": 519,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11444,7 +11470,7 @@
     ]
   },
   {
-    "sequence": 519,
+    "sequence": 520,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11470,7 +11496,7 @@
     ]
   },
   {
-    "sequence": 520,
+    "sequence": 521,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11496,7 +11522,7 @@
     ]
   },
   {
-    "sequence": 521,
+    "sequence": 522,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11522,7 +11548,7 @@
     ]
   },
   {
-    "sequence": 522,
+    "sequence": 523,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11548,7 +11574,7 @@
     ]
   },
   {
-    "sequence": 523,
+    "sequence": 524,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11574,7 +11600,7 @@
     ]
   },
   {
-    "sequence": 524,
+    "sequence": 525,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11600,7 +11626,7 @@
     ]
   },
   {
-    "sequence": 525,
+    "sequence": 526,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11626,7 +11652,7 @@
     ]
   },
   {
-    "sequence": 526,
+    "sequence": 527,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11652,7 +11678,7 @@
     ]
   },
   {
-    "sequence": 527,
+    "sequence": 528,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11678,7 +11704,7 @@
     ]
   },
   {
-    "sequence": 528,
+    "sequence": 529,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11704,7 +11730,7 @@
     ]
   },
   {
-    "sequence": 529,
+    "sequence": 530,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11730,7 +11756,7 @@
     ]
   },
   {
-    "sequence": 530,
+    "sequence": 531,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11756,7 +11782,7 @@
     ]
   },
   {
-    "sequence": 531,
+    "sequence": 532,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "hard",
@@ -11782,7 +11808,7 @@
     ]
   },
   {
-    "sequence": 532,
+    "sequence": 533,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11808,7 +11834,7 @@
     ]
   },
   {
-    "sequence": 533,
+    "sequence": 534,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11834,7 +11860,7 @@
     ]
   },
   {
-    "sequence": 534,
+    "sequence": 535,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -11860,7 +11886,7 @@
     ]
   },
   {
-    "sequence": 535,
+    "sequence": 536,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11886,7 +11912,7 @@
     ]
   },
   {
-    "sequence": 536,
+    "sequence": 537,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11912,7 +11938,7 @@
     ]
   },
   {
-    "sequence": 537,
+    "sequence": 538,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11938,7 +11964,7 @@
     ]
   },
   {
-    "sequence": 538,
+    "sequence": 539,
     "chapter": "第五章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -11964,7 +11990,7 @@
     ]
   },
   {
-    "sequence": 539,
+    "sequence": 540,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -11990,7 +12016,7 @@
     ]
   },
   {
-    "sequence": 540,
+    "sequence": 541,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12016,7 +12042,7 @@
     ]
   },
   {
-    "sequence": 541,
+    "sequence": 542,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12042,7 +12068,7 @@
     ]
   },
   {
-    "sequence": 542,
+    "sequence": 543,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12068,7 +12094,7 @@
     ]
   },
   {
-    "sequence": 543,
+    "sequence": 544,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12094,7 +12120,7 @@
     ]
   },
   {
-    "sequence": 544,
+    "sequence": 545,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12120,7 +12146,7 @@
     ]
   },
   {
-    "sequence": 545,
+    "sequence": 546,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12146,7 +12172,7 @@
     ]
   },
   {
-    "sequence": 546,
+    "sequence": 547,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12172,7 +12198,7 @@
     ]
   },
   {
-    "sequence": 547,
+    "sequence": 548,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12198,7 +12224,7 @@
     ]
   },
   {
-    "sequence": 548,
+    "sequence": 549,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12224,7 +12250,7 @@
     ]
   },
   {
-    "sequence": 549,
+    "sequence": 550,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12250,7 +12276,7 @@
     ]
   },
   {
-    "sequence": 550,
+    "sequence": 551,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12276,7 +12302,7 @@
     ]
   },
   {
-    "sequence": 551,
+    "sequence": 552,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12302,7 +12328,7 @@
     ]
   },
   {
-    "sequence": 552,
+    "sequence": 553,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -12328,7 +12354,7 @@
     ]
   },
   {
-    "sequence": 553,
+    "sequence": 554,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12354,7 +12380,7 @@
     ]
   },
   {
-    "sequence": 554,
+    "sequence": 555,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12380,7 +12406,7 @@
     ]
   },
   {
-    "sequence": 555,
+    "sequence": 556,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12406,7 +12432,7 @@
     ]
   },
   {
-    "sequence": 556,
+    "sequence": 557,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -12432,7 +12458,7 @@
     ]
   },
   {
-    "sequence": 557,
+    "sequence": 558,
     "chapter": "第五章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -12458,7 +12484,7 @@
     ]
   },
   {
-    "sequence": 558,
+    "sequence": 559,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12466,7 +12492,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 559,
+    "sequence": 560,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12474,7 +12500,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 560,
+    "sequence": 561,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12482,7 +12508,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 561,
+    "sequence": 562,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12490,7 +12516,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 562,
+    "sequence": 563,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "easy",
@@ -12498,7 +12524,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 563,
+    "sequence": 564,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "hard",
@@ -12506,7 +12532,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 564,
+    "sequence": 565,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12514,7 +12540,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 565,
+    "sequence": 566,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -12522,7 +12548,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 566,
+    "sequence": 567,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12530,7 +12556,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 567,
+    "sequence": 568,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12538,7 +12564,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 568,
+    "sequence": 569,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12546,7 +12572,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 569,
+    "sequence": 570,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12554,7 +12580,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 570,
+    "sequence": 571,
     "chapter": "第五章",
     "type": "true_false",
     "difficulty": "medium",
@@ -12562,7 +12588,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 571,
+    "sequence": 572,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12588,7 +12614,7 @@
     ]
   },
   {
-    "sequence": 572,
+    "sequence": 573,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12614,7 +12640,7 @@
     ]
   },
   {
-    "sequence": 573,
+    "sequence": 574,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12640,7 +12666,7 @@
     ]
   },
   {
-    "sequence": 574,
+    "sequence": 575,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12666,7 +12692,7 @@
     ]
   },
   {
-    "sequence": 575,
+    "sequence": 576,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12692,7 +12718,7 @@
     ]
   },
   {
-    "sequence": 576,
+    "sequence": 577,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12718,7 +12744,7 @@
     ]
   },
   {
-    "sequence": 577,
+    "sequence": 578,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12744,7 +12770,7 @@
     ]
   },
   {
-    "sequence": 578,
+    "sequence": 579,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12770,7 +12796,7 @@
     ]
   },
   {
-    "sequence": 579,
+    "sequence": 580,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12796,7 +12822,7 @@
     ]
   },
   {
-    "sequence": 580,
+    "sequence": 581,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12822,7 +12848,7 @@
     ]
   },
   {
-    "sequence": 581,
+    "sequence": 582,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12848,7 +12874,7 @@
     ]
   },
   {
-    "sequence": 582,
+    "sequence": 583,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12874,7 +12900,7 @@
     ]
   },
   {
-    "sequence": 583,
+    "sequence": 584,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12900,7 +12926,7 @@
     ]
   },
   {
-    "sequence": 584,
+    "sequence": 585,
     "chapter": "第六章",
     "type": "single_choice",
     "difficulty": "unknown",
@@ -12926,7 +12952,7 @@
     ]
   },
   {
-    "sequence": 585,
+    "sequence": 586,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -12952,7 +12978,7 @@
     ]
   },
   {
-    "sequence": 586,
+    "sequence": 587,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -12978,7 +13004,7 @@
     ]
   },
   {
-    "sequence": 587,
+    "sequence": 588,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13004,7 +13030,7 @@
     ]
   },
   {
-    "sequence": 588,
+    "sequence": 589,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13030,7 +13056,7 @@
     ]
   },
   {
-    "sequence": 589,
+    "sequence": 590,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13056,7 +13082,7 @@
     ]
   },
   {
-    "sequence": 590,
+    "sequence": 591,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13082,7 +13108,7 @@
     ]
   },
   {
-    "sequence": 591,
+    "sequence": 592,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13108,7 +13134,7 @@
     ]
   },
   {
-    "sequence": 592,
+    "sequence": 593,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13134,7 +13160,7 @@
     ]
   },
   {
-    "sequence": 593,
+    "sequence": 594,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13160,7 +13186,7 @@
     ]
   },
   {
-    "sequence": 594,
+    "sequence": 595,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13186,7 +13212,7 @@
     ]
   },
   {
-    "sequence": 595,
+    "sequence": 596,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13212,7 +13238,7 @@
     ]
   },
   {
-    "sequence": 596,
+    "sequence": 597,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13238,7 +13264,7 @@
     ]
   },
   {
-    "sequence": 597,
+    "sequence": 598,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13264,7 +13290,7 @@
     ]
   },
   {
-    "sequence": 598,
+    "sequence": 599,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13290,7 +13316,7 @@
     ]
   },
   {
-    "sequence": 599,
+    "sequence": 600,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13316,7 +13342,7 @@
     ]
   },
   {
-    "sequence": 600,
+    "sequence": 601,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13342,7 +13368,7 @@
     ]
   },
   {
-    "sequence": 601,
+    "sequence": 602,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13368,7 +13394,7 @@
     ]
   },
   {
-    "sequence": 602,
+    "sequence": 603,
     "chapter": "第六章",
     "type": "multiple_choice",
     "difficulty": "unknown",
@@ -13394,7 +13420,7 @@
     ]
   },
   {
-    "sequence": 603,
+    "sequence": 604,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13402,7 +13428,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 604,
+    "sequence": 605,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13410,7 +13436,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 605,
+    "sequence": 606,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13418,7 +13444,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 606,
+    "sequence": 607,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13426,7 +13452,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 607,
+    "sequence": 608,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13434,7 +13460,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 608,
+    "sequence": 609,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13442,7 +13468,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 609,
+    "sequence": 610,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13450,7 +13476,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 610,
+    "sequence": 611,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13458,7 +13484,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 611,
+    "sequence": 612,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13466,7 +13492,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 612,
+    "sequence": 613,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13474,7 +13500,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 613,
+    "sequence": 614,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13482,7 +13508,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 614,
+    "sequence": 615,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13490,7 +13516,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 615,
+    "sequence": 616,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13498,7 +13524,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 616,
+    "sequence": 617,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13506,7 +13532,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 617,
+    "sequence": 618,
     "chapter": "第六章",
     "type": "true_false",
     "difficulty": "unknown",
@@ -13514,7 +13540,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 618,
+    "sequence": 619,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -13540,7 +13566,7 @@
     ]
   },
   {
-    "sequence": 619,
+    "sequence": 620,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -13566,7 +13592,7 @@
     ]
   },
   {
-    "sequence": 620,
+    "sequence": 621,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -13592,7 +13618,7 @@
     ]
   },
   {
-    "sequence": 621,
+    "sequence": 622,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "medium",
@@ -13618,7 +13644,7 @@
     ]
   },
   {
-    "sequence": 622,
+    "sequence": 623,
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "easy",
@@ -13644,7 +13670,7 @@
     ]
   },
   {
-    "sequence": 623,
+    "sequence": 624,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -13670,7 +13696,7 @@
     ]
   },
   {
-    "sequence": 624,
+    "sequence": 625,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "easy",
@@ -13696,7 +13722,7 @@
     ]
   },
   {
-    "sequence": 625,
+    "sequence": 626,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -13722,7 +13748,7 @@
     ]
   },
   {
-    "sequence": 626,
+    "sequence": 627,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "medium",
@@ -13748,7 +13774,7 @@
     ]
   },
   {
-    "sequence": 627,
+    "sequence": 628,
     "chapter": "第七章",
     "type": "multiple_choice",
     "difficulty": "hard",
@@ -13774,7 +13800,7 @@
     ]
   },
   {
-    "sequence": 628,
+    "sequence": 629,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "easy",
@@ -13782,7 +13808,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 629,
+    "sequence": 630,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "easy",
@@ -13790,7 +13816,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 630,
+    "sequence": 631,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "medium",
@@ -13798,7 +13824,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 631,
+    "sequence": 632,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "hard",
@@ -13806,7 +13832,7 @@
     "answer": "正确"
   },
   {
-    "sequence": 632,
+    "sequence": 633,
     "chapter": "第七章",
     "type": "true_false",
     "difficulty": "medium",
@@ -13814,7 +13840,7 @@
     "answer": "错误"
   },
   {
-    "sequence": 633,
+    "sequence": 634,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13825,7 +13851,7 @@
     }
   },
   {
-    "sequence": 634,
+    "sequence": 635,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13836,7 +13862,7 @@
     }
   },
   {
-    "sequence": 635,
+    "sequence": 636,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -13847,7 +13873,7 @@
     }
   },
   {
-    "sequence": 636,
+    "sequence": 637,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -13858,7 +13884,7 @@
     }
   },
   {
-    "sequence": 637,
+    "sequence": 638,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13869,7 +13895,7 @@
     }
   },
   {
-    "sequence": 638,
+    "sequence": 639,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -13880,7 +13906,7 @@
     }
   },
   {
-    "sequence": 639,
+    "sequence": 640,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -13891,7 +13917,7 @@
     }
   },
   {
-    "sequence": 640,
+    "sequence": 641,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -13902,7 +13928,7 @@
     }
   },
   {
-    "sequence": 641,
+    "sequence": 642,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -13913,7 +13939,7 @@
     }
   },
   {
-    "sequence": 642,
+    "sequence": 643,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -13924,7 +13950,7 @@
     }
   },
   {
-    "sequence": 643,
+    "sequence": 644,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13935,7 +13961,7 @@
     }
   },
   {
-    "sequence": 644,
+    "sequence": 645,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13946,7 +13972,7 @@
     }
   },
   {
-    "sequence": 645,
+    "sequence": 646,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13957,7 +13983,7 @@
     }
   },
   {
-    "sequence": 646,
+    "sequence": 647,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13968,7 +13994,7 @@
     }
   },
   {
-    "sequence": 647,
+    "sequence": 648,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13979,7 +14005,7 @@
     }
   },
   {
-    "sequence": 648,
+    "sequence": 649,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -13990,7 +14016,7 @@
     }
   },
   {
-    "sequence": 649,
+    "sequence": 650,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14001,7 +14027,7 @@
     }
   },
   {
-    "sequence": 650,
+    "sequence": 651,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14012,7 +14038,7 @@
     }
   },
   {
-    "sequence": 651,
+    "sequence": 652,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -14023,7 +14049,7 @@
     }
   },
   {
-    "sequence": 652,
+    "sequence": 653,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14034,7 +14060,7 @@
     }
   },
   {
-    "sequence": 653,
+    "sequence": 654,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14045,7 +14071,7 @@
     }
   },
   {
-    "sequence": 654,
+    "sequence": 655,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14056,7 +14082,7 @@
     }
   },
   {
-    "sequence": 655,
+    "sequence": 656,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14067,7 +14093,7 @@
     }
   },
   {
-    "sequence": 656,
+    "sequence": 657,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14078,7 +14104,7 @@
     }
   },
   {
-    "sequence": 657,
+    "sequence": 658,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -14089,7 +14115,7 @@
     }
   },
   {
-    "sequence": 658,
+    "sequence": 659,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14100,7 +14126,7 @@
     }
   },
   {
-    "sequence": 659,
+    "sequence": 660,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14111,7 +14137,7 @@
     }
   },
   {
-    "sequence": 660,
+    "sequence": 661,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14122,7 +14148,7 @@
     }
   },
   {
-    "sequence": 661,
+    "sequence": 662,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -14133,7 +14159,7 @@
     }
   },
   {
-    "sequence": 662,
+    "sequence": 663,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14144,7 +14170,7 @@
     }
   },
   {
-    "sequence": 663,
+    "sequence": 664,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14155,7 +14181,7 @@
     }
   },
   {
-    "sequence": 664,
+    "sequence": 665,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14166,7 +14192,7 @@
     }
   },
   {
-    "sequence": 665,
+    "sequence": 666,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14177,7 +14203,7 @@
     }
   },
   {
-    "sequence": 666,
+    "sequence": 667,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14188,7 +14214,7 @@
     }
   },
   {
-    "sequence": 667,
+    "sequence": 668,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -14199,7 +14225,7 @@
     }
   },
   {
-    "sequence": 668,
+    "sequence": 669,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14210,7 +14236,7 @@
     }
   },
   {
-    "sequence": 669,
+    "sequence": 670,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -14221,7 +14247,7 @@
     }
   },
   {
-    "sequence": 670,
+    "sequence": 671,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14232,7 +14258,7 @@
     }
   },
   {
-    "sequence": 671,
+    "sequence": 672,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14243,7 +14269,7 @@
     }
   },
   {
-    "sequence": 672,
+    "sequence": 673,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14254,7 +14280,7 @@
     }
   },
   {
-    "sequence": 673,
+    "sequence": 674,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -14265,7 +14291,7 @@
     }
   },
   {
-    "sequence": 674,
+    "sequence": 675,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "hard",
@@ -14276,7 +14302,7 @@
     }
   },
   {
-    "sequence": 675,
+    "sequence": 676,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "easy",
@@ -14287,7 +14313,7 @@
     }
   },
   {
-    "sequence": 676,
+    "sequence": 677,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
@@ -14298,7 +14324,7 @@
     }
   },
   {
-    "sequence": 677,
+    "sequence": 678,
     "chapter": "主观题",
     "type": "subjective",
     "difficulty": "medium",
