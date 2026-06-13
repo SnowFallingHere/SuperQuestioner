@@ -149,11 +149,11 @@
   </div>
   <div class="review-card" id="wb-card"></div>
   <div class="review-card hidden" id="wb-analysis"></div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="btn-wb-prev" onclick="wbPrev()">上一题</button>
-    <button class="btn btn-primary" id="btn-wb-action" onclick="wbToggleCategory()">暂时错题</button>
-    <button class="btn btn-danger" id="btn-wb-remove" onclick="wbRemove()">移除错题</button>
-    <button class="btn btn-primary" id="btn-wb-next" onclick="wbNext()">下一题</button>
+  <div class="btn-row btn-row-wrongbook">
+    <button class="btn btn-secondary btn-wb-shrinkable" id="btn-wb-prev" onclick="wbPrev()" data-text-full="上一题" data-text-short="&lt;"></button>
+    <button class="btn btn-book-green btn-wb-shrinkable" id="btn-wb-action" onclick="wbToggleCategory()" data-text-full="转为长期记忆" data-text-short="长期记忆"></button>
+    <button class="btn btn-danger btn-wb-shrinkable" id="btn-wb-remove" onclick="wbRemove()" data-text-full="移除错题" data-text-short="移除"></button>
+    <button class="btn btn-primary btn-wb-shrinkable" id="btn-wb-next" onclick="wbNext()" data-text-full="下一题" data-text-short="&gt;"></button>
   </div>
   <div class="btn-row" style="margin-top:8px">
     <button class="btn btn-secondary" onclick="showHome()">返回首页</button>

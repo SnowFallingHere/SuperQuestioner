@@ -447,10 +447,19 @@ function toggleNoteArea() {
 
 function saveNote() {
   const q = quizQueue[currentIndex];
+  if (!q) return;
   const key = qKey(q);
   const val = document.getElementById('note-input').value.trim();
   if (val) {
     wrongBookNotes[key] = val;
+    // 写了备注就自动入长期记忆
+    delete wrongBookTemp[key];
+    if (!wrongBookLong[key]) {
+      // 简化：把题目存进去
+      wrongBookLong[key] = q;
+    }
+    localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
+    localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
   } else {
     delete wrongBookNotes[key];
   }
@@ -1447,7 +1456,8 @@ function renderWbItem() {
   if (wbList.length === 0) {
     counterEl.textContent = '0 / 0';
     cardEl.innerHTML = '<div style="text-align:center;color:#999;padding:40px">暂无错题</div>';
-    btnAction.textContent = '无操作';
+    btnAction.dataset.textFull = '无操作';
+    btnAction.dataset.textShort = '—';
     return;
   }
   if (wbIndex >= wbList.length) wbIndex = wbList.length - 1;
@@ -1483,19 +1493,47 @@ function renderWbItem() {
     });
   }
 
-  const note = wrongBookNotes[item.key];
-  if (note) {
-    html += '<div style="margin-top:12px;padding:8px 12px;background:#fff8e1;border-radius:6px;font-size:13px;color:#8d6e00;">备注：' + escHtml(note) + '</div>';
-  }
+  const note = wrongBookNotes[item.key] || '';
+  html += '<div style="margin-top:12px;padding:12px;background:#f5f5f5;border-radius:8px;font-size:13px;border:1px solid #e5e5e5;">';
+  html += '<div style="color:#666;margin-bottom:6px;font-weight:600;">📝 备注（写备注后自动加入长期记忆）</div>';
+  html += '<textarea class="note-input" id="wb-note-input" style="width:100%;box-sizing:border-box;min-height:70px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px;resize:vertical;background:#fff;" placeholder="写点备注..."></textarea>';
+  html += '</div>';
 
   cardEl.innerHTML = html;
 
+  // 绑定输入事件（自动保存 + 自动入长期记忆）
+  const wbNoteInput = document.getElementById('wb-note-input');
+  if (wbNoteInput) {
+    wbNoteInput.value = note;
+    wbNoteInput.addEventListener('input', function () {
+      const key = item.key;
+      const val = this.value.trim();
+      if (val) {
+        wrongBookNotes[key] = val;
+        delete wrongBookTemp[key];
+        if (!wrongBookLong[key]) wrongBookLong[key] = q;
+      } else {
+        delete wrongBookNotes[key];
+      }
+      localStorage.setItem('wrongBookNotes', JSON.stringify(wrongBookNotes));
+      localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
+      localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
+    });
+  }
+
   if (item.cat === 'temp') {
-    btnAction.textContent = '转为长期记忆';
-    btnAction.className = 'btn btn-book-green';
+    btnAction.dataset.textFull = '转为长期记忆';
+    btnAction.dataset.textShort = '长期记忆';
+    btnAction.className = 'btn btn-book-green btn-wb-shrinkable';
+  } else if (item.cat === 'long') {
+    btnAction.dataset.textFull = '转为暂时错题';
+    btnAction.dataset.textShort = '暂存';
+    btnAction.className = 'btn btn-primary btn-wb-shrinkable';
   } else {
-    btnAction.textContent = '转为暂时错题';
-    btnAction.className = 'btn btn-primary';
+    // analysis / other —— 保留原按钮结构但给它一个"查看"状态
+    btnAction.dataset.textFull = '查看详情';
+    btnAction.dataset.textShort = '详情';
+    btnAction.className = 'btn btn-primary btn-wb-shrinkable';
   }
 }
 

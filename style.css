@@ -46,6 +46,41 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f
 .btn-danger:hover { opacity: .85; }
 .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
 
+/* 错题本按钮响应式：通过 data 属性切换文字 */
+.btn-wb-shrinkable { text-align: center; }
+.btn-wb-shrinkable::before { content: attr(data-text-full); }
+
+@media (max-width: 720px) {
+  .btn-wb-shrinkable { font-size: 14px; padding: 9px 20px; }
+  .btn-wb-shrinkable::before { content: attr(data-text-short); }
+  #btn-wb-prev::before { content: attr(data-text-short); }
+  #btn-wb-next::before { content: attr(data-text-short); }
+}
+
+@media (max-width: 480px) {
+  .btn-wb-shrinkable { font-size: 13px; padding: 8px 14px; flex: 1 1 auto; }
+  .btn-row-wrongbook {
+    flex-wrap: wrap; gap: 8px;
+  }
+  /* 把 < 和 > 提到第一行，水平各占一半 */
+  .btn-row-wrongbook #btn-wb-prev { order: 1; flex: 1 1 calc(50% - 4px); max-width: calc(50% - 4px); }
+  .btn-row-wrongbook #btn-wb-next { order: 2; flex: 1 1 calc(50% - 4px); max-width: calc(50% - 4px); }
+  /* 其他两个按钮占整行，依次在下面 */
+  .btn-row-wrongbook #btn-wb-action { order: 3; flex: 1 1 100%; max-width: 100%; }
+  .btn-row-wrongbook #btn-wb-remove { order: 4; flex: 1 1 100%; max-width: 100%; }
+}
+
+@media (min-width: 481px) {
+  .btn-wb-shrinkable { flex: 0 0 auto; }
+  .btn-row-wrongbook { flex-wrap: nowrap; flex-direction: row; gap: 12px; }
+  .btn-row-wrongbook #btn-wb-prev,
+  .btn-row-wrongbook #btn-wb-next,
+  .btn-row-wrongbook #btn-wb-action,
+  .btn-row-wrongbook #btn-wb-remove {
+    order: 0; flex: 0 0 auto; max-width: none;
+  }
+}
+
 /* Quiz */
 .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 14px; color: #888; }
 .quiz-header-right { display: flex; align-items: center; gap: 12px; }
