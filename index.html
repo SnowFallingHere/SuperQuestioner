@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题库练习</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<!-- Home -->
+<div id="page-home">
+  <div class="home-title">题库练习</div>
+  <div id="source-area">
+    <div class="loading">加载题库中...</div>
+  </div>
+  <div id="mode-area" class="hidden">
+    <div class="mode-cards">
+      <div class="mode-card" id="card-wrongbook" onclick="startWrongBook()">
+        <div class="mode-card-row">
+          <h2>重做错题</h2>
+          <div class="toggle-row" onclick="event.stopPropagation()">
+            <span class="toggle-label">含长期记忆</span>
+            <label class="toggle-switch"><input type="checkbox" id="wb-include-long" checked onchange="updateWrongBookCardText()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <p>从错题本中抽取题目重做</p>
+      </div>
+      <div class="mode-card" onclick="startChallenge()">
+        <h2>闯关模式</h2>
+        <p>答错100道即失败</p>
+      </div>
+      <div class="mode-card" onclick="startInfinite()">
+        <h2>无限模式</h2>
+        <p>答对3次的题不再出现，错题会反复出现直到掌握</p>
+      </div>
+      <div class="mode-card" onclick="showTimedConfig()">
+        <h2>限时模式</h2>
+        <p>选择章节和难度，10分钟内答完50题</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Timed Config -->
+<div id="page-config" class="hidden">
+  <div class="config-section" id="config-chapter-section">
+    <h3>选择章节</h3>
+    <div class="chip-group" id="chapter-chips"></div>
+  </div>
+  <div class="config-section hidden" id="config-difficulty-section">
+    <h3>选择难度</h3>
+    <div class="chip-group" id="difficulty-chips"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="showHome()">返回</button>
+    <button class="btn btn-primary" id="btn-start-timed" onclick="startTimed()" disabled>开始</button>
+  </div>
+</div>
+
+<!-- Quiz -->
+<div id="page-quiz" class="hidden">
+  <div class="quiz-header">
+    <span id="quiz-info"></span>
+    <div class="quiz-header-right">
+      <span id="quiz-timer" class="timer hidden"></span>
+      <span id="gear-btn" class="gear-icon hidden" onclick="toggleSettings()">&#9881;</span>
+    </div>
+  </div>
+  <div class="quiz-card">
+    <div class="question-meta" id="question-meta"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="options-area"></div>
+    <div class="answer-feedback" id="answer-feedback"></div>
+    <div class="note-panel hidden" id="note-panel">
+      <div class="note-panel-row">
+        <div class="note-category" id="note-category"></div>
+      </div>
+      <textarea id="note-input" class="note-input" placeholder="写备注..." oninput="saveNote()"></textarea>
+    </div>
+    <div class="note-toggle" id="note-toggle" onclick="toggleNoteArea()">+</div>
+  </div>
+  <div class="btn-row" id="quiz-btns">
+    <button class="btn btn-secondary" onclick="quitQuiz()">退出</button>
+  </div>
+</div>
+
+<!-- Settings Panel (overlay) -->
+<div id="settings-panel" class="settings-overlay hidden">
+  <div class="settings-card">
+    <div class="settings-header">
+      <h3>设置</h3>
+      <span class="settings-close" onclick="toggleSettings()">&times;</span>
+    </div>
+    <div class="settings-body">
+      <div class="settings-section">
+        <h4>自定义难度</h4>
+        <p class="settings-hint">为没有难度标记的题目设置难度</p>
+        <div class="chip-group" id="settings-difficulty-chips"></div>
+      </div>
+      <div class="settings-section">
+        <h4>进度管理</h4>
+        <div class="btn-row" style="margin-top:8px">
+          <button class="btn btn-primary" onclick="exportProgress()">导出进度</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">导入进度</button>
+          <input type="file" id="import-file" accept=".json" class="hidden" onchange="importProgress(event)">
+        </div>
+      </div>
+      <div class="settings-section">
+        <button class="btn btn-danger" onclick="resetProgress()">重置进度</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Result -->
+<div id="page-result" class="hidden">
+  <div class="result-card">
+    <h2 id="result-title"></h2>
+    <div class="result-stats" id="result-stats"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="showHome()">返回首页</button>
+    </div>
+  </div>
+  <div id="wrong-summary" class="hidden">
+    <div class="wrong-summary-header" onclick="toggleWrongSummary()">
+      <h3>错题列表</h3><span id="wrong-summary-toggle">&#9660;</span>
+    </div>
+    <div id="wrong-summary-list"></div>
+  </div>
+</div>
+
+<!-- Wrong Book Browser -->
+<div id="page-wrongbook" class="hidden">
+  <div class="review-header">
+    <h3>错题本</h3>
+    <span id="wb-counter"></span>
+  </div>
+  <div class="wb-filter-row" id="wb-filter-row">
+    <span class="chip active" data-filter="all" onclick="setWbFilter(this)">全部</span>
+    <span class="chip active-green" data-filter="temp" onclick="setWbFilter(this)">暂时错题</span>
+    <span class="chip" data-filter="long" onclick="setWbFilter(this)" style="background:#f39c12;color:#fff;border-color:#f39c12">长期记忆</span>
+  </div>
+  <div class="review-card" id="wb-card"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" id="btn-wb-prev" onclick="wbPrev()">上一题</button>
+    <button class="btn btn-primary" id="btn-wb-action" onclick="wbToggleCategory()">暂时错题</button>
+    <button class="btn btn-danger" id="btn-wb-remove" onclick="wbRemove()">移除错题</button>
+    <button class="btn btn-primary" id="btn-wb-next" onclick="wbNext()">下一题</button>
+  </div>
+  <div class="btn-row" style="margin-top:8px">
+    <button class="btn btn-secondary" onclick="showHome()">返回首页</button>
+  </div>
+</div>
+
+<!-- Wrong Review -->
+<div id="page-wrong-review" class="hidden">
+  <div class="review-header">
+    <h3>错题回顾</h3>
+    <span id="review-counter"></span>
+  </div>
+  <div class="review-card" id="review-card"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" id="btn-review-prev" onclick="reviewPrev()">上一题</button>
+    <button class="btn btn-primary" id="btn-review-add" onclick="toggleWrongBookReview()">加入错题本</button>
+    <button class="btn btn-primary" id="btn-review-next" onclick="reviewNext()">下一题</button>
+  </div>
+  <div class="btn-row" style="margin-top:8px">
+    <button class="btn btn-secondary" onclick="backToResult()">返回结果</button>
+    <button class="btn btn-secondary" onclick="showHome()">返回首页</button>
+  </div>
+</div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
