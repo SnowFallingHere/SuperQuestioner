@@ -58,6 +58,8 @@ loadSourceSelection();
 
 let mode, quizQueue, currentIndex, wrongCount, correctCount, totalAnswered;
 let timerInterval, timeLeft, timerPaused;
+let perQuestionTimerInterval, perQuestionTimeLeft, perQuestionTimerActive;
+let challengeSettings = null; // {wrongLimit, correctTarget, useTimer, timerSeconds, redEffect, combo, shake}
 let infiniteMap;
 let infiniteSession; // {key: {is_correct: bool, corrects: int}} —— 本轮已答过的题
 let timedQuestions;
@@ -311,7 +313,7 @@ function updateWrongBookCardText() {
 }
 
 // ====== Page Navigation ======
-const PAGES = ['page-home','page-config','page-quiz','page-result','page-wrong-review','page-wrongbook','page-preview-config','page-preview'];
+const PAGES = ['page-home','page-config','page-challenge-config','page-quiz','page-result','page-wrong-review','page-wrongbook','page-preview-config','page-preview'];
 function show(id) {
   PAGES.forEach(p => {
     document.getElementById(p).classList.toggle('hidden', p !== id);
@@ -353,6 +355,35 @@ function getActiveQuestions() {
 
 function startChallenge() {
   if (ALL_QUESTIONS.length === 0) return;
+  // 读取中转页面的配置（如果没有打开过中转页面，使用默认值）
+  const wrongLimitEl = document.getElementById('challenge-wrong-limit');
+  const correctTargetEl = document.getElementById('challenge-correct-target');
+  const useTimerEl = document.getElementById('challenge-use-timer');
+  const timerSecondsEl = document.getElementById('challenge-timer-seconds');
+  const redEffectEl = document.getElementById('challenge-red-effect');
+  const comboEl = document.getElementById('challenge-combo');
+  const shakeEl = document.getElementById('challenge-shake');
+
+  let wrongLimit = 50, correctTarget = 160, useTimer = true, timerSeconds = 30;
+  let redEffect = true, combo = true, shake = false;
+  if (wrongLimitEl) {
+    wrongLimit = parseInt(wrongLimitEl.value, 10) || 50;
+    correctTarget = parseInt(correctTargetEl.value, 10) || 160;
+    useTimer = useTimerEl.checked;
+    timerSeconds = parseInt(timerSecondsEl.value, 10) || 30;
+    redEffect = redEffectEl.checked;
+    combo = comboEl.checked;
+    shake = shakeEl.checked;
+  }
+  if (wrongLimit < 1) wrongLimit = 1;
+  if (correctTarget < 1) correctTarget = 1;
+  if (timerSeconds < 5) timerSeconds = 5;
+  challengeSettings = { wrongLimit, correctTarget, useTimer, timerSeconds, redEffect, combo, shake };
+  effectsEnabled = combo;
+  localStorage.setItem('effectsEnabled', String(effectsEnabled));
+  saveChallengePrefs();
+  console.log('[startChallenge] settings=', challengeSettings);
+
   mode = 'challenge';
   wrongCount = 0; correctCount = 0; totalAnswered = 0; streak = 0;
   wrongList = [];
@@ -361,6 +392,152 @@ function startChallenge() {
   show('page-quiz');
   document.getElementById('gear-btn').classList.add('hidden');
   renderQuestion();
+}
+
+function showChallengeConfig() {
+  // 恢复保存过的偏好
+  const savedPrefs = localStorage.getItem('challengePrefs');
+  if (savedPrefs) {
+    try {
+      const p = JSON.parse(savedPrefs);
+      const we = document.getElementById('challenge-wrong-limit');
+      const ce = document.getElementById('challenge-correct-target');
+      const ute = document.getElementById('challenge-use-timer');
+      const tse = document.getElementById('challenge-timer-seconds');
+      const re = document.getElementById('challenge-red-effect');
+      const coe = document.getElementById('challenge-combo');
+      const se = document.getElementById('challenge-shake');
+      if (we) we.value = p.wrongLimit ?? 50;
+      if (ce) ce.value = p.correctTarget ?? 160;
+      if (ute) ute.checked = p.useTimer !== false;
+      if (tse) tse.value = p.timerSeconds ?? 30;
+      if (re) re.checked = p.redEffect !== false;
+      if (coe) coe.checked = p.combo !== false;
+      if (se) se.checked = p.shake === true;
+      onChallengeTimerToggle();
+    } catch(e) {}
+  }
+  show('page-challenge-config');
+}
+
+function onChallengeTimerToggle() {
+  const useTimer = document.getElementById('challenge-use-timer');
+  const secondsInput = document.getElementById('challenge-timer-seconds');
+  if (useTimer && secondsInput) {
+    secondsInput.style.opacity = useTimer.checked ? '1' : '0.4';
+    secondsInput.disabled = !useTimer.checked;
+  }
+}
+
+function saveChallengePrefs() {
+  const we = document.getElementById('challenge-wrong-limit');
+  if (!we) return;
+  const p = {
+    wrongLimit: parseInt(we.value, 10) || 50,
+    correctTarget: parseInt(document.getElementById('challenge-correct-target').value, 10) || 160,
+    useTimer: document.getElementById('challenge-use-timer').checked,
+    timerSeconds: parseInt(document.getElementById('challenge-timer-seconds').value, 10) || 30,
+    redEffect: document.getElementById('challenge-red-effect').checked,
+    combo: document.getElementById('challenge-combo').checked,
+    shake: document.getElementById('challenge-shake').checked,
+  };
+  localStorage.setItem('challengePrefs', JSON.stringify(p));
+}
+
+// 每题倒计时
+function startPerQuestionTimer() {
+  console.log('[startPerQuestionTimer] ENTERED');
+  clearPerQuestionTimer();
+  if (!challengeSettings || !challengeSettings.useTimer) {
+    console.log('[startPerQuestionTimer] skip: settings=', challengeSettings);
+    return;
+  }
+  perQuestionTimeLeft = challengeSettings.timerSeconds;
+  perQuestionTimerActive = true;
+  const el = document.getElementById('quiz-timer');
+  if (!el) { console.warn('[startPerQuestionTimer] #quiz-timer not found'); return; }
+  // 不依赖 hidden class，直接用内联样式确保显示（优先级最高）
+  el.classList.remove('hidden');
+  el.setAttribute('style', 'display: inline-block !important; visibility: visible;');
+  // 回退：某些浏览器不认内联 !important，再加一层保障
+  if (getComputedStyle(el).display === 'none') {
+    el.style.cssText = 'display: inline-block; visibility: visible;';
+  }
+  console.log('[startPerQuestionTimer] started, seconds=', perQuestionTimeLeft, ' current display=', getComputedStyle(el).display);
+  // 立即渲染一次（避免 setInterval 的 1s 空窗期导致"一秒后才出现"）
+  updatePerQuestionTimerDisplay();
+  perQuestionTimerInterval = setInterval(() => {
+    if (timerPaused) return;
+    perQuestionTimeLeft--;
+    updatePerQuestionTimerDisplay();
+    if (perQuestionTimeLeft <= 0) {
+      clearPerQuestionTimer();
+      perQuestionTimerActive = false;
+      registerPerQuestionTimeout();
+    }
+  }, 1000);
+}
+
+function updatePerQuestionTimerDisplay() {
+  const el = document.getElementById('quiz-timer');
+  if (!el) return;
+  const s = perQuestionTimeLeft;
+  el.textContent = '⏱ ' + (s < 0 ? 0 : s) + 's';
+  // 倒计时特效（遮罩层方式：剩余 ≤5 秒时开启
+  const overlay = document.getElementById('timer-red-overlay');
+  const useRed = challengeSettings && challengeSettings.redEffect;
+  const useShake = challengeSettings && challengeSettings.shake;
+  if (overlay && useRed && s <= 5 && s > 0) {
+    overlay.classList.add('active');
+  } else if (overlay) {
+    overlay.classList.remove('active');
+  }
+  const oa = document.getElementById('options-area');
+  if (oa && useShake && s <= 5 && s > 0) {
+    oa.classList.add('shake-options');
+  } else if (oa) {
+    oa.classList.remove('shake-options');
+  }
+}
+
+function clearPerQuestionTimer() {
+  if (perQuestionTimerInterval) clearInterval(perQuestionTimerInterval);
+  perQuestionTimerInterval = null;
+  perQuestionTimerActive = false;
+  const overlay = document.getElementById('timer-red-overlay');
+  if (overlay) overlay.classList.remove('active');
+  const oa = document.getElementById('options-area');
+  if (oa) oa.classList.remove('shake-options');
+  const el = document.getElementById('quiz-timer');
+  if (el) {
+    el.classList.add('hidden');
+    // 重置内联样式，避免 "inline-block" 残留与 hidden 冲突
+    el.style.display = '';
+    el.style.visibility = '';
+    console.log('[clearPerQuestionTimer] hidden added');
+  }
+}
+
+function registerPerQuestionTimeout() {
+  // 时间到自动判错
+  if (answered) return;
+  const q = quizQueue[currentIndex];
+  if (!q) return;
+  answered = true;
+  wrongCount++;
+  totalAnswered++;
+  streak = 0;
+  wrongList.push(qObj(q));
+  // 显示 feedback
+  const fb = document.getElementById('answer-feedback');
+  if (fb) {
+    const correctText = formatAnswer(q);
+    fb.innerHTML = '<div class="feedback wrong">时间到！正确答案：' + correctText + '</div>';
+  }
+  autoNextTimeout = setTimeout(() => {
+    currentIndex++;
+    renderQuestion();
+  }, 1200);
 }
 
 // ====== Infinite Mode ======
@@ -662,13 +839,6 @@ function setCustomDifficulty(el, diff) {
 }
 
 // ====== Note & Category Panel ======
-function toggleNoteArea() {
-  const panel = document.getElementById('note-panel');
-  const toggle = document.getElementById('note-toggle');
-  panel.classList.toggle('hidden');
-  toggle.classList.toggle('active');
-}
-
 function saveNote() {
   const q = quizQueue[currentIndex];
   if (!q) return;
@@ -697,33 +867,26 @@ function renderNotePanel(q) {
 
   // Category chips
   const catEl = document.getElementById('note-category');
-  catEl.innerHTML =
-    '<span class="cat-label">分类：</span>' +
-    '<span class="cat-chip' + (inTemp ? ' active' : '') + '" onclick="setWrongCategory(\'temp\')">暂时错题</span>' +
-    '<span class="cat-chip' + (inLong ? ' active-long' : '') + '" onclick="setWrongCategory(\'long\')">长期记忆</span>' +
-    '<span class="cat-label" style="margin-left:8px">特效：</span>' +
-    '<span class="cat-chip' + (effectsEnabled !== false ? ' active' : '') + '" onclick="toggleEffects()">连击</span>';
+  if (catEl) {
+    catEl.innerHTML =
+      '<span class="cat-label">分类：</span>' +
+      '<span class="cat-chip' + (inTemp ? ' active' : '') + '" onclick="setWrongCategory(\'temp\')">暂时错题</span>' +
+      '<span class="cat-chip' + (inLong ? ' active-long' : '') + '" onclick="setWrongCategory(\'long\')">长期记忆</span>';
+  }
 
   // Note
-  document.getElementById('note-input').value = wrongBookNotes[key] || '';
+  const noteInput = document.getElementById('note-input');
+  if (noteInput) noteInput.value = wrongBookNotes[key] || '';
 
   // Auto-show if in any book or has note
   const panel = document.getElementById('note-panel');
-  const toggle = document.getElementById('note-toggle');
-  if (inTemp || inLong || wrongBookNotes[key]) {
-    panel.classList.remove('hidden');
-    toggle.classList.add('active');
-  } else {
-    panel.classList.add('hidden');
-    toggle.classList.remove('active');
+  if (panel) {
+    if (inTemp || inLong || wrongBookNotes[key]) {
+      panel.classList.remove('hidden');
+    } else {
+      panel.classList.add('hidden');
+    }
   }
-}
-
-function toggleEffects() {
-  effectsEnabled = effectsEnabled === false ? true : false;
-  localStorage.setItem('effectsEnabled', String(effectsEnabled));
-  const q = quizQueue[currentIndex];
-  renderNotePanel(q);
 }
 
 function setWrongCategory(cat) {
@@ -905,7 +1068,17 @@ function renderQuestion() {
   clearTimeout(autoNextTimeout);
   questionStartTime = Date.now();
 
-  if (mode === 'challenge' && wrongCount >= 100) { showResult(); return; }
+  console.log('[renderQuestion] mode=', mode, 'challengeSettings=', challengeSettings);
+
+  // 闯关模式：检查胜利/失败
+  if (mode === 'challenge' && challengeSettings) {
+    if (wrongCount >= challengeSettings.wrongLimit) { showResult(); return; }
+    if (correctCount >= challengeSettings.correctTarget && wrongCount < challengeSettings.wrongLimit) { showResult(); return; }
+  }
+  if (mode === 'challenge' && !challengeSettings) {
+    // 兜底：默认 100
+    if (wrongCount >= 100) { showResult(); return; }
+  }
   if (mode === 'infinite') {
     currentIndex = infiniteNextIndex();
     if (currentIndex === -1) { showResult(); return; }
@@ -917,6 +1090,17 @@ function renderQuestion() {
   }
 
   const q = quizQueue[currentIndex];
+
+  // === 闯关模式：启动每题倒计时（必须放在所有题型分支之前，避免 calculation/subjective return 时漏掉）===
+  if (mode === 'challenge') {
+    // 清掉旧状态（确保 quiz-timer 能被看见）
+    const oldTimer = document.getElementById('quiz-timer');
+    if (oldTimer) {
+      oldTimer.textContent = '';
+      oldTimer.classList.remove('hidden');
+    }
+    startPerQuestionTimer();
+  }
 
   let info = '';
   if (mode === 'challenge') info = '闯关 | 对' + correctCount + ' 错' + wrongCount;
@@ -1003,6 +1187,8 @@ function renderQuestion() {
 
   // Note panel
   renderNotePanel(q);
+
+  // （闯关模式的倒计时已在 renderQuestion 最前面启动）
 }
 
 function clickOption(el, isMulti) {
@@ -1037,6 +1223,12 @@ function answerTF(val) {
 function judge(isCorrect, correctAnswer, selectedAnswer) {
   answered = true;
   const q = quizQueue[currentIndex];
+
+  // 停止每题倒计时（闯关模式）
+  if (mode === 'challenge') {
+    clearPerQuestionTimer();
+    console.log('[judge] cleared per-question timer; will render next question in 1500ms');
+  }
 
   if (mode === 'timed') timerPaused = true;
 
@@ -1208,6 +1400,7 @@ function renderCalculation(q, area) {
 
 function judgeCalculation() {
   answered = true;
+  if (mode === 'challenge') clearPerQuestionTimer();
   const q = quizQueue[currentIndex];
   const answers = q.answer || {};
   const inputs = document.querySelectorAll('.calc-input');
@@ -1321,6 +1514,7 @@ function renderSubjective(q, area) {
 
 function judgeSubjective() {
   answered = true;
+  if (mode === 'challenge') clearPerQuestionTimer();
   const q = quizQueue[currentIndex];
   const userAnswer = document.getElementById('subjective-input').value.trim();
   const answerData = q.answer || {};
@@ -1463,6 +1657,7 @@ function nextQuestion() {
 function quitQuiz() {
   clearTimeout(autoNextTimeout);
   clearInterval(timerInterval);
+  clearPerQuestionTimer();
   recordQuizSession();
   if (mode === 'infinite') saveInfiniteProgress();
   if (totalAnswered > 0) showResult();
@@ -1473,6 +1668,7 @@ function quitQuiz() {
 function showResult() {
   clearTimeout(autoNextTimeout);
   clearInterval(timerInterval);
+  clearPerQuestionTimer();
   recordQuizSession();
   if (mode === 'infinite') saveInfiniteProgress();
 
@@ -1483,7 +1679,11 @@ function showResult() {
   const rate = totalAnswered > 0 ? Math.round(correctCount / totalAnswered * 100) : 0;
 
   if (mode === 'challenge') {
-    title.textContent = wrongCount >= 100 ? '闯关失败' : '已退出';
+    const wl = challengeSettings ? challengeSettings.wrongLimit : 100;
+    const ct = challengeSettings ? challengeSettings.correctTarget : 160;
+    if (wrongCount >= wl) title.textContent = '闯关失败 ❌';
+    else if (correctCount >= ct) title.textContent = '闯关胜利 🎉';
+    else title.textContent = '已退出';
   } else if (mode === 'infinite') {
     const mastered = getActiveQuestions().filter(q => infiniteMap[qKey(q)].correctCount >= 3).length;
     title.textContent = mastered === getActiveQuestions().length ? '全部掌握！' : '已退出';
@@ -1603,8 +1803,8 @@ function renderWrongSummary() {
           ' | 正确答案：' + correctStr + '</span></div>';
       });
     } else if (q.type === 'true_false') {
-      html += '<div class="detail-opt' + (sel === '正确' ? ' wrong' : '') + '">正确' + (sel === '正确' ? ' ← 你的选择' : '') + '</div>';
-      html += '<div class="detail-opt' + (sel === '错误' ? ' wrong' : '') + '">错误' + (sel === '错误' ? ' ← 你的选择' : '') + '</div>';
+      html += '<div class="detail-opt' + (sel === '正确' ? ' wrong' : '') + '">正确' + (sel === '正确' ? ' ← 你的选择' : '') + (ans === '正确' && sel !== '正确' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
+      html += '<div class="detail-opt' + (sel === '错误' ? ' wrong' : '') + '">错误' + (sel === '错误' ? ' ← 你的选择' : '') + (ans === '错误' && sel !== '错误' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
       html += '<div class="detail-opt correct">正确答案：' + ans + '</div>';
     } else {
       (q.options || []).forEach(opt => {
@@ -1615,7 +1815,10 @@ function renderWrongSummary() {
         let cls = 'detail-opt';
         if (isCorrectOpt) cls += ' correct';
         if (isSelected && !isCorrectOpt) cls += ' wrong';
-        html += '<div class="' + cls + '">' + label + (label ? '. ' : '') + escHtml(text) +
+        const isMissing = isCorrectOpt && !isSelected;
+        html += '<div class="' + cls + '">' +
+          (isMissing ? '<span class="miss-badge" title="漏选">漏</span> ' : '') +
+          label + (label ? '. ' : '') + escHtml(text) +
           (isSelected ? ' ← 你的选择' : '') + (isCorrectOpt && !isSelected ? ' (正确)' : '') + '</div>';
       });
     }
@@ -1661,8 +1864,8 @@ function renderReviewItem() {
   html += '<div class="question-text">' + escHtml(q.question) + '</div>';
 
   if (q.type === 'true_false') {
-    html += '<div class="review-option' + (selected === '正确' ? ' wrong' : '') + '">正确' + (selected === '正确' ? ' (你的选择)' : '') + '</div>';
-    html += '<div class="review-option' + (selected === '错误' ? ' wrong' : '') + '">错误' + (selected === '错误' ? ' (你的选择)' : '') + '</div>';
+    html += '<div class="review-option' + (selected === '正确' ? ' wrong' : '') + '">正确' + (selected === '正确' ? ' (你的选择)' : '') + (q.answer === '正确' && selected !== '正确' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
+    html += '<div class="review-option' + (selected === '错误' ? ' wrong' : '') + '">错误' + (selected === '错误' ? ' (你的选择)' : '') + (q.answer === '错误' && selected !== '错误' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
     html += '<div class="review-answer correct-ans">正确答案：' + q.answer + '</div>';
   } else if (q.type === 'calculation') {
     html += '<div class="review-answer correct-ans">正确答案：' + formatAnswer(q) + '</div>';
@@ -1677,7 +1880,10 @@ function renderReviewItem() {
       if (isCorrectOpt) cls += ' correct';
       else if (isSelected) cls += ' wrong';
       else cls += ' neutral';
-      html += '<div class="' + cls + '">' + label + (label ? '. ' : '') + escHtml(text) +
+      const isMissing = isCorrectOpt && !isSelected;
+      html += '<div class="' + cls + '">' +
+        (isMissing ? '<span class="miss-badge" title="漏选">漏</span> ' : '') +
+        label + (label ? '. ' : '') + escHtml(text) +
         (isSelected ? ' (你的选择)' : '') + (isCorrectOpt && !isSelected ? ' (正确)' : '') + '</div>';
     });
     html += '<div class="review-answer correct-ans">正确答案：' + q.answer + '</div>';
@@ -3081,6 +3287,13 @@ function renderPreviewItem() {
     html += '</div>';
   }
 
+  // 只读备注（如果有）
+  const previewNoteKey = qKey(q);
+  const previewNote = wrongBookNotes[previewNoteKey];
+  if (previewNote) {
+    html += '<div class="note-display">📝 备注：' + escHtml(previewNote) + '</div>';
+  }
+
   document.getElementById('preview-card').innerHTML = html;
 
   document.getElementById('btn-preview-prev').disabled = previewIndex === 0;
@@ -3115,7 +3328,11 @@ function renderPreviewList() {
     if (Object.keys(sourceData).length > 1) metaParts.push(q.source);
     const brief = q.question.length > 50 ? q.question.substring(0, 50) + '...' : q.question;
 
-    html += '<div class="pv-list-item" onclick="togglePreviewListItem(this)">';
+    // 检查是否有备注
+    const listItemNoteKey = qKey(q);
+    const listItemHasNote = !!wrongBookNotes[listItemNoteKey];
+
+    html += '<div class="pv-list-item' + (listItemHasNote ? ' has-note' : '') + '" onclick="togglePreviewListItem(this)">';
     html += '<div class="pv-list-header">';
     html += '<span class="pv-list-num">' + (i + 1) + '</span>';
     html += '<span class="pv-list-meta">' + escHtml(metaParts.join(' · ')) + '</span>';
@@ -3167,6 +3384,14 @@ function renderPreviewList() {
     if (q.type === 'calculation' || q.type === 'subjective') {
       html += buildPreviewAnswerHtml(q);
     }
+
+    // 只读备注（如果有）
+    const listNoteKey = qKey(q);
+    const listNote = wrongBookNotes[listNoteKey];
+    if (listNote) {
+      html += '<div class="note-display">📝 备注：' + escHtml(listNote) + '</div>';
+    }
+
     html += '</div></div>';
   });
   document.getElementById('preview-list').innerHTML = html;

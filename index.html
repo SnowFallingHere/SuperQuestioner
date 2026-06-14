@@ -29,9 +29,9 @@
         </div>
         <p>从错题本中抽取题目重做</p>
       </div>
-      <div class="mode-card" onclick="startChallenge()">
+      <div class="mode-card" onclick="showChallengeConfig()">
         <h2>闯关模式</h2>
-        <p>答错100道即失败</p>
+        <p>自定义胜利/失败条件，挑战极限</p>
       </div>
       <div class="mode-card" onclick="startInfinite()">
         <div class="mode-card-row">
@@ -78,14 +78,74 @@
   </div>
 </div>
 
+<!-- Challenge Config -->
+<div id="page-challenge-config" class="hidden">
+  <div class="config-section">
+    <h3>失败条件</h3>
+    <div class="config-row">
+      <label>错误数达到：</label>
+      <input type="number" id="challenge-wrong-limit" min="1" max="9999" step="1" value="50"
+             style="padding:8px 12px;font-size:16px;border:1px solid #ddd;border-radius:8px;width:120px;text-align:center;">
+      <span style="color:#888;font-size:14px">（默认 50）</span>
+    </div>
+  </div>
+  <div class="config-section">
+    <h3>胜利条件</h3>
+    <div class="config-row">
+      <label>答对达到：</label>
+      <input type="number" id="challenge-correct-target" min="1" max="99999" step="1" value="160"
+             style="padding:8px 12px;font-size:16px;border:1px solid #ddd;border-radius:8px;width:120px;text-align:center;">
+      <span style="color:#888;font-size:14px">（需同时小于失败错误数）</span>
+    </div>
+  </div>
+  <div class="config-section">
+    <h3>默认设置</h3>
+    <div class="config-toggle-row">
+      <label class="toggle-switch">
+        <input type="checkbox" id="challenge-use-timer" checked onchange="onChallengeTimerToggle()">
+        <span class="toggle-slider"></span>
+      </label>
+      <span>启用每题倒计时</span>
+      <input type="number" id="challenge-timer-seconds" min="5" max="600" step="5" value="30"
+             style="padding:6px 10px;font-size:14px;border:1px solid #ddd;border-radius:6px;width:90px;text-align:center;margin-left:8px;">
+      <span style="color:#888;font-size:14px">秒</span>
+    </div>
+    <div class="config-toggle-row">
+      <label class="toggle-switch">
+        <input type="checkbox" id="challenge-red-effect" checked>
+        <span class="toggle-slider"></span>
+      </label>
+      <span>倒计时特效：剩余 5 秒时全屏变红</span>
+    </div>
+    <div class="config-toggle-row">
+      <label class="toggle-switch">
+        <input type="checkbox" id="challenge-combo" checked>
+        <span class="toggle-slider"></span>
+      </label>
+      <span>启用连击特效</span>
+    </div>
+    <div class="config-toggle-row">
+      <label class="toggle-switch">
+        <input type="checkbox" id="challenge-shake">
+        <span class="toggle-slider"></span>
+      </label>
+      <span>倒计时选项抖动：剩余 5 秒时所有选项抖动并微微缩放</span>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="showHome()">返回</button>
+    <button class="btn btn-primary" onclick="startChallenge()">开始闯关</button>
+  </div>
+</div>
+
 <!-- Quiz -->
 <div id="page-quiz" class="hidden">
-  <div class="quiz-header">
+  <div id="timer-red-overlay"></div>
+  <div class="quiz-top-bar">
+    <span class="quiz-back-btn" onclick="quitQuiz()">&larr; 退出</span>
     <span id="quiz-info"></span>
-    <div class="quiz-header-right">
-      <span id="quiz-timer" class="timer hidden"></span>
-      <span id="gear-btn" class="gear-icon hidden" onclick="toggleSettings()">&#9881;</span>
-    </div>
+    <span id="quiz-timer" class="timer hidden"></span>
+    <span id="gear-btn" class="gear-icon hidden" onclick="toggleSettings()">&#9881;</span>
   </div>
   <div class="quiz-card">
     <div class="question-meta" id="question-meta"></div>
@@ -98,10 +158,6 @@
       </div>
       <textarea id="note-input" class="note-input" placeholder="写备注..." oninput="saveNote()"></textarea>
     </div>
-    <div class="note-toggle" id="note-toggle" onclick="toggleNoteArea()">+</div>
-  </div>
-  <div class="btn-row" id="quiz-btns">
-    <button class="btn btn-secondary" onclick="quitQuiz()">退出</button>
   </div>
 </div>
 
