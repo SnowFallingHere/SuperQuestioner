@@ -54,6 +54,9 @@
 
 <!-- Timed Config -->
 <div id="page-config" class="hidden">
+  <div class="page-top-bar">
+    <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
+  </div>
   <div class="config-section" id="config-chapter-section">
     <h3>选择章节</h3>
     <div class="chip-group" id="chapter-chips"></div>
@@ -73,13 +76,15 @@
            style="padding:8px 12px;font-size:16px;border:1px solid #ddd;border-radius:8px;width:120px;text-align:center;">
   </div>
   <div class="btn-row">
-    <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
     <button class="btn btn-primary" id="btn-start-timed" onclick="startTimed()">开始</button>
   </div>
 </div>
 
 <!-- Challenge Config -->
 <div id="page-challenge-config" class="hidden">
+  <div class="page-top-bar">
+    <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
+  </div>
   <div class="config-section">
     <h3>失败条件</h3>
     <div class="config-row">
@@ -140,7 +145,6 @@
     </div>
   </div>
   <div class="btn-row">
-    <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
     <button class="btn btn-primary" onclick="startChallenge()">开始闯关</button>
   </div>
 </div>
@@ -178,6 +182,9 @@
 
 <!-- Preview Config -->
 <div id="page-preview-config" class="hidden">
+  <div class="page-top-bar">
+    <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
+  </div>
   <div class="config-section" id="preview-chapter-section">
     <h3>选择章节</h3>
     <div class="chip-group" id="preview-chapter-chips"></div>
@@ -190,7 +197,6 @@
     <h3>筛选结果：<span id="preview-count">0</span> 题</h3>
   </div>
   <div class="btn-row">
-    <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
     <button class="btn btn-primary" id="btn-start-preview" onclick="startPreview()">开始浏览</button>
   </div>
 </div>
@@ -247,12 +253,12 @@
 
 <!-- Result -->
 <div id="page-result" class="hidden">
+  <div class="page-top-bar">
+    <span class="quiz-back-btn" onclick="showHome()">← 返回首页</span>
+  </div>
   <div class="result-card">
     <h2 id="result-title"></h2>
     <div class="result-stats" id="result-stats"></div>
-    <div class="btn-row">
-      <span class="quiz-back-btn" onclick="showHome()">← 返回首页</span>
-    </div>
   </div>
   <div id="wrong-summary" class="hidden">
     <div class="wrong-summary-header" onclick="toggleWrongSummary()">
@@ -282,6 +288,10 @@
 
 <!-- Wrong Review -->
 <div id="page-wrong-review" class="hidden">
+  <div class="page-top-bar">
+    <span class="quiz-back-btn" onclick="backToResult()">← 返回结果</span>
+    <span class="quiz-back-btn" onclick="showHome()">← 返回首页</span>
+  </div>
   <div class="review-header">
     <h3>错题回顾</h3>
     <span id="review-counter"></span>
@@ -292,10 +302,7 @@
     <button class="btn btn-primary" id="btn-review-add" onclick="toggleWrongBookReview()">加入错题本</button>
     <button class="btn btn-primary" id="btn-review-next" onclick="reviewNext()">下一题</button>
   </div>
-  <div class="btn-row" style="margin-top:8px">
-    <span class="quiz-back-btn" onclick="backToResult()">← 返回结果</span>
-    <span class="quiz-back-btn" onclick="showHome()">← 返回首页</span>
-  </div>
+</div>
 </div>
 
 </div>

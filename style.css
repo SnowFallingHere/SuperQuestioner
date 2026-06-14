@@ -108,6 +108,7 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .quiz-top-bar .timer { font-size: 18px; font-weight: 600; color: #e74c3c; flex: 0 0 auto; min-width: 58px; padding: 0 4px; text-align: center; }
 .quiz-back-btn { cursor: pointer; color: #555; font-size: 15px; padding: 4px 10px; border-radius: 6px; user-select: none; transition: background .15s; flex: 0 0 auto; }
 .quiz-back-btn:hover { background: #eee; }
+.page-top-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; min-height: 28px; }
 [data-theme="dark"] .quiz-back-btn { color: #bbb; }
 [data-theme="dark"] .quiz-back-btn:hover { background: #333; }
 .gear-icon { font-size: 20px; cursor: pointer; color: #bbb; transition: color .2s; user-select: none; }
