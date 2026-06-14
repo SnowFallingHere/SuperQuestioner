@@ -44,6 +44,10 @@
         <h2>限时模式</h2>
         <p>选择章节和难度，限定时间内答完50题</p>
       </div>
+      <div class="mode-card" onclick="showPreviewConfig()">
+        <h2>预览模式</h2>
+        <p>浏览所有题目，可筛选章节、题型，查看答案</p>
+      </div>
     </div>
   </div>
 </div>
@@ -98,6 +102,48 @@
   </div>
   <div class="btn-row" id="quiz-btns">
     <button class="btn btn-secondary" onclick="quitQuiz()">退出</button>
+  </div>
+</div>
+
+<!-- Preview Config -->
+<div id="page-preview-config" class="hidden">
+  <div class="config-section" id="preview-chapter-section">
+    <h3>选择章节</h3>
+    <div class="chip-group" id="preview-chapter-chips"></div>
+  </div>
+  <div class="config-section hidden config-section-locked" id="preview-type-section">
+    <h3>选择题型</h3>
+    <div class="chip-group" id="preview-type-chips"></div>
+  </div>
+  <div class="config-section" id="preview-count-section">
+    <h3>筛选结果：<span id="preview-count">0</span> 题</h3>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="showHome()">返回</button>
+    <button class="btn btn-primary" id="btn-start-preview" onclick="startPreview()">开始浏览</button>
+  </div>
+</div>
+
+<!-- Preview Browse -->
+<div id="page-preview" class="hidden">
+  <div class="preview-header">
+    <span class="preview-back-btn" onclick="showPreviewConfig()">&larr;</span>
+    <div class="preview-header-right">
+      <span id="preview-info"></span>
+      <span id="preview-counter" style="color:#888;font-size:14px"></span>
+      <div class="cylinder-toggle-row hidden" id="cylinder-toggle-row">
+        <span class="cylinder-label">滚轮</span>
+        <label class="toggle-switch"><input type="checkbox" id="cylinder-toggle" onchange="toggleCylinderMode(this.checked)"><span class="toggle-slider"></span></label>
+      </div>
+      <span class="preview-view-toggle" id="preview-view-toggle" onclick="togglePreviewView()" title="切换视图">☰</span>
+    </div>
+  </div>
+  <div class="preview-card" id="preview-card"></div>
+  <div class="preview-list hidden" id="preview-list"></div>
+  <div class="btn-row preview-nav" id="preview-card-nav">
+    <button class="btn btn-secondary" id="btn-preview-prev" onclick="previewPrev()">上一题</button>
+    <button class="btn btn-primary" id="btn-preview-toggle" onclick="previewToggleAnswer()">显示答案</button>
+    <button class="btn btn-primary" id="btn-preview-next" onclick="previewNext()">下一题</button>
   </div>
 </div>
 

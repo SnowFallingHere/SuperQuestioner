@@ -311,7 +311,7 @@ function updateWrongBookCardText() {
 }
 
 // ====== Page Navigation ======
-const PAGES = ['page-home','page-config','page-quiz','page-result','page-wrong-review','page-wrongbook'];
+const PAGES = ['page-home','page-config','page-quiz','page-result','page-wrong-review','page-wrongbook','page-preview-config','page-preview'];
 function show(id) {
   PAGES.forEach(p => {
     document.getElementById(p).classList.toggle('hidden', p !== id);
@@ -515,17 +515,35 @@ function showTimedConfig() {
 function toggleChip(el) {
   el.classList.toggle('active');
   // 章节切换时联动更新题型筛选
-  if (el.closest('#chapter-chips')) updateTypeChips();
+  if (el.closest('#chapter-chips')) { updateTypeChips(); updateSelectAllLabels('#chapter-chips'); }
   checkTimedReady();
+}
+
+function updateSelectAllLabels(containerSelector) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
+  container.querySelectorAll('.source-group').forEach(group => {
+    const label = group.querySelector('.source-select-all');
+    if (!label) return;
+    const chips = group.querySelectorAll('.chip');
+    const allActive = [...chips].every(c => c.classList.contains('active'));
+    label.textContent = allActive ? '全不选' : '全选';
+  });
 }
 
 function selectAllChapters(src) {
   const chips = document.querySelectorAll('#chapter-chips .chip');
-  chips.forEach(c => {
-    const srcQuestions = sourceData[src] || [];
-    const srcChapters = new Set(srcQuestions.map(q => q.chapter).filter(Boolean));
-    if (srcChapters.has(c.dataset.val)) c.classList.add('active');
+  const srcQuestions = sourceData[src] || [];
+  const srcChapters = new Set(srcQuestions.map(q => q.chapter).filter(Boolean));
+  const srcChips = [...chips].filter(c => srcChapters.has(c.dataset.val));
+  const allActive = srcChips.every(c => c.classList.contains('active'));
+  srcChips.forEach(c => {
+    if (allActive) c.classList.remove('active');
+    else c.classList.add('active');
   });
+  // 更新按钮文字
+  const label = document.querySelector('#chapter-chips .source-group .source-select-all[onclick*="' + src + '"]');
+  if (label) label.textContent = allActive ? '全选' : '全不选';
   updateTypeChips();
   checkTimedReady();
 }
@@ -2449,6 +2467,726 @@ function toggleTheme() {
     document.getElementById('theme-toggle').textContent = '🌙';
   }
 })();
+
+// ====== Preview Mode ======
+let previewList = [];
+let previewIndex = 0;
+let previewAnswerShown = false;
+let previewViewMode = 'card'; // 'card' or 'list'
+let previewSavedSelection = null; // { chapters: [...], types: [...] }
+let cylinderModeEnabled = false;
+let cylinderRafId = null;
+let cylinderScrollPending = false;
+let cylinderWheelAccum = 0;
+let cylinderWheelTimer = null;
+let cylinderSnapAnimating = false;
+let cylinderSnapIdleTimer = null;
+let cylinderFastMode = false;
+let cylinderFastExitTimer = null;
+let cylinderFocusIdx = 0; // index of currently focused item
+const CYLINDER_WHEEL_THRESHOLD = 80; // px of accumulated delta to trigger snap
+const CYLINDER_FAST_WINDOW = 2000; // 2 seconds window for fast detection
+const CYLINDER_FAST_COUNT = 2; // >=2 wheel events in window = fast mode
+const CYLINDER_FAST_EXIT = 500; // ms of no scroll before exiting fast mode
+
+function loadPreviewSelection() {
+  try {
+    const raw = localStorage.getItem('previewSelection');
+    if (raw) previewSavedSelection = JSON.parse(raw);
+  } catch(e) {}
+}
+loadPreviewSelection();
+
+function savePreviewSelection() {
+  const chSelected = [...document.querySelectorAll('#preview-chapter-chips .chip.active')].map(e => e.dataset.val);
+  const tpSelected = [...document.querySelectorAll('#preview-type-chips .chip.active')].map(e => e.dataset.val);
+  previewSavedSelection = { chapters: chSelected, types: tpSelected };
+  localStorage.setItem('previewSelection', JSON.stringify(previewSavedSelection));
+}
+
+function showPreviewConfig() {
+  if (ALL_QUESTIONS.length === 0) return;
+  disableCylinderMode();
+  show('page-preview-config');
+  const chapterSection = document.getElementById('preview-chapter-section');
+  const sources = Object.keys(sourceData).filter(src => sourceSelection[src] !== false);
+  if (sources.length > 0) {
+    chapterSection.classList.remove('hidden');
+    let html = '';
+    sources.forEach(src => {
+      const srcQuestions = sourceData[src] || [];
+      const srcChapters = [...new Set(srcQuestions.map(q => q.chapter).filter(Boolean))];
+      if (srcChapters.length === 0) return;
+      const savedChapters = previewSavedSelection ? previewSavedSelection.chapters : null;
+      html += '<div class="source-group">';
+      html += '<div class="source-label">' + escHtml(src) + '</div>';
+      html += '<span class="source-select-all" onclick="previewSelectAllChapters(\'' + escHtml(src) + '\')">全不选</span>';
+      html += '<div class="chip-group">';
+      srcChapters.forEach(ch => {
+        const active = savedChapters ? savedChapters.includes(ch) : true;
+        html += '<div class="chip' + (active ? ' active' : '') + '" data-val="'+ch+'" onclick="togglePreviewChip(this)">'+escHtml(ch)+'</div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('preview-chapter-chips').innerHTML = html;
+    updateSelectAllLabels('#preview-chapter-chips');
+  } else {
+    chapterSection.classList.add('hidden');
+  }
+  // Type chips
+  const allTypes = [...new Set(ALL_QUESTIONS.filter(q => sourceSelection[q.source] !== false).map(q => q.type).filter(Boolean))];
+  const typeSection = document.getElementById('preview-type-section');
+  if (allTypes.length > 0) {
+    typeSection.classList.remove('hidden');
+    const savedTypes = previewSavedSelection ? previewSavedSelection.types : null;
+    const typeLabels = {single_choice:'单选', multiple_choice:'多选', true_false:'判断', calculation:'计算', subjective:'主观'};
+    document.getElementById('preview-type-chips').innerHTML =
+      allTypes.map(t => {
+        const active = savedTypes ? savedTypes.includes(t) : true;
+        return '<div class="chip' + (active ? ' active' : '') + '" data-val="'+t+'" onclick="togglePreviewChip(this)">'+(typeLabels[t]||t)+'</div>';
+      }).join('');
+  } else {
+    typeSection.classList.add('hidden');
+  }
+  updatePreviewTypeChips();
+  updatePreviewCount();
+}
+
+function togglePreviewChip(el) {
+  el.classList.toggle('active');
+  if (el.closest('#preview-chapter-chips')) { updatePreviewTypeChips(); updateSelectAllLabels('#preview-chapter-chips'); }
+  updatePreviewCount();
+  savePreviewSelection();
+}
+
+function previewSelectAllChapters(src) {
+  const chips = document.querySelectorAll('#preview-chapter-chips .chip');
+  const srcQuestions = sourceData[src] || [];
+  const srcChapters = new Set(srcQuestions.map(q => q.chapter).filter(Boolean));
+  const srcChips = [...chips].filter(c => srcChapters.has(c.dataset.val));
+  const allActive = srcChips.every(c => c.classList.contains('active'));
+  srcChips.forEach(c => {
+    if (allActive) c.classList.remove('active');
+    else c.classList.add('active');
+  });
+  // 更新按钮文字
+  const label = document.querySelector('#preview-chapter-chips .source-group .source-select-all[onclick*="' + src + '"]');
+  if (label) label.textContent = allActive ? '全选' : '全不选';
+  updatePreviewTypeChips();
+  updatePreviewCount();
+  savePreviewSelection();
+}
+
+function updatePreviewTypeChips() {
+  const chSelected = [...document.querySelectorAll('#preview-chapter-chips .chip.active')].map(e => e.dataset.val);
+  const typeChips = document.querySelectorAll('#preview-type-chips .chip');
+  if (chSelected.length === 0) {
+    typeChips.forEach(c => c.style.display = '');
+    return;
+  }
+  const validTypes = new Set();
+  chSelected.forEach(ch => {
+    ALL_QUESTIONS.filter(q => q.chapter === ch && sourceSelection[q.source] !== false).forEach(q => {
+      if (q.type) validTypes.add(q.type);
+    });
+  });
+  typeChips.forEach(c => {
+    if (validTypes.has(c.dataset.val)) {
+      c.style.display = '';
+    } else {
+      c.style.display = 'none';
+      c.classList.remove('active');
+    }
+  });
+}
+
+function updatePreviewCount() {
+  const pool = getPreviewPool();
+  document.getElementById('preview-count').textContent = pool.length;
+  document.getElementById('btn-start-preview').disabled = pool.length === 0;
+  // 联动锁定题型区
+  const chSelected = [...document.querySelectorAll('#preview-chapter-chips .chip.active')].map(e => e.dataset.val);
+  const typeSection = document.getElementById('preview-type-section');
+  if (typeSection) {
+    typeSection.classList.toggle('config-section-locked', chSelected.length === 0);
+  }
+}
+
+function getPreviewPool() {
+  const chSelected = [...document.querySelectorAll('#preview-chapter-chips .chip.active')].map(e => e.dataset.val);
+  const tpSelected = [...document.querySelectorAll('#preview-type-chips .chip.active')].map(e => e.dataset.val);
+  let pool = ALL_QUESTIONS.filter(q => sourceSelection[q.source] !== false);
+  if (chSelected.length > 0) pool = pool.filter(q => chSelected.includes(q.chapter));
+  if (tpSelected.length > 0) pool = pool.filter(q => tpSelected.includes(q.type));
+  return pool;
+}
+
+function startPreview() {
+  const pool = getPreviewPool();
+  if (pool.length === 0) { alert('没有符合条件的题目'); return; }
+  previewList = pool;
+  previewIndex = 0;
+  previewAnswerShown = false;
+  // Restore last view/cylinder state
+  const saved = localStorage.getItem('previewViewState');
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      previewViewMode = s.viewMode || 'card';
+      cylinderModeEnabled = !!s.cylinder;
+    } catch (e) {
+      previewViewMode = 'card';
+      cylinderModeEnabled = false;
+    }
+  } else {
+    previewViewMode = 'card';
+    cylinderModeEnabled = false;
+  }
+  show('page-preview');
+  // Sync checkbox state
+  const cb = document.getElementById('cylinder-toggle');
+  if (cb) cb.checked = cylinderModeEnabled;
+  renderPreviewView();
+}
+
+function togglePreviewView() {
+  previewViewMode = previewViewMode === 'card' ? 'list' : 'card';
+  savePreviewViewState();
+  renderPreviewView();
+}
+
+function savePreviewViewState() {
+  localStorage.setItem('previewViewState', JSON.stringify({
+    viewMode: previewViewMode,
+    cylinder: cylinderModeEnabled
+  }));
+}
+
+function renderPreviewView() {
+  const cardEl = document.getElementById('preview-card');
+  const listEl = document.getElementById('preview-list');
+  const navEl = document.getElementById('preview-card-nav');
+  const toggleEl = document.getElementById('preview-view-toggle');
+  const cylinderRow = document.getElementById('cylinder-toggle-row');
+
+  if (previewViewMode === 'card') {
+    cardEl.classList.remove('hidden');
+    listEl.classList.add('hidden');
+    navEl.classList.remove('hidden');
+    toggleEl.textContent = '☰';
+    toggleEl.title = '切换为列表视图';
+    cylinderRow.classList.add('hidden');
+    disableCylinderMode();
+    renderPreviewItem();
+  } else {
+    cardEl.classList.add('hidden');
+    listEl.classList.remove('hidden');
+    navEl.classList.add('hidden');
+    toggleEl.textContent = '⊟';
+    toggleEl.title = '切换为卡片视图';
+    cylinderRow.classList.remove('hidden');
+    renderPreviewList();
+    if (cylinderModeEnabled) enableCylinderMode();
+  }
+  document.getElementById('preview-counter').textContent = previewList.length + ' 题';
+  document.getElementById('preview-info').textContent = '预览模式';
+}
+
+// ====== Cylinder Mode ======
+function toggleCylinderMode(enabled) {
+  cylinderModeEnabled = enabled;
+  savePreviewViewState();
+  if (enabled) enableCylinderMode();
+  else disableCylinderMode();
+}
+
+function enableCylinderMode() {
+  const listEl = document.getElementById('preview-list');
+  listEl.classList.add('cylinder-mode');
+  document.documentElement.classList.add('cylinder-snap');
+
+  // Reset all items
+  listEl.querySelectorAll('.pv-list-detail').forEach(d => { d.classList.remove('show'); d.classList.remove('half-show'); });
+  listEl.querySelectorAll('.pv-list-arrow').forEach(a => { a.style.transform = ''; });
+  listEl.querySelectorAll('.pv-list-item').forEach(item => {
+    item.style.marginTop = '';
+    item.style.marginBottom = '';
+    item.style.transform = '';
+    item.style.opacity = '';
+  });
+
+  // Spacers so first/last can reach center
+  const spacerH = Math.round(window.innerHeight / 2);
+  let topSpacer = listEl.querySelector('.cylinder-spacer-top');
+  let bottomSpacer = listEl.querySelector('.cylinder-spacer-bottom');
+  if (!topSpacer) {
+    topSpacer = document.createElement('div');
+    topSpacer.className = 'cylinder-spacer-top';
+    listEl.insertBefore(topSpacer, listEl.firstChild);
+  }
+  if (!bottomSpacer) {
+    bottomSpacer = document.createElement('div');
+    bottomSpacer.className = 'cylinder-spacer-bottom';
+    listEl.appendChild(bottomSpacer);
+  }
+  topSpacer.style.height = spacerH + 'px';
+  bottomSpacer.style.height = spacerH + 'px';
+
+  // Event listeners
+  window.addEventListener('scroll', onCylinderScroll, { passive: true });
+  window.addEventListener('resize', onCylinderResize, { passive: true });
+  window.addEventListener('wheel', onCylinderWheel, { passive: false });
+  window.addEventListener('touchstart', onCylinderTouchStart, { passive: true });
+  window.addEventListener('touchend', onCylinderTouchEnd, { passive: true });
+
+  cylinderWheelAccum = 0;
+  cylinderSnapAnimating = false;
+  cylinderFastMode = false;
+  cylinderFocusIdx = 0;
+
+  // First item to center
+  requestAnimationFrame(() => {
+    const items = listEl.querySelectorAll('.pv-list-item');
+    if (items.length > 0) {
+      const itemRect = items[0].getBoundingClientRect();
+      const targetScroll = window.scrollY + itemRect.top + itemRect.height / 2 - window.innerHeight / 2;
+      window.scrollTo({ top: targetScroll, behavior: 'instant' });
+    }
+    updateCylinderEffect();
+  });
+}
+
+function disableCylinderMode() {
+  const listEl = document.getElementById('preview-list');
+  listEl.classList.remove('cylinder-mode');
+  listEl.classList.remove('cylinder-fast-mode');
+  document.documentElement.classList.remove('cylinder-snap');
+
+  listEl.querySelectorAll('.pv-list-item').forEach(item => {
+    item.style.transform = '';
+    item.style.opacity = '';
+    item.style.marginBottom = '';
+    item.style.marginTop = '';
+    item.classList.remove('focused', 'adjacent', 'far');
+  });
+  listEl.querySelectorAll('.pv-list-detail').forEach(d => { d.classList.remove('show'); d.classList.remove('half-show'); });
+  listEl.querySelectorAll('.pv-list-arrow').forEach(a => { a.style.transform = ''; });
+
+  const topSpacer = listEl.querySelector('.cylinder-spacer-top');
+  const bottomSpacer = listEl.querySelector('.cylinder-spacer-bottom');
+  if (topSpacer) topSpacer.remove();
+  if (bottomSpacer) bottomSpacer.remove();
+
+  window.removeEventListener('scroll', onCylinderScroll);
+  window.removeEventListener('resize', onCylinderResize);
+  window.removeEventListener('wheel', onCylinderWheel);
+  window.removeEventListener('touchstart', onCylinderTouchStart);
+  window.removeEventListener('touchend', onCylinderTouchEnd);
+
+  if (cylinderRafId) { cancelAnimationFrame(cylinderRafId); cylinderRafId = null; }
+  if (cylinderWheelTimer) { clearTimeout(cylinderWheelTimer); cylinderWheelTimer = null; }
+  if (cylinderSnapIdleTimer) { clearTimeout(cylinderSnapIdleTimer); cylinderSnapIdleTimer = null; }
+  if (cylinderFastExitTimer) { clearTimeout(cylinderFastExitTimer); cylinderFastExitTimer = null; }
+  cylinderScrollPending = false;
+  cylinderSnapAnimating = false;
+  cylinderWheelAccum = 0;
+  cylinderFastMode = false;
+}
+
+function onCylinderScroll() {
+  if (!cylinderScrollPending) {
+    cylinderScrollPending = true;
+    cylinderRafId = requestAnimationFrame(() => {
+      cylinderScrollPending = false;
+      // Find the item closest to center and make it focus
+      const listEl = document.getElementById('preview-list');
+      const items = listEl.querySelectorAll('.pv-list-item');
+      if (items.length === 0) return;
+      const viewCenter = window.innerHeight / 2;
+      let closestIdx = 0;
+      let closestDist = Infinity;
+      items.forEach((item, i) => {
+        const rect = item.getBoundingClientRect();
+        const dist = Math.abs(rect.top + rect.height / 2 - viewCenter);
+        if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+      });
+      if (closestIdx !== cylinderFocusIdx) {
+        cylinderFocusIdx = closestIdx;
+      }
+      updateCylinderEffect();
+      // In fast mode: schedule exit when scrolling stops
+      if (cylinderFastMode) {
+        scheduleFastExit();
+      }
+    });
+  }
+}
+
+function onCylinderResize() {
+  const listEl = document.getElementById('preview-list');
+  const spacerH = Math.round(window.innerHeight / 2);
+  const topSpacer = listEl.querySelector('.cylinder-spacer-top');
+  const bottomSpacer = listEl.querySelector('.cylinder-spacer-bottom');
+  if (topSpacer) topSpacer.style.height = spacerH + 'px';
+  if (bottomSpacer) bottomSpacer.style.height = spacerH + 'px';
+  updateCylinderEffect();
+}
+
+let cylinderTouchStartY = 0;
+
+function onCylinderTouchStart(e) {
+  if (!cylinderModeEnabled) return;
+  cylinderTouchStartY = e.touches[0].clientY;
+}
+
+function onCylinderTouchEnd(e) {
+  if (!cylinderModeEnabled) return;
+  const deltaY = cylinderTouchStartY - (e.changedTouches[0]?.clientY || cylinderTouchStartY);
+  if (Math.abs(deltaY) > 30) {
+    // Fast-mode detection via touch: if we're already in fast mode, stay there
+    if (!cylinderFastMode) {
+      cylinderSnapToItem(deltaY > 0 ? 1 : -1);
+    }
+    // In fast mode, just let native scrolling continue
+  }
+}
+
+function onCylinderWheel(e) {
+  if (!cylinderModeEnabled) return;
+  const listEl = document.getElementById('preview-list');
+  if (!listEl || listEl.classList.contains('hidden')) return;
+
+  // In fast mode: don't intercept, let native scroll happen freely
+  if (cylinderFastMode) return;
+
+  // Ignore wheel during snap animation
+  if (cylinderSnapAnimating) return;
+
+  const delta = e.deltaY;
+  cylinderWheelAccum += delta;
+
+  if (cylinderWheelTimer) clearTimeout(cylinderWheelTimer);
+  cylinderWheelTimer = setTimeout(() => {
+    cylinderWheelAccum = 0;
+  }, 200);
+
+  if (Math.abs(cylinderWheelAccum) >= CYLINDER_WHEEL_THRESHOLD) {
+    const direction = cylinderWheelAccum > 0 ? 1 : -1;
+    cylinderWheelAccum = 0;
+
+    // Fast-mode detection: 2+ snap-triggering wheel events within 2s
+    if (!window._cylWheelTimes) window._cylWheelTimes = [];
+    window._cylWheelTimes.push(Date.now());
+    const windowNow = Date.now();
+    window._cylWheelTimes = window._cylWheelTimes.filter(t => windowNow - t <= CYLINDER_FAST_WINDOW);
+
+    if (window._cylWheelTimes.length >= CYLINDER_FAST_COUNT + 1) {
+      window._cylWheelTimes = [];
+      enterFastMode();
+      // After entering fast mode, still prevent this scroll from going beyond the list
+      e.preventDefault();
+      return;
+    }
+
+    cylinderSnapToItem(direction);
+  }
+
+  // Prevent page scroll during cylinder mode (when not in fast mode)
+  e.preventDefault();
+}
+
+function enterFastMode() {
+  cylinderFastMode = true;
+  document.documentElement.classList.remove('cylinder-snap'); // disable CSS snap
+  // Schedule auto-exit when scrolling stops
+  scheduleFastExit();
+}
+
+function scheduleFastExit() {
+  if (cylinderFastExitTimer) clearTimeout(cylinderFastExitTimer);
+  cylinderFastExitTimer = setTimeout(() => {
+    if (!cylinderFastMode) return;
+    exitFastMode();
+  }, CYLINDER_FAST_EXIT);
+}
+
+function exitFastMode() {
+  cylinderFastMode = false;
+  document.documentElement.classList.add('cylinder-snap'); // re-enable CSS snap
+  // Snap to nearest item
+  cylinderSnapToNearest();
+}
+
+function cylinderSnapToNearest() {
+  if (cylinderSnapAnimating) return;
+  const listEl = document.getElementById('preview-list');
+  const items = listEl.querySelectorAll('.pv-list-item');
+  if (items.length === 0) return;
+
+  const viewCenter = window.innerHeight / 2;
+  let closestIdx = 0;
+  let closestDist = Infinity;
+  items.forEach((item, i) => {
+    const rect = item.getBoundingClientRect();
+    const dist = Math.abs(rect.top + rect.height / 2 - viewCenter);
+    if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+  });
+
+  cylinderFocusIdx = closestIdx;
+  cylinderAnimateSnapTo(items[closestIdx]);
+}
+
+function cylinderSnapToItem(direction) {
+  if (cylinderSnapAnimating) return;
+  const listEl = document.getElementById('preview-list');
+  const items = listEl.querySelectorAll('.pv-list-item');
+  if (items.length === 0) return;
+
+  let targetIdx = cylinderFocusIdx + direction;
+  targetIdx = Math.max(0, Math.min(items.length - 1, targetIdx));
+  if (targetIdx === cylinderFocusIdx) return;
+  cylinderFocusIdx = targetIdx;
+
+  cylinderAnimateSnapTo(items[targetIdx]);
+}
+
+function cylinderAnimateSnapTo(targetItem) {
+  if (!targetItem || cylinderSnapAnimating) return;
+  cylinderSnapAnimating = true;
+
+  const rect = targetItem.getBoundingClientRect();
+  const targetScroll = window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2;
+
+  window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+
+  setTimeout(() => {
+    cylinderSnapAnimating = false;
+    updateCylinderEffect();
+  }, 450);
+}
+
+function updateCylinderEffect() {
+  const listEl = document.getElementById('preview-list');
+  if (!listEl || !listEl.classList.contains('cylinder-mode')) return;
+
+  const items = listEl.querySelectorAll('.pv-list-item');
+  if (items.length === 0) return;
+
+  items.forEach((item, idx) => {
+    const idxDist = Math.abs(idx - cylinderFocusIdx);
+
+    // Clear inline styles that may have been set
+    item.style.transform = '';
+    item.style.opacity = '';
+    item.style.marginTop = '';
+    item.style.marginBottom = '';
+
+    // Set class for visual state
+    item.classList.remove('focused', 'adjacent', 'far');
+    if (idx === cylinderFocusIdx) item.classList.add('focused');
+    else if (idxDist === 1) item.classList.add('adjacent');
+    else item.classList.add('far');
+
+    // Expand/collapse: in fast mode, collapse all
+    const detail = item.querySelector('.pv-list-detail');
+    const arrow = item.querySelector('.pv-list-arrow');
+    if (detail) {
+      if (cylinderFastMode) {
+        // Fast mode: all collapsed, just visual scaling
+        detail.classList.remove('show');
+        detail.classList.remove('half-show');
+        if (arrow) arrow.style.transform = '';
+      } else if (idx === cylinderFocusIdx) {
+        detail.classList.add('show');
+        detail.classList.remove('half-show');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+      } else if (idxDist === 1) {
+        detail.classList.remove('show');
+        detail.classList.add('half-show');
+        if (arrow) arrow.style.transform = 'rotate(90deg)';
+      } else {
+        detail.classList.remove('show');
+        detail.classList.remove('half-show');
+        if (arrow) arrow.style.transform = '';
+      }
+    }
+  });
+}
+
+function renderPreviewItem() {
+  if (previewIndex < 0) previewIndex = 0;
+  if (previewIndex >= previewList.length) previewIndex = previewList.length - 1;
+  const q = previewList[previewIndex];
+  const typeLabel = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'}[q.type] || '';
+  let metaParts = [];
+  if (q.chapter) metaParts.push(q.chapter);
+  if (typeLabel) metaParts.push(typeLabel);
+  if (Object.keys(sourceData).length > 1) metaParts.push(q.source);
+
+  document.getElementById('preview-counter').textContent = (previewIndex + 1) + ' / ' + previewList.length;
+
+  let html = '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
+  html += '<div class="question-text">' + escHtml(q.question) + '</div>';
+
+  // Table for calculation questions
+  if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
+    html += '<div class="calc-table-wrap"><table class="calc-table"><thead><tr>';
+    q.table.headers.forEach(h => { html += '<th>' + escHtml(h) + '</th>'; });
+    html += '</tr></thead><tbody>';
+    q.table.rows.forEach(row => {
+      html += '<tr>';
+      row.forEach(cell => { html += '<td>' + escHtml(cell) + '</td>'; });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    if (q.sub_questions) {
+      q.sub_questions.forEach(sq => {
+        html += '<div class="preview-sub-q"><b>第' + sq.id + '问：</b>' + escHtml(sq.text) + '</div>';
+      });
+    }
+  }
+
+  // Options
+  if (q.type === 'true_false') {
+    html += '<div class="preview-options">';
+    html += '<div class="review-option' + (q.answer === '正确' ? ' correct' : ' neutral') + '">正确' + (q.answer === '正确' ? ' ✓' : '') + '</div>';
+    html += '<div class="review-option' + (q.answer === '错误' ? ' correct' : ' neutral') + '">错误' + (q.answer === '错误' ? ' ✓' : '') + '</div>';
+    html += '</div>';
+  } else if (q.options && q.options.length > 0) {
+    html += '<div class="preview-options">';
+    q.options.forEach(opt => {
+      const label = opt.label || '';
+      const isCorrect = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
+      html += '<div class="review-option' + (isCorrect ? ' correct' : ' neutral') + '">' + label + (label ? '. ' : '') + escHtml(opt.text || '') + (isCorrect ? ' ✓' : '') + '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Answer area
+  html += '<div class="preview-answer hidden" id="preview-answer">';
+  html += buildPreviewAnswerHtml(q);
+  html += '</div>';
+
+  document.getElementById('preview-card').innerHTML = html;
+
+  document.getElementById('btn-preview-prev').disabled = previewIndex === 0;
+  document.getElementById('btn-preview-next').disabled = previewIndex === previewList.length - 1;
+  document.getElementById('btn-preview-toggle').textContent = previewAnswerShown ? '隐藏答案' : '显示答案';
+
+  if (previewAnswerShown) {
+    document.getElementById('preview-answer').classList.remove('hidden');
+  }
+}
+
+function buildPreviewAnswerHtml(q) {
+  let html = '';
+  if (q.type === 'true_false') {
+    html += '<div class="review-answer correct-ans">正确答案：' + escHtml(q.answer) + '</div>';
+  } else if (q.type === 'calculation') {
+    html += '<div class="review-answer correct-ans">正确答案：' + escHtml(formatAnswer(q)) + '</div>';
+  } else if (q.type === 'subjective') {
+    const ansData = q.answer || {};
+    const ref = ansData.reference || '';
+    html += '<div class="review-answer correct-ans">参考答案：' + escHtml(ref || JSON.stringify(ansData)) + '</div>';
+    if (ansData.min_match) html += '<div style="font-size:12px;color:#888;margin-top:4px">最低匹配度：' + Math.round(ansData.min_match * 100) + '%</div>';
+  } else {
+    html += '<div class="review-answer correct-ans">正确答案：' + escHtml(q.answer) + '</div>';
+  }
+  return html;
+}
+
+function renderPreviewList() {
+  const typeLabels = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'};
+  let html = '';
+  previewList.forEach((q, i) => {
+    const typeLabel = typeLabels[q.type] || '';
+    let metaParts = [];
+    if (q.chapter) metaParts.push(q.chapter);
+    if (typeLabel) metaParts.push(typeLabel);
+    if (Object.keys(sourceData).length > 1) metaParts.push(q.source);
+    const brief = q.question.length > 50 ? q.question.substring(0, 50) + '...' : q.question;
+
+    html += '<div class="pv-list-item" onclick="togglePreviewListItem(this)">';
+    html += '<div class="pv-list-header">';
+    html += '<span class="pv-list-num">' + (i + 1) + '</span>';
+    html += '<span class="pv-list-meta">' + escHtml(metaParts.join(' · ')) + '</span>';
+    html += '<span class="pv-list-brief">' + escHtml(brief) + '</span>';
+    html += '<span class="pv-list-arrow">&#9662;</span>';
+    html += '</div>';
+    html += '<div class="pv-list-detail">';
+
+    // Full question text
+    html += '<div class="question-text" style="font-size:15px;margin-bottom:12px">' + escHtml(q.question) + '</div>';
+
+    // Table for calculation
+    if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
+      html += '<div class="calc-table-wrap"><table class="calc-table"><thead><tr>';
+      q.table.headers.forEach(h => { html += '<th>' + escHtml(h) + '</th>'; });
+      html += '</tr></thead><tbody>';
+      q.table.rows.forEach(row => {
+        html += '<tr>';
+        row.forEach(cell => { html += '<td>' + escHtml(cell) + '</td>'; });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      if (q.sub_questions) {
+        q.sub_questions.forEach(sq => {
+          html += '<div class="preview-sub-q"><b>第' + sq.id + '问：</b>' + escHtml(sq.text) + '</div>';
+        });
+      }
+    }
+
+    // Options
+    if (q.type === 'true_false') {
+      html += '<div class="review-option' + (q.answer === '正确' ? ' correct' : ' neutral') + '">正确' + (q.answer === '正确' ? ' ✓' : '') + '</div>';
+      html += '<div class="review-option' + (q.answer === '错误' ? ' correct' : ' neutral') + '">错误' + (q.answer === '错误' ? ' ✓' : '') + '</div>';
+    } else if (q.options && q.options.length > 0) {
+      q.options.forEach(opt => {
+        const label = opt.label || '';
+        const isCorrect = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
+        html += '<div class="review-option' + (isCorrect ? ' correct' : ' neutral') + '">' + label + (label ? '. ' : '') + escHtml(opt.text || '') + (isCorrect ? ' ✓' : '') + '</div>';
+      });
+    }
+
+    // Answer
+    html += buildPreviewAnswerHtml(q);
+    html += '</div></div>';
+  });
+  document.getElementById('preview-list').innerHTML = html;
+}
+
+function togglePreviewListItem(el) {
+  if (cylinderModeEnabled) return; // cylinder mode manages open/close
+  const detail = el.querySelector('.pv-list-detail');
+  const arrow = el.querySelector('.pv-list-arrow');
+  const isOpen = detail.classList.contains('show');
+  detail.classList.toggle('show', !isOpen);
+  arrow.innerHTML = isOpen ? '&#9662;' : '&#9662;';
+  arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function previewToggleAnswer() {
+  previewAnswerShown = !previewAnswerShown;
+  const el = document.getElementById('preview-answer');
+  if (el) el.classList.toggle('hidden', !previewAnswerShown);
+  document.getElementById('btn-preview-toggle').textContent = previewAnswerShown ? '隐藏答案' : '显示答案';
+}
+
+function previewPrev() {
+  if (previewIndex > 0) {
+    previewIndex--;
+    previewAnswerShown = false;
+    renderPreviewItem();
+  }
+}
+
+function previewNext() {
+  if (previewIndex < previewList.length - 1) {
+    previewIndex++;
+    previewAnswerShown = false;
+    renderPreviewItem();
+  }
+}
 
 // ====== Start ======
 init();
