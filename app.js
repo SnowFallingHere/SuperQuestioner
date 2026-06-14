@@ -1686,7 +1686,7 @@ function renderReviewItem() {
   const key = qKey(q);
   const note = wrongBookNotes[key];
   if (note) {
-    html += '<div style="margin-top:12px;padding:8px 12px;background:#fff8e1;border-radius:6px;font-size:13px;color:#8d6e00;">备注：' + escHtml(note) + '</div>';
+    html += '<div class="note-display">备注：' + escHtml(note) + '</div>';
   }
 
   document.getElementById('review-card').innerHTML = html;
@@ -1755,6 +1755,13 @@ function openWrongBook() {
   wbFilter = 'all';
   wbSourceFilter = 'all';
   wbIndex = 0;
+  // 重置筛选按钮的视觉状态（清除内联色 + active-green + active）
+  document.querySelectorAll('#wb-filter-row .chip').forEach(c => {
+    c.classList.remove('active', 'active-green');
+    c.style.background = ''; c.style.color = ''; c.style.borderColor = '';
+  });
+  const allChip = document.querySelector('#wb-filter-row .chip[data-filter="all"]');
+  if (allChip) allChip.classList.add('active');
   buildWbList();
   show('page-wrongbook');
   renderWbSourceFilters();
@@ -2144,9 +2151,9 @@ function renderWbItem() {
   }
 
   const note = wrongBookNotes[item.key] || '';
-  html += '<div style="margin-top:12px;padding:12px;background:#f5f5f5;border-radius:8px;font-size:13px;border:1px solid #e5e5e5;">';
-  html += '<div style="color:#666;margin-bottom:6px;font-weight:600;">📝 备注（写备注后自动加入长期记忆）</div>';
-  html += '<textarea class="note-input" id="wb-note-input" style="width:100%;box-sizing:border-box;min-height:70px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px;resize:vertical;background:#fff;" placeholder="写点备注..."></textarea>';
+  html += '<div class="note-input-panel">';
+  html += '<div class="note-input-label">📝 备注（写备注后自动加入长期记忆）</div>';
+  html += '<textarea class="note-input" id="wb-note-input" placeholder="写点备注..."></textarea>';
   html += '</div>';
 
   cardEl.innerHTML = html;
@@ -2471,7 +2478,6 @@ function toggleTheme() {
 // ====== Preview Mode ======
 let previewList = [];
 let previewIndex = 0;
-let previewAnswerShown = false;
 let previewViewMode = 'card'; // 'card' or 'list'
 let previewSavedSelection = null; // { chapters: [...], types: [...] }
 let cylinderModeEnabled = false;
@@ -2626,7 +2632,6 @@ function startPreview() {
   if (pool.length === 0) { alert('没有符合条件的题目'); return; }
   previewList = pool;
   previewIndex = 0;
-  previewAnswerShown = false;
   // Restore last view/cylinder state
   const saved = localStorage.getItem('previewViewState');
   if (saved) {
@@ -3026,7 +3031,14 @@ function renderPreviewItem() {
   document.getElementById('preview-counter').textContent = (previewIndex + 1) + ' / ' + previewList.length;
 
   let html = '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
-  html += '<div class="question-text">' + escHtml(q.question) + '</div>';
+  // 题干末尾加答案字母（选择/判断题）
+  let answerTag = '';
+  if (q.type === 'single_choice' || q.type === 'multiple_choice') {
+    answerTag = ' <span class="preview-answer-tag">' + (q.answer || '') + '</span>';
+  } else if (q.type === 'true_false') {
+    answerTag = ' <span class="preview-answer-tag">' + (q.answer === '正确' ? '正确' : q.answer === '错误' ? '错误' : '') + '</span>';
+  }
+  html += '<div class="question-text">' + escHtml(q.question) + answerTag + '</div>';
 
   // Table for calculation questions
   if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
@@ -3062,20 +3074,17 @@ function renderPreviewItem() {
     html += '</div>';
   }
 
-  // Answer area
-  html += '<div class="preview-answer hidden" id="preview-answer">';
-  html += buildPreviewAnswerHtml(q);
-  html += '</div>';
+  // Answer area - 只有计算/主观题显示答案区块
+  if (q.type === 'calculation' || q.type === 'subjective') {
+    html += '<div class="preview-answer" id="preview-answer">';
+    html += buildPreviewAnswerHtml(q);
+    html += '</div>';
+  }
 
   document.getElementById('preview-card').innerHTML = html;
 
   document.getElementById('btn-preview-prev').disabled = previewIndex === 0;
   document.getElementById('btn-preview-next').disabled = previewIndex === previewList.length - 1;
-  document.getElementById('btn-preview-toggle').textContent = previewAnswerShown ? '隐藏答案' : '显示答案';
-
-  if (previewAnswerShown) {
-    document.getElementById('preview-answer').classList.remove('hidden');
-  }
 }
 
 function buildPreviewAnswerHtml(q) {
@@ -3115,8 +3124,14 @@ function renderPreviewList() {
     html += '</div>';
     html += '<div class="pv-list-detail">';
 
-    // Full question text
-    html += '<div class="question-text" style="font-size:15px;margin-bottom:12px">' + escHtml(q.question) + '</div>';
+    // Full question text + 答案字母
+    let listAnswerTag = '';
+    if (q.type === 'single_choice' || q.type === 'multiple_choice') {
+      listAnswerTag = ' <span class="preview-answer-tag">' + (q.answer || '') + '</span>';
+    } else if (q.type === 'true_false') {
+      listAnswerTag = ' <span class="preview-answer-tag">' + (q.answer === '正确' ? '正确' : q.answer === '错误' ? '错误' : '') + '</span>';
+    }
+    html += '<div class="question-text" style="font-size:15px;margin-bottom:12px">' + escHtml(q.question) + listAnswerTag + '</div>';
 
     // Table for calculation
     if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
@@ -3148,8 +3163,10 @@ function renderPreviewList() {
       });
     }
 
-    // Answer
-    html += buildPreviewAnswerHtml(q);
+    // Answer - 只有计算/主观题显示答案区块
+    if (q.type === 'calculation' || q.type === 'subjective') {
+      html += buildPreviewAnswerHtml(q);
+    }
     html += '</div></div>';
   });
   document.getElementById('preview-list').innerHTML = html;
@@ -3165,17 +3182,9 @@ function togglePreviewListItem(el) {
   arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
 }
 
-function previewToggleAnswer() {
-  previewAnswerShown = !previewAnswerShown;
-  const el = document.getElementById('preview-answer');
-  if (el) el.classList.toggle('hidden', !previewAnswerShown);
-  document.getElementById('btn-preview-toggle').textContent = previewAnswerShown ? '隐藏答案' : '显示答案';
-}
-
 function previewPrev() {
   if (previewIndex > 0) {
     previewIndex--;
-    previewAnswerShown = false;
     renderPreviewItem();
   }
 }
@@ -3183,7 +3192,6 @@ function previewPrev() {
 function previewNext() {
   if (previewIndex < previewList.length - 1) {
     previewIndex++;
-    previewAnswerShown = false;
     renderPreviewItem();
   }
 }
