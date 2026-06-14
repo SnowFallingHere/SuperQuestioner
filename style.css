@@ -50,8 +50,11 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .source-select-all { font-size: 11px; color: #4a90d9; cursor: pointer; margin-left: 8px; user-select: none; }
 .source-select-all:hover { text-decoration: underline; }
 .chapter-hint { font-size: 13px; color: #e74c3c; margin-top: 10px; }
-.chip { padding: 6px 14px; border-radius: 20px; border: 1px solid #ddd; font-size: 14px; cursor: pointer; user-select: none; transition: all .15s; }
+.chip { padding: 6px 14px; border-radius: 20px; border: 1px solid #ddd; font-size: 14px; cursor: pointer; user-select: none; transition: all .15s; color: #555; background: transparent; }
+.chip:hover { border-color: #bbb; }
 .chip.active { background: #4a90d9; color: #fff; border-color: #4a90d9; }
+.chip[data-filter="analysis"].active { background: #27ae60; border-color: #27ae60; }
+.chip[data-filter="stats"].active { background: #8e44ad; border-color: #8e44ad; }
 .chip.active-green { background: #27ae60; color: #fff; border-color: #27ae60; }
 .btn { display: inline-block; padding: 10px 28px; border-radius: 8px; border: none; font-size: 16px; cursor: pointer; transition: opacity .15s; }
 .btn-primary { background: #4a90d9; color: #fff; }
@@ -192,6 +195,17 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .note-input-panel { margin-top: 12px; padding: 12px; background: #f5f5f5; border-radius: 8px; font-size: 13px; border: 1px solid #e5e5e5; }
 .note-input-label { color: #666; margin-bottom: 6px; font-weight: 600; }
 
+/* 答题后的只读备注（默认折叠） */
+.readonly-note { margin-top: 12px; background: #fff8e1; border-radius: 8px; overflow: hidden; }
+.readonly-note-toggle { display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; color: #8d6e00; font-weight: 500; user-select: none; }
+.readonly-note-toggle:hover { background: rgba(0,0,0,0.03); }
+.readonly-note-icon { font-size: 14px; }
+.readonly-note-toggle span:nth-child(2) { flex: 1; }
+.readonly-note-arrow { font-size: 10px; transition: transform .2s; }
+.readonly-note.expanded .readonly-note-arrow { transform: rotate(180deg); }
+.readonly-note-content { display: none; padding: 0 14px 12px; font-size: 13px; color: #5d4e00; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.readonly-note.expanded .readonly-note-content { display: block; }
+
 /* Settings */
 .settings-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.3); z-index: 100; display: flex; align-items: center; justify-content: center; }
 .settings-card { background: #fff; border-radius: 12px; padding: 24px; width: 90%; max-width: 420px; max-height: 80vh; overflow-y: auto; }
@@ -263,6 +277,72 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .wb-list-num { font-weight: 600; color: #999; min-width: 24px; flex-shrink: 0; }
 .wb-list-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wb-list-ans { font-size: 12px; color: #888; white-space: nowrap; flex-shrink: 0; }
+
+/* 三级列表（题库 → 暂时/长期 → 题目） */
+.wb-three { display: flex; flex-direction: column; gap: 10px; }
+.wb-level1 { border: 1px solid #e6eaf0; border-radius: 10px; overflow: hidden; background: #fff; }
+.wb-level1-header { display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer; background: #f6f8fb; transition: background .15s; }
+.wb-level1-header:hover { background: #eef2f7; }
+.wb-level1-icon { font-size: 12px; color: #888; transition: transform .2s; flex-shrink: 0; width: 14px; text-align: center; }
+.wb-level1-title { font-weight: 600; flex: 1; color: #2c3e50; font-size: 16px; }
+.wb-level1-count { font-size: 12px; color: #666; background: #fff; padding: 3px 10px; border-radius: 10px; border: 1px solid #e6eaf0; flex-shrink: 0; }
+.wb-level1-body { padding: 6px 16px 16px; }
+
+.wb-level2 { margin-left: 4px; margin-top: 8px; border-left: 3px solid #e6eaf0; padding-left: 14px; }
+.wb-level2-header { display: flex; align-items: center; gap: 10px; padding: 9px 8px; cursor: pointer; font-size: 14px; transition: background .15s; border-radius: 6px; }
+.wb-level2-header:hover { background: #f5f5f5; }
+.wb-level2-header.wb-level2-temp .wb-level2-title { color: #27ae60; font-weight: 600; }
+.wb-level2-header.wb-level2-long .wb-level2-title { color: #f39c12; font-weight: 600; }
+.wb-level2-icon { font-size: 11px; color: #999; flex-shrink: 0; width: 12px; text-align: center; }
+.wb-level2-title { flex: 1; }
+.wb-level2-count { font-size: 12px; color: #888; flex-shrink: 0; }
+.wb-level2-body { padding-left: 4px; margin-top: 4px; }
+
+.wb-level3-item { display: flex; align-items: center; gap: 12px; padding: 9px 10px; font-size: 13px; cursor: pointer; border-radius: 6px; transition: background .15s; border-bottom: 1px solid #f3f3f3; }
+.wb-level3-item:last-child { border-bottom: none; }
+.wb-level3-item:hover { background: #f0f4f8; }
+.wb-num { font-weight: 600; color: #bbb; min-width: 22px; flex-shrink: 0; font-size: 12px; }
+.wb-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #333; }
+.wb-ans { font-size: 12px; color: #888; white-space: nowrap; flex-shrink: 0; padding: 2px 10px; background: #f5f7fa; border-radius: 10px; }
+
+/* 题目详情浮层 */
+.wb-detail { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); background: rgba(255,255,255,0.75); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top-left-radius: 18px; border-top-right-radius: 18px; box-shadow: 0 -8px 30px rgba(0,0,0,0.15); padding: 18px 20px 24px; max-height: calc(100vh - 16px); overflow-y: auto; z-index: 1000; width: min(640px, 92vw); transition: transform .35s cubic-bezier(.22,.61,.36,1); scrollbar-width: none; -ms-overflow-style: none; }
+.wb-detail::-webkit-scrollbar { display: none; }
+.wb-detail.hidden { display: block !important; transform: translateX(-50%) translateY(102%); pointer-events: none; }
+.wb-detail:not(.hidden) { transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.wb-detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.wb-detail-label { font-weight: 600; color: #2c3e50; font-size: 14px; }
+.wb-detail-close { cursor: pointer; font-size: 22px; color: #888; line-height: 1; padding: 0 4px; border-radius: 6px; transition: background .15s, color .15s; }
+.wb-detail-close:hover { color: #333; background: rgba(0,0,0,0.05); }
+.wb-detail-meta { font-size: 12px; color: #888; margin-bottom: 10px; }
+.wb-detail-q { font-size: 15px; font-weight: 500; margin-bottom: 14px; line-height: 1.6; color: #2c3e50; }
+.wb-detail-btn-row { display: flex; gap: 6px; margin-top: 16px; }
+
+/* 图标按钮（浮层操作行） */
+.wb-icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; background: rgba(255,255,255,0.65); color: #444; }
+.wb-icon-btn:hover { transform: scale(1.12); }
+.wb-icon-star:hover { background: rgba(39,174,96,0.15); border-color: #27ae60; color: #27ae60; }
+.wb-icon-remove:hover { background: rgba(231,76,60,0.15); border-color: #e74c3c; color: #e74c3c; }
+.wb-icon-note:hover { background: rgba(52,152,219,0.15); border-color: #3498db; color: #3498db; }
+
+/* 浮层备注编辑器 */
+.wb-note-editor { margin-top: 10px; }
+.wb-note-editor textarea { width: 100%; min-height: 72px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; resize: vertical; box-sizing: border-box; background: rgba(255,255,255,0.7); color: #333; font-family: inherit; }
+.wb-note-editor-actions { display: flex; gap: 6px; margin-top: 8px; }
+.btn-sm { padding: 5px 14px; font-size: 13px; border-radius: 6px; }
+
+/* 浮层底部导航 */
+.wb-detail-nav { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); }
+.wb-nav-btn { width: 40px; height: 36px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; background: rgba(255,255,255,0.5); color: #555; }
+.wb-nav-btn:hover { background: rgba(255,255,255,0.8); border-color: #999; color: #222; }
+
+/* 浮层选项卡片 */
+.wb-detail .detail-opt { padding: 9px 14px; border-radius: 8px; border: 1px solid #e0e0e0; font-size: 14px; line-height: 1.5; margin-bottom: 6px; background: rgba(255,255,255,0.5); color: #333; }
+.wb-detail .detail-opt.correct { border-color: #27ae60; background: rgba(39,174,96,0.12); color: #1e8449; font-weight: 500; }
+
+/* 错题本容器 */
+#wb-card { margin-top: 12px; }
+#wb-counter { display: inline-block; font-size: 13px; color: #666; margin-left: 6px; }
 
 /* Loading */
 .loading { text-align: center; padding: 40px; color: #888; }
@@ -352,6 +432,45 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 [data-theme="dark"] .wrong-item-header { background: #253a5a; }
 [data-theme="dark"] .wrong-item-header:hover { background: #2a4060; }
 [data-theme="dark"] .wrong-item-detail { background: #1e3050; }
+
+[data-theme="dark"] .wb-level1 { border-color: #2a3a5a; background: var(--card-bg); }
+[data-theme="dark"] .wb-level1-header { background: #253a5a; color: var(--text); }
+[data-theme="dark"] .wb-level1-header:hover { background: #2a4060; }
+[data-theme="dark"] .wb-level1-title { color: var(--text); }
+[data-theme="dark"] .wb-level1-count { background: #1e2a4a; border-color: #2a3a5a; color: var(--text-secondary); }
+[data-theme="dark"] .wb-level2 { border-left-color: #3a4a6a; }
+[data-theme="dark"] .wb-level2-header:hover { background: #253a5a; }
+[data-theme="dark"] .wb-level2-title { color: var(--text); }
+[data-theme="dark"] .wb-level2-count { color: var(--text-secondary); }
+[data-theme="dark"] .wb-level3-item:hover { background: #2a4060; }
+[data-theme="dark"] .wb-text { color: var(--text); }
+[data-theme="dark"] .wb-ans { background: #253a5a; color: var(--text-secondary); }
+[data-theme="dark"] .wb-detail { background: rgba(26,38,57,0.75); box-shadow: 0 -8px 30px rgba(0,0,0,0.4); }
+[data-theme="dark"] .wb-detail-label { color: var(--text); }
+[data-theme="dark"] .wb-detail-close { color: var(--text-secondary); }
+[data-theme="dark"] .wb-detail-close:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+[data-theme="dark"] .wb-detail-meta { color: var(--text-secondary); }
+[data-theme="dark"] .wb-detail-q { color: var(--text); }
+[data-theme="dark"] .wb-detail .detail-opt { background: rgba(30,42,74,0.6); border-color: #2a3a5a; color: var(--text); }
+[data-theme="dark"] .wb-detail .detail-opt.correct { border-color: #2a7a3a; background: rgba(42,122,58,0.25); color: #5cdb8a; }
+[data-theme="dark"] .wb-icon-btn { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); color: #ccc; }
+[data-theme="dark"] .wb-icon-star:hover { background: rgba(39,174,96,0.2); border-color: #27ae60; color: #5cdb8a; }
+[data-theme="dark"] .wb-icon-remove:hover { background: rgba(231,76,60,0.2); border-color: #e74c3c; color: #ff6b6b; }
+[data-theme="dark"] .wb-icon-note:hover { background: rgba(52,152,219,0.2); border-color: #3498db; color: #6bb5ff; }
+[data-theme="dark"] .wb-note-editor textarea { background: rgba(255,255,255,0.08); border-color: #2a3a5a; color: var(--text); }
+[data-theme="dark"] .wb-detail-nav { border-top-color: rgba(255,255,255,0.08); }
+[data-theme="dark"] .wb-nav-btn { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: #aaa; }
+[data-theme="dark"] .wb-nav-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); color: #eee; }
+
+[data-theme="dark"] .readonly-note { background: #3a2a1a; }
+[data-theme="dark"] .readonly-note-toggle { color: #ffbb66; }
+[data-theme="dark"] .readonly-note-content { color: #ffcc88; }
+
+[data-theme="dark"] .stats-chart svg text,
+[data-theme="dark"] #wb-analysis svg text,
+[data-theme="dark"] .analysis-row svg text { fill: var(--text-secondary) !important; }
+[data-theme="dark"] .stats-chart svg line,
+[data-theme="dark"] #wb-analysis svg line { stroke: #3a4a6a !important; }
 
 /* Stats chart */
 .stats-filter-row { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }

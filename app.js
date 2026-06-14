@@ -59,7 +59,7 @@ loadSourceSelection();
 let mode, quizQueue, currentIndex, wrongCount, correctCount, totalAnswered;
 let timerInterval, timeLeft, timerPaused;
 let perQuestionTimerInterval, perQuestionTimeLeft, perQuestionTimerActive;
-let challengeSettings = null; // {wrongLimit, correctTarget, useTimer, timerSeconds, redEffect, combo, shake}
+let challengeSettings = null; // {wrongLimit, correctTarget, useTimer, timerSeconds, redEffect, combo, shake, showNote}
 let infiniteMap;
 let infiniteSession; // {key: {is_correct: bool, corrects: int}} —— 本轮已答过的题
 let timedQuestions;
@@ -363,9 +363,10 @@ function startChallenge() {
   const redEffectEl = document.getElementById('challenge-red-effect');
   const comboEl = document.getElementById('challenge-combo');
   const shakeEl = document.getElementById('challenge-shake');
+  const showNoteEl = document.getElementById('challenge-show-note');
 
   let wrongLimit = 50, correctTarget = 160, useTimer = true, timerSeconds = 30;
-  let redEffect = true, combo = true, shake = false;
+  let redEffect = true, combo = true, shake = false, showNote = false;
   if (wrongLimitEl) {
     wrongLimit = parseInt(wrongLimitEl.value, 10) || 50;
     correctTarget = parseInt(correctTargetEl.value, 10) || 160;
@@ -374,11 +375,12 @@ function startChallenge() {
     redEffect = redEffectEl.checked;
     combo = comboEl.checked;
     shake = shakeEl.checked;
+    showNote = showNoteEl.checked;
   }
   if (wrongLimit < 1) wrongLimit = 1;
   if (correctTarget < 1) correctTarget = 1;
   if (timerSeconds < 5) timerSeconds = 5;
-  challengeSettings = { wrongLimit, correctTarget, useTimer, timerSeconds, redEffect, combo, shake };
+  challengeSettings = { wrongLimit, correctTarget, useTimer, timerSeconds, redEffect, combo, shake, showNote };
   effectsEnabled = combo;
   localStorage.setItem('effectsEnabled', String(effectsEnabled));
   saveChallengePrefs();
@@ -407,6 +409,7 @@ function showChallengeConfig() {
       const re = document.getElementById('challenge-red-effect');
       const coe = document.getElementById('challenge-combo');
       const se = document.getElementById('challenge-shake');
+      const sne = document.getElementById('challenge-show-note');
       if (we) we.value = p.wrongLimit ?? 50;
       if (ce) ce.value = p.correctTarget ?? 160;
       if (ute) ute.checked = p.useTimer !== false;
@@ -414,6 +417,7 @@ function showChallengeConfig() {
       if (re) re.checked = p.redEffect !== false;
       if (coe) coe.checked = p.combo !== false;
       if (se) se.checked = p.shake === true;
+      if (sne) sne.checked = p.showNote === true;
       onChallengeTimerToggle();
     } catch(e) {}
   }
@@ -440,6 +444,7 @@ function saveChallengePrefs() {
     redEffect: document.getElementById('challenge-red-effect').checked,
     combo: document.getElementById('challenge-combo').checked,
     shake: document.getElementById('challenge-shake').checked,
+    showNote: document.getElementById('challenge-show-note').checked,
   };
   localStorage.setItem('challengePrefs', JSON.stringify(p));
 }
@@ -527,7 +532,7 @@ function registerPerQuestionTimeout() {
   wrongCount++;
   totalAnswered++;
   streak = 0;
-  wrongList.push(qObj(q));
+  wrongList.push({question: q, selectedAnswer: '时间到'});
   // 显示 feedback
   const fb = document.getElementById('answer-feedback');
   if (fb) {
@@ -1067,6 +1072,9 @@ function renderQuestion() {
   answered = false;
   clearTimeout(autoNextTimeout);
   questionStartTime = Date.now();
+  // 重置答题后的只读备注显示
+  const noteEl = document.getElementById('readonly-note');
+  if (noteEl) noteEl.classList.add('hidden');
 
   console.log('[renderQuestion] mode=', mode, 'challengeSettings=', challengeSettings);
 
@@ -1350,10 +1358,33 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   currentIndex++;
   if (mode === 'infinite') saveInfiniteProgress();
 
+  // 答题后显示只读备注：必须开关开启且该题有备注才显示
+  const noteKey = qKey(q);
+  const noteVal = wrongBookNotes[noteKey];
+  const noteEl = document.getElementById('readonly-note');
+  const noteContentEl = document.getElementById('readonly-note-content');
+  const showNoteEnabled = challengeSettings && challengeSettings.showNote;
+  if (noteEl && noteContentEl) {
+    if (showNoteEnabled && noteVal) {
+      noteEl.classList.remove('hidden');
+      noteContentEl.textContent = noteVal;
+      // 默认折叠
+      noteEl.classList.remove('expanded');
+    } else {
+      noteEl.classList.add('hidden');
+    }
+  }
+
   autoNextTimeout = setTimeout(() => {
     if (mode === 'timed') timerPaused = false;
     renderQuestion();
   }, 1500);
+}
+
+// 切换答题后的只读备注展开/折叠
+function toggleReadonlyNote() {
+  const noteEl = document.getElementById('readonly-note');
+  if (noteEl) noteEl.classList.toggle('expanded');
 }
 
 // ====== Calculation Questions ======
@@ -1803,19 +1834,21 @@ function renderWrongSummary() {
           ' | 正确答案：' + correctStr + '</span></div>';
       });
     } else if (q.type === 'true_false') {
-      html += '<div class="detail-opt' + (sel === '正确' ? ' wrong' : '') + '">正确' + (sel === '正确' ? ' ← 你的选择' : '') + (ans === '正确' && sel !== '正确' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
-      html += '<div class="detail-opt' + (sel === '错误' ? ' wrong' : '') + '">错误' + (sel === '错误' ? ' ← 你的选择' : '') + (ans === '错误' && sel !== '错误' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
+      html += '<div class="detail-opt' + (sel === '正确' ? ' wrong' : '') + '">正确' + (sel === '正确' ? ' ← 你的选择' : '') + (ans === '正确' && sel !== '正确' ? ' (正确)' : '') + '</div>';
+      html += '<div class="detail-opt' + (sel === '错误' ? ' wrong' : '') + '">错误' + (sel === '错误' ? ' ← 你的选择' : '') + (ans === '错误' && sel !== '错误' ? ' (正确)' : '') + '</div>';
       html += '<div class="detail-opt correct">正确答案：' + ans + '</div>';
     } else {
       (q.options || []).forEach(opt => {
         const label = opt.label || '';
         const text = opt.text || '';
-        const isCorrectOpt = q.type === 'multiple_choice' ? ans.includes(label) : label === ans;
-        const isSelected = q.type === 'multiple_choice' ? sel.includes(label) : label === sel;
+        const isMulti = q.type === 'multiple_choice';
+        const isCorrectOpt = isMulti ? ans.includes(label) : label === ans;
+        const isSelected = isMulti ? sel.includes(label) : label === sel;
         let cls = 'detail-opt';
         if (isCorrectOpt) cls += ' correct';
         if (isSelected && !isCorrectOpt) cls += ' wrong';
-        const isMissing = isCorrectOpt && !isSelected;
+        // 只在多选题时显示漏选标记（单选/判断只有一个正确答案，选了别的就是选错，不是漏选）
+        const isMissing = isMulti && isCorrectOpt && !isSelected;
         html += '<div class="' + cls + '">' +
           (isMissing ? '<span class="miss-badge" title="漏选">漏</span> ' : '') +
           label + (label ? '. ' : '') + escHtml(text) +
@@ -1864,8 +1897,8 @@ function renderReviewItem() {
   html += '<div class="question-text">' + escHtml(q.question) + '</div>';
 
   if (q.type === 'true_false') {
-    html += '<div class="review-option' + (selected === '正确' ? ' wrong' : '') + '">正确' + (selected === '正确' ? ' (你的选择)' : '') + (q.answer === '正确' && selected !== '正确' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
-    html += '<div class="review-option' + (selected === '错误' ? ' wrong' : '') + '">错误' + (selected === '错误' ? ' (你的选择)' : '') + (q.answer === '错误' && selected !== '错误' ? ' <span class="miss-badge" title="漏选">漏</span>' : '') + '</div>';
+    html += '<div class="review-option' + (selected === '正确' ? ' wrong' : '') + '">正确' + (selected === '正确' ? ' (你的选择)' : '') + (q.answer === '正确' && selected !== '正确' ? ' (正确)' : '') + '</div>';
+    html += '<div class="review-option' + (selected === '错误' ? ' wrong' : '') + '">错误' + (selected === '错误' ? ' (你的选择)' : '') + (q.answer === '错误' && selected !== '错误' ? ' (正确)' : '') + '</div>';
     html += '<div class="review-answer correct-ans">正确答案：' + q.answer + '</div>';
   } else if (q.type === 'calculation') {
     html += '<div class="review-answer correct-ans">正确答案：' + formatAnswer(q) + '</div>';
@@ -1874,13 +1907,15 @@ function renderReviewItem() {
     (q.options || []).forEach(opt => {
       const label = opt.label || '';
       const text = opt.text || '';
-      const isCorrectOpt = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
-      const isSelected = q.type === 'multiple_choice' ? selected.includes(label) : label === selected;
+      const isMulti = q.type === 'multiple_choice';
+      const isCorrectOpt = isMulti ? q.answer.includes(label) : label === q.answer;
+      const isSelected = isMulti ? selected.includes(label) : label === selected;
       let cls = 'review-option';
       if (isCorrectOpt) cls += ' correct';
       else if (isSelected) cls += ' wrong';
       else cls += ' neutral';
-      const isMissing = isCorrectOpt && !isSelected;
+      // 只在多选题时显示漏选标记
+      const isMissing = isMulti && isCorrectOpt && !isSelected;
       html += '<div class="' + cls + '">' +
         (isMissing ? '<span class="miss-badge" title="漏选">漏</span> ' : '') +
         label + (label ? '. ' : '') + escHtml(text) +
@@ -1953,47 +1988,46 @@ let wbList = [];
 let wbIndex = 0;
 let wbFilter = 'all'; // 'all', 'temp', 'long'
 let wbSourceFilter = 'all'; // 'all' or source name
+// 展开状态：两级 key
+// wbExpanded.source[source] = true / false (题库是否展开)
+// wbExpanded.cat[source+':temp' or source+':long'] = true / false (二级分组是否展开)
+let wbExpanded = { source: {}, cat: {} };
 
 function openWrongBook() {
   const tempCount = Object.keys(wrongBookTemp).length;
   const longCount = Object.keys(wrongBookLong).length;
   if (tempCount + longCount === 0) return;
   wbFilter = 'all';
-  wbSourceFilter = 'all';
   wbIndex = 0;
-  // 重置筛选按钮的视觉状态（清除内联色 + active-green + active）
+  wbExpanded = { source: {}, cat: {} };
   document.querySelectorAll('#wb-filter-row .chip').forEach(c => {
-    c.classList.remove('active', 'active-green');
-    c.style.background = ''; c.style.color = ''; c.style.borderColor = '';
+    c.classList.remove('active');
   });
   const allChip = document.querySelector('#wb-filter-row .chip[data-filter="all"]');
   if (allChip) allChip.classList.add('active');
-  buildWbList();
+  buildWbGrouped();
   show('page-wrongbook');
-  renderWbSourceFilters();
   renderWbView();
 }
 
-function renderWbSourceFilters() {
-  const container = document.getElementById('wb-source-filter-row');
-  const sources = new Set();
-  Object.values(wrongBookTemp).forEach(q => sources.add(q.source || '未分类'));
-  Object.values(wrongBookLong).forEach(q => sources.add(q.source || '未分类'));
-  const sorted = ['all', ...Array.from(sources).sort()];
-  container.innerHTML = sorted.map(src => {
-    const label = src === 'all' ? '全部题库' : src;
-    const active = src === wbSourceFilter;
-    return '<span class="chip source-chip' + (active ? ' active' : '') + '" data-source="' + src + '" onclick="setWbSourceFilter(this,\'' + src + '\')">' + label + '</span>';
-  }).join('');
+// 按"题库 → 暂时/长期"分组构造数据
+function buildWbGrouped() {
+  // result: { sources: [{name, temp:[{key,q}], long:[{key,q}], totalCount}] }
+  const map = new Map();
+  function addToMap(q, key, cat) {
+    const s = q.source || '未分类';
+    if (!map.has(s)) map.set(s, { name: s, temp: [], long: [] });
+    const entry = map.get(s);
+    entry[cat].push({ key, q });
+  }
+  Object.entries(wrongBookTemp).forEach(([key, q]) => addToMap(q, key, 'temp'));
+  Object.entries(wrongBookLong).forEach(([key, q]) => addToMap(q, key, 'long'));
+  const sources = Array.from(map.values())
+    .map(s => ({ ...s, totalCount: s.temp.length + s.long.length }))
+    .sort((a, b) => b.totalCount - a.totalCount);
+  wbGrouped = sources;
 }
-
-function setWbSourceFilter(el, src) {
-  wbSourceFilter = src;
-  document.querySelectorAll('#wb-source-filter-row .chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  buildWbList();
-  renderWbView();
-}
+let wbGrouped = [];
 
 function buildWbList() {
   wbList = [];
@@ -2014,8 +2048,7 @@ function buildWbList() {
 function setWbFilter(el) {
   wbFilter = el.dataset.filter;
   document.querySelectorAll('#wb-filter-row .chip').forEach(c => {
-    c.classList.remove('active', 'active-green');
-    c.style.background = ''; c.style.color = ''; c.style.borderColor = '';
+    c.classList.remove('active');
   });
   el.classList.add('active');
   wbIndex = 0;
@@ -2036,9 +2069,7 @@ function setWbFilter(el) {
     analysis.classList.add('hidden');
     statsEl.classList.add('hidden');
     card.classList.remove('hidden');
-    renderWbSourceFilters();
-    wbSourceFilter = 'all';
-    buildWbList();
+    buildWbGrouped();
     renderWbView();
   }
 }
@@ -2258,146 +2289,299 @@ function escapeHtml(s) {
   return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
 }
 
+// ====== 三级列表视图（题库 → 暂时/长期 → 题目） ======
 function renderWbView() {
-  if (wbFilter === 'all') {
-    renderWbList();
-  } else {
-    renderWbItem();
-  }
+  renderWbThreeLevel();
 }
 
-// List view for "all" filter
-function renderWbList() {
+function renderWbThreeLevel() {
   const cardEl = document.getElementById('wb-card');
   const counterEl = document.getElementById('wb-counter');
-  const btnAction = document.getElementById('btn-wb-action');
-  const btnPrev = document.getElementById('btn-wb-prev');
-  const btnNext = document.getElementById('btn-wb-next');
 
-  counterEl.textContent = '共 ' + wbList.length + ' 题';
-  btnPrev.classList.add('hidden');
-  btnNext.classList.add('hidden');
-  btnAction.classList.add('hidden');
-  document.getElementById('btn-wb-remove').classList.add('hidden');
+  const totalCount = wbGrouped.reduce((s, x) => s + x.totalCount, 0);
+  counterEl.textContent = '共 ' + totalCount + ' 题';
 
-  if (wbList.length === 0) {
+  if (totalCount === 0) {
     cardEl.innerHTML = '<div style="text-align:center;color:#999;padding:40px">暂无错题</div>';
     return;
   }
 
-  let html = '<div class="wb-list">';
-  wbList.forEach((item, i) => {
-    const q = item.q;
-    const brief = q.question.length > 28 ? q.question.substring(0, 28) + '...' : q.question;
-    const catTag = item.cat === 'temp'
-      ? '<span class="wb-cat-temp">暂</span>'
-      : '<span class="wb-cat-long">长</span>';
-    html += '<div class="wb-list-item" onclick="wbOpenItem(' + i + ')">' +
-      catTag +
-      '<span class="wb-list-num">' + (i + 1) + '</span>' +
-      '<span class="wb-list-text">' + escHtml(brief) + '</span>' +
-      '<span class="wb-list-ans">答案：' + escHtml(formatAnswer(q)) + '</span>' +
+  let html = '<div class="wb-three">';
+  wbGrouped.forEach((src) => {
+    const sourceExpanded = wbExpanded.source[src.name];
+    const srcIcon = sourceExpanded ? '▼' : '▶';
+    html += '<div class="wb-level1">' +
+      '<div class="wb-level1-header" onclick="wbToggleSource(\'' + escAttr(src.name) + '\')">' +
+      '<span class="wb-level1-icon">' + srcIcon + '</span>' +
+      '<span class="wb-level1-title">' + escHtml(src.name) + '</span>' +
+      '<span class="wb-level1-count">' + src.temp.length + '暂 / ' + src.long.length + '长</span>' +
       '</div>';
+    if (sourceExpanded) {
+      html += '<div class="wb-level1-body">';
+      html += buildWbCatBlock(src, 'temp');
+      html += buildWbCatBlock(src, 'long');
+      html += '</div>';
+    }
+    html += '</div>';
   });
   html += '</div>';
+  html += '<div id="wb-detail" class="wb-detail hidden"></div>';
   cardEl.innerHTML = html;
 }
 
-// Card view for temp/long filter
+function buildWbCatBlock(src, cat) {
+  const items = src[cat];
+  if (items.length === 0) return '';
+  const catKey = src.name + ':' + cat;
+  const expanded = wbExpanded.cat[catKey];
+  const label = cat === 'temp' ? '暂时错题' : '长期记忆';
+  const colorClass = cat === 'temp' ? 'wb-level2-temp' : 'wb-level2-long';
+  const icon = expanded ? '▼' : '▶';
+  let html = '<div class="wb-level2">';
+  html += '<div class="wb-level2-header ' + colorClass + '" onclick="wbToggleCat(\'' + escAttr(catKey) + '\')">' +
+    '<span class="wb-level2-icon">' + icon + '</span>' +
+    '<span class="wb-level2-title">' + label + '</span>' +
+    '<span class="wb-level2-count">' + items.length + ' 题</span>' + '</div>';
+  if (expanded) {
+    html += '<div class="wb-level2-body">';
+    items.forEach((item, idx) => {
+      const q = item.q;
+      const brief = q.question.length > 40 ? q.question.substring(0, 40) + '...' : q.question;
+      html += '<div class="wb-level3-item" onclick="wbOpenDetail(\'' + escAttr(item.key) + '\',\'' + cat + '\')">' +
+        '<span class="wb-num">' + (idx + 1) + '</span>' +
+        '<span class="wb-text">' + escHtml(brief) + '</span>' +
+        '<span class="wb-ans">答 ' + escHtml(formatAnswer(q)) + '</span>' +
+        '</div>';
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function wbToggleSource(name) {
+  wbExpanded.source[name] = !wbExpanded.source[name];
+  renderWbThreeLevel();
+}
+function wbToggleCat(key) {
+  wbExpanded.cat[key] = !wbExpanded.cat[key];
+  renderWbThreeLevel();
+}
+
+function wbOpenDetail(key, cat) {
+  const store = cat === 'temp' ? wrongBookTemp : wrongBookLong;
+  const q = store[key];
+  if (!q) return;
+  const detail = document.getElementById('wb-detail');
+  if (!detail) return;
+  if (detail.dataset.key === key && detail.dataset.cat === cat) {
+    detail.classList.add('hidden');
+    detail.dataset.key = '';
+    return;
+  }
+  detail.dataset.key = key;
+  detail.dataset.cat = cat;
+
+  const typeLabel = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'}[q.type] || '';
+  let meta = [];
+  if (q.chapter) meta.push(q.chapter);
+  if (typeLabel) meta.push(typeLabel);
+
+  let html = '<div class="wb-detail-header">' +
+    '<span class="wb-detail-label">' + (cat === 'temp' ? '暂时错题' : '长期记忆') + '</span>' +
+    '<span class="wb-detail-close" onclick="wbCloseDetail()">×</span>' +
+    '</div>';
+  html += '<div class="wb-detail-meta">' + meta.join(' · ') + '</div>';
+  html += '<div class="wb-detail-q">' + escHtml(q.question) + '</div>';
+
+  if (q.type === 'calculation') {
+    const subQuestions = q.sub_questions || [];
+    subQuestions.forEach(sq => {
+      let aText = '';
+      if (sq.answer) {
+        if (sq.answer.value !== undefined) aText = String(sq.answer.value);
+        else if (sq.answer.scope) aText = sq.answer.scope[0] + '~' + sq.answer.scope[1];
+      }
+      html += '<div class="detail-opt">' + escHtml(sq.text) +
+        '<br><span style="font-size:12px;color:#888">参考答案：' + escHtml(aText) + '</span></div>';
+    });
+    html += '<div class="detail-opt correct">正确答案：' + escHtml(formatAnswer(q)) + ' ✓</div>';
+  } else if (q.type === 'true_false') {
+    const isCorrect = (opt) => opt.label === q.answer;
+    [{label:'正确',text:'正确'}, {label:'错误',text:'错误'}].forEach(opt => {
+      const ok = opt.label === q.answer;
+      html += '<div class="detail-opt' + (ok ? ' correct' : '') + '">' + opt.label + (ok ? ' ✓' : '') + '</div>';
+    });
+  } else {
+    (q.options || []).forEach(opt => {
+      const isCorrect = q.type === 'multiple_choice' ? (q.answer || '').includes(opt.label) : opt.label === q.answer;
+      html += '<div class="detail-opt' + (isCorrect ? ' correct' : '') + '">' +
+        (opt.label ? opt.label + '. ' : '') + escHtml(opt.text || '') + (isCorrect ? ' ✓' : '') + '</div>';
+    });
+    html += '<div class="detail-opt correct">正确答案：' + escHtml(q.answer || '') + '</div>';
+  }
+
+  // 备注显示
+  const noteKey = qKey(q);
+  const noteVal = wrongBookNotes[noteKey];
+  if (noteVal) {
+    html += '<div class="note-display">📝 ' + escHtml(noteVal) + '</div>';
+  }
+
+  // 按钮行：纯图标 + 增加备注
+  html += '<div class="wb-detail-btn-row">' +
+    '<button class="wb-icon-btn wb-icon-star" onclick="wbToggleCategory(\'' + escAttr(key) + '\',\'' + cat + '\')" title="' + (cat === 'temp' ? '转为长期记忆' : '转回暂时错题') + '">☆</button>' +
+    '<button class="wb-icon-btn wb-icon-remove" onclick="wbRemove(\'' + escAttr(key) + '\',\'' + cat + '\')" title="移除">✈</button>' +
+    '<button class="wb-icon-btn wb-icon-note" onclick="wbToggleNoteInput()" title="增加备注">📝</button>' +
+    '</div>';
+
+  // 备注输入区（默认隐藏）
+  html += '<div id="wb-note-editor" class="wb-note-editor hidden">' +
+    '<textarea id="wb-note-text" placeholder="输入备注内容…" maxlength="500"></textarea>' +
+    '<div class="wb-note-editor-actions">' +
+    '<button class="btn btn-primary btn-sm" onclick="wbSaveDetailNote(\'' + escAttr(noteKey) + '\')">保存</button>' +
+    '<button class="btn btn-secondary btn-sm" onclick="wbCancelNote()">取消</button>' +
+    '</div></div>';
+
+  // 底部导航：◀ ▶
+  html += '<div class="wb-detail-nav">' +
+    '<button class="wb-nav-btn" onclick="wbNavPrev()" title="上一题">◀</button>' +
+    '<button class="wb-nav-btn" onclick="wbNavNext()" title="下一题">▶</button>' +
+    '</div>';
+
+  detail.innerHTML = html;
+
+  // 如果有备注，回填到输入框
+  const noteTextEl = document.getElementById('wb-note-text');
+  if (noteTextEl && noteVal) {
+    noteTextEl.value = noteVal;
+  }
+
+  detail.classList.remove('hidden');
+}
+
+function wbCloseDetail() {
+  const d = document.getElementById('wb-detail');
+  if (d) {
+    d.classList.add('hidden');
+    d.dataset.key = '';
+  }
+}
+
+// ====== 浮层备注 ======
+function wbToggleNoteInput() {
+  const editor = document.getElementById('wb-note-editor');
+  if (!editor) return;
+  editor.classList.toggle('hidden');
+  if (!editor.classList.contains('hidden')) {
+    const ta = document.getElementById('wb-note-text');
+    if (ta) { ta.focus(); ta.select(); }
+  }
+}
+
+function wbSaveDetailNote(noteKey) {
+  const ta = document.getElementById('wb-note-text');
+  if (!ta) return;
+  const val = ta.value.trim();
+  if (val) {
+    wrongBookNotes[noteKey] = val;
+  } else {
+    delete wrongBookNotes[noteKey];
+  }
+  localStorage.setItem('wrongBookNotes', JSON.stringify(wrongBookNotes));
+  // 刷新浮层以更新备注显示
+  const key = document.getElementById('wb-detail').dataset.key;
+  const cat = document.getElementById('wb-detail').dataset.cat;
+  wbOpenDetail(key, cat);
+}
+
+function wbCancelNote() {
+  const editor = document.getElementById('wb-note-editor');
+  if (editor) editor.classList.add('hidden');
+}
+
+// ====== 浮层上下题导航 ======
+function wbBuildNavList() {
+  const list = [];
+  wbGrouped.forEach(src => {
+    src.temp.forEach(item => list.push({ key: item.key, cat: 'temp' }));
+    src.long.forEach(item => list.push({ key: item.key, cat: 'long' }));
+  });
+  return list;
+}
+
+function wbNavPrev() {
+  const detail = document.getElementById('wb-detail');
+  if (!detail || !detail.dataset.key) return;
+  const list = wbBuildNavList();
+  const cur = detail.dataset.key + '::' + detail.dataset.cat;
+  const idx = list.findIndex(i => i.key + '::' + i.cat === cur);
+  if (idx > 0) {
+    const prev = list[idx - 1];
+    wbOpenDetail(prev.key, prev.cat);
+  }
+}
+
+function wbNavNext() {
+  const detail = document.getElementById('wb-detail');
+  if (!detail || !detail.dataset.key) return;
+  const list = wbBuildNavList();
+  const cur = detail.dataset.key + '::' + detail.dataset.cat;
+  const idx = list.findIndex(i => i.key + '::' + i.cat === cur);
+  if (idx < list.length - 1) {
+    const next = list[idx + 1];
+    wbOpenDetail(next.key, next.cat);
+  }
+}
+
+// ========== 单题视图（用于分析页点击跳转） ==========
 function renderWbItem() {
   const cardEl = document.getElementById('wb-card');
   const counterEl = document.getElementById('wb-counter');
-  const btnAction = document.getElementById('btn-wb-action');
-  const btnPrev = document.getElementById('btn-wb-prev');
-  const btnNext = document.getElementById('btn-wb-next');
-
-  btnPrev.classList.remove('hidden');
-  btnNext.classList.remove('hidden');
-  btnAction.classList.remove('hidden');
-  document.getElementById('btn-wb-remove').classList.remove('hidden');
-
   if (wbList.length === 0) {
     counterEl.textContent = '0 / 0';
     cardEl.innerHTML = '<div style="text-align:center;color:#999;padding:40px">暂无错题</div>';
-    btnAction.dataset.textFull = '无操作';
-    btnAction.dataset.textShort = '—';
     return;
   }
   if (wbIndex >= wbList.length) wbIndex = wbList.length - 1;
   if (wbIndex < 0) wbIndex = 0;
-
   const item = wbList[wbIndex];
   const q = item.q;
-
   counterEl.textContent = (wbIndex + 1) + ' / ' + wbList.length;
-
   const typeLabel = {single_choice:'单选',multiple_choice:'多选',true_false:'判断'}[q.type] || '';
   let metaParts = [];
   if (q.chapter) metaParts.push(q.chapter);
   if (typeLabel) metaParts.push(typeLabel);
-  metaParts.push(item.cat === 'temp' ? '暂时错题' : '长期记忆');
 
   let html = '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
   html += '<div class="question-text">' + escHtml(q.question) + '</div>';
 
   if (q.type === 'true_false') {
-    html += '<div class="review-option' + (q.answer === '正确' ? ' correct' : ' neutral') + '">正确' + (q.answer === '正确' ? ' (答案)' : '') + '</div>';
-    html += '<div class="review-option' + (q.answer === '错误' ? ' correct' : ' neutral') + '">错误' + (q.answer === '错误' ? ' (答案)' : '') + '</div>';
+    html += '<div class="detail-opt">正确</div>';
+    html += '<div class="detail-opt">错误</div>';
+    html += '<div class="detail-opt correct">正确答案：' + q.answer + '</div>';
+  } else if (q.type === 'calculation') {
+    html += '<div class="review-answer correct-ans">正确答案：' + formatAnswer(q) + '</div>';
   } else {
     (q.options || []).forEach(opt => {
-      const label = opt.label || '';
-      const text = opt.text || '';
-      const isCorrectOpt = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
-      let cls = 'review-option';
-      if (isCorrectOpt) cls += ' correct';
-      else cls += ' neutral';
-      html += '<div class="' + cls + '">' + label + (label ? '. ' : '') + escHtml(text) +
-        (isCorrectOpt ? ' (答案)' : '') + '</div>';
+      const isCorrect = q.type === 'multiple_choice' ? (q.answer || '').includes(opt.label) : opt.label === q.answer;
+      html += '<div class="detail-opt' + (isCorrect ? ' correct' : '') + '">' +
+        (opt.label ? opt.label + '. ' : '') + escHtml(opt.text || '') + '</div>';
     });
+    html += '<div class="detail-opt correct">正确答案：' + escHtml(q.answer || '') + '</div>';
   }
-
-  const note = wrongBookNotes[item.key] || '';
-  html += '<div class="note-input-panel">';
-  html += '<div class="note-input-label">📝 备注（写备注后自动加入长期记忆）</div>';
-  html += '<textarea class="note-input" id="wb-note-input" placeholder="写点备注..."></textarea>';
-  html += '</div>';
-
+  const key = qKey(q);
+  if (wrongBookNotes[key]) {
+    html += '<div class="note-display">备注：' + escHtml(wrongBookNotes[key]) + '</div>';
+  }
   cardEl.innerHTML = html;
+}
 
-  // 绑定输入事件（自动保存 + 自动入长期记忆）
-  const wbNoteInput = document.getElementById('wb-note-input');
-  if (wbNoteInput) {
-    wbNoteInput.value = note;
-    wbNoteInput.addEventListener('input', function () {
-      const key = item.key;
-      const val = this.value.trim();
-      if (val) {
-        wrongBookNotes[key] = val;
-        delete wrongBookTemp[key];
-        if (!wrongBookLong[key]) wrongBookLong[key] = q;
-      } else {
-        delete wrongBookNotes[key];
-      }
-      localStorage.setItem('wrongBookNotes', JSON.stringify(wrongBookNotes));
-      localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
-      localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
-    });
-  }
-
-  if (item.cat === 'temp') {
-    btnAction.dataset.textFull = '转为长期记忆';
-    btnAction.dataset.textShort = '长期记忆';
-    btnAction.className = 'btn btn-book-green btn-wb-shrinkable';
-  } else if (item.cat === 'long') {
-    btnAction.dataset.textFull = '转为暂时错题';
-    btnAction.dataset.textShort = '暂存';
-    btnAction.className = 'btn btn-primary btn-wb-shrinkable';
-  } else {
-    // analysis / other —— 保留原按钮结构但给它一个"查看"状态
-    btnAction.dataset.textFull = '查看详情';
-    btnAction.dataset.textShort = '详情';
-    btnAction.className = 'btn btn-primary btn-wb-shrinkable';
-  }
+// ========== 工具：属性转义 ==========
+function escAttr(s) {
+  return String(s).replace(/[<>&"']/g, c => ({
+    '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'
+  }[c]));
 }
 
 // Click a list item to open it in detail view
@@ -2453,44 +2637,91 @@ function refreshWrongBookHome() {
   }
 }
 
-function wbRemove() {
-  if (wbList.length === 0) return;
-  const item = wbList[wbIndex];
-  const key = item.key;
-  if (item.cat === 'temp') {
-    delete wrongBookTemp[key];
-  } else {
-    delete wrongBookLong[key];
+// 支持两种调用：
+// 1) wbRemove(key, cat) —— 新版（从三级列表详情）
+// 2) wbRemove() —— 老版（基于 wbIndex/wbList）
+function wbRemove(key, cat) {
+  let removed = false;
+  if (key && cat) {
+    if (cat === 'temp') {
+      if (wrongBookTemp[key]) { delete wrongBookTemp[key]; removed = true; }
+    } else if (cat === 'long') {
+      if (wrongBookLong[key]) { delete wrongBookLong[key]; removed = true; }
+    }
+  } else if (wbList.length > 0) {
+    const item = wbList[wbIndex];
+    const k = item.key;
+    if (item.cat === 'temp') {
+      if (wrongBookTemp[k]) { delete wrongBookTemp[k]; removed = true; }
+    } else if (item.cat === 'long') {
+      if (wrongBookLong[k]) { delete wrongBookLong[k]; removed = true; }
+    }
   }
+  if (!removed) return;
   localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
   localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
   refreshWrongBookHome();
-  buildWbList();
-  if (wbIndex >= wbList.length) wbIndex = wbList.length - 1;
-  if (wbList.length === 0) {
-    showHome();
-    return;
+
+  if (key && cat) {
+    // 从三级列表调用：关闭详情，重新渲染列表
+    const d = document.getElementById('wb-detail');
+    if (d) { d.classList.add('hidden'); d.dataset.key = ''; }
+    buildWbGrouped();
+    renderWbThreeLevel();
+  } else {
+    // 老版路径（如分析页）：重新渲染单题视图
+    buildWbList();
+    if (wbIndex >= wbList.length) wbIndex = wbList.length - 1;
+    if (wbList.length === 0) { showHome(); return; }
+    renderWbItem();
   }
-  renderWbItem();
 }
 
-function wbToggleCategory() {
-  if (wbList.length === 0) return;
-  const item = wbList[wbIndex];
-  const key = item.key;
-  const q = item.q;
-  if (item.cat === 'temp') {
-    delete wrongBookTemp[key];
-    wrongBookLong[key] = q;
+function wbToggleCategory(key, cat) {
+  let q = null;
+  if (key && cat) {
+    if (cat === 'temp') {
+      if (!wrongBookTemp[key]) return;
+      q = wrongBookTemp[key];
+      delete wrongBookTemp[key];
+      wrongBookLong[key] = q;
+    } else if (cat === 'long') {
+      if (!wrongBookLong[key]) return;
+      q = wrongBookLong[key];
+      delete wrongBookLong[key];
+      wrongBookTemp[key] = q;
+    }
+  } else if (wbList.length > 0) {
+    const item = wbList[wbIndex];
+    const k = item.key;
+    q = item.q;
+    if (item.cat === 'temp') {
+      delete wrongBookTemp[k];
+      wrongBookLong[k] = q;
+    } else if (item.cat === 'long') {
+      delete wrongBookLong[k];
+      wrongBookTemp[k] = q;
+    }
   } else {
-    delete wrongBookLong[key];
-    wrongBookTemp[key] = q;
+    return;
   }
   localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
   localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
   refreshWrongBookHome();
-  buildWbList();
-  renderWbItem();
+
+  if (key && cat) {
+    buildWbGrouped();
+    // 保持展开状态并刷新详情（或简单关闭）
+    const d = document.getElementById('wb-detail');
+    if (d) {
+      const newCat = cat === 'temp' ? 'long' : 'temp';
+      d.dataset.cat = newCat;
+    }
+    renderWbThreeLevel();
+  } else {
+    buildWbList();
+    renderWbItem();
+  }
 }
 
 // ====== 答题历史统计（正确率图表） ======
