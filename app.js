@@ -68,6 +68,7 @@ let wrongList = [];
 let wrongBookTemp = {};   // temporary wrong - auto added, cleared on correct
 let wrongBookLong = {};   // long-term memory - user added, manual remove only
 let wrongBookNotes = {};
+let _subjectivePending = true; // segmentit 未加载时过滤主观题
 let streak = 0;
 let effectsEnabled = null; // null = not asked yet, true/false
 let wrongSummaryCollapsed = false;
@@ -158,6 +159,50 @@ function scoreSubjectiveRef(userAnswer, referenceText) {
 // 异步初始化分词（不阻塞页面渲染）
 setTimeout(ensureSegmenter, 100);
 
+// 动态加载 segmentit.js（不阻塞主流程），加载完成后注入主观题
+function loadSegmentitAsync() {
+  // 显示加载条
+  const bar = showSegmentitBar();
+
+  const script = document.createElement('script');
+  script.src = 'segmentit.js';
+  script.onload = function() {
+    ensureSegmenter().then(ready => {
+      if (bar) bar.classList.add('done');
+      setTimeout(() => { if (bar) bar.remove(); }, 600);
+      if (!ready) return;
+      _subjectivePending = false;
+      // 刷新题目池和界面
+      renderSourceSelector();
+      updateActiveQuestions();
+      showSegmentitToast('主观题已加载完成');
+    });
+  };
+  script.onerror = function() {
+    if (bar) { bar.classList.add('done'); setTimeout(() => bar.remove(), 600); }
+    console.warn('segmentit.js 加载失败，主观题暂不可用');
+    _subjectivePending = false; // 显示主观题但不分词
+    renderSourceSelector();
+    updateActiveQuestions();
+  };
+  document.body.appendChild(script);
+}
+
+function showSegmentitBar() {
+  const el = document.createElement('div');
+  el.className = 'segmentit-bar';
+  document.body.appendChild(el);
+  return el;
+}
+
+function showSegmentitToast(msg) {
+  const el = document.createElement('div');
+  el.textContent = msg;
+  el.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);color:#999;font-size:12px;z-index:9999;transition:opacity 1s;pointer-events:none;';
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 1200); }, 2000);
+}
+
 function loadAnalysis() {
   try {
     const raw = localStorage.getItem('quizAnalysis');
@@ -232,6 +277,8 @@ async function init() {
       } catch(e) {}
     }
     renderSourceSelector();
+    // 异步加载 segmentit.js，不阻塞页面渲染
+    loadSegmentitAsync();
   } catch(e) {
     document.getElementById('source-area').innerHTML =
       '<div class="loading">加载失败：' + e.message + '</div>';
@@ -246,7 +293,8 @@ function renderSourceSelector() {
 
   let html = '<div class="source-section"><h3>选择题库</h3><div class="source-chips">';
   QUIZ_SOURCES.forEach((s, i) => {
-    const count = sourceData[s.name] ? sourceData[s.name].length : 0;
+    const all = sourceData[s.name] || [];
+    const count = _subjectivePending ? all.filter(q => q.type !== 'subjective').length : all.length;
     const active = sourceSelection[s.name] !== false ? ' active' : '';
     html += '<div class="source-chip' + active + '" data-idx="'+i+'" data-type="source" onclick="toggleSource(this)">' +
       s.name + '<span class="count">(' + count + '题)</span></div>';
@@ -279,7 +327,9 @@ function updateActiveQuestions() {
     if (chip.dataset.type === 'wrongbook') return; // skip wrongbook chip
     const idx = parseInt(chip.dataset.idx);
     const name = QUIZ_SOURCES[idx].name;
-    ALL_QUESTIONS = ALL_QUESTIONS.concat(sourceData[name]);
+    let qs = sourceData[name] || [];
+    if (_subjectivePending) qs = qs.filter(q => q.type !== 'subjective');
+    ALL_QUESTIONS = ALL_QUESTIONS.concat(qs);
   });
   const modeArea = document.getElementById('mode-area');
   if (ALL_QUESTIONS.length === 0) {
@@ -1759,6 +1809,7 @@ function formatAnswer(q) {
       return 'Q' + k + '=?';
     }).join(' ');
   }
+  if (q.type === 'subjective') return '见展开详情';
   return q.answer;
 }
 function renderWrongSummary() {
@@ -1793,6 +1844,8 @@ function renderWrongSummary() {
       } else if (!ans) {
         ans = '未设置';
       }
+    } else if (q.type === 'subjective' && ans && ans.reference) {
+      ans = ans.reference;
     } else if (typeof ans === 'object' && ans !== null) {
       ans = JSON.stringify(ans);
     }
@@ -1802,10 +1855,10 @@ function renderWrongSummary() {
       '<div class="wrong-item-header" onclick="toggleWrongItem(this)">' +
       '<span class="wrong-item-num">' + (i+1) + '</span>' +
       '<span class="wrong-item-brief">' + escHtml(brief) + '</span>' +
-      '<span class="wrong-item-ans"><span class="wrong-sel">' + escHtml(sel || '未回答') + '</span> → <span class="correct-ans">答 ' + escHtml(ans || '未设置') + '</span></span>' +
       '</div>' +
       '<div class="wrong-item-detail">' +
-      '<div class="detail-q">' + escHtml(q.question) + '</div>';
+      '<div class="detail-q">' + escHtml(q.question) + '</div>' +
+      '<div class="wrong-item-ans-inline"><span class="wrong-sel">' + escHtml(sel || '未回答') + '</span> → <span class="correct-ans">答 ' + escHtml(ans || '未设置') + '</span></div>';
 
     if (q.type === 'calculation') {
       // 计算题详情：显示各子问
@@ -2406,6 +2459,9 @@ function wbOpenDetail(key, cat) {
         '<br><span style="font-size:12px;color:#888">参考答案：' + escHtml(aText) + '</span></div>';
     });
     html += '<div class="detail-opt correct">正确答案：' + escHtml(formatAnswer(q)) + ' ✓</div>';
+  } else if (q.type === 'subjective') {
+    const ref = (q.answer && q.answer.reference) ? q.answer.reference : '';
+    html += '<div class="detail-opt correct">参考答案：' + escHtml(ref) + '</div>';
   } else if (q.type === 'true_false') {
     const isCorrect = (opt) => opt.label === q.answer;
     [{label:'正确',text:'正确'}, {label:'错误',text:'错误'}].forEach(opt => {
@@ -2429,8 +2485,9 @@ function wbOpenDetail(key, cat) {
   }
 
   // 按钮行：纯图标 + 增加备注
+  const isLongTerm = (cat === 'long');
   html += '<div class="wb-detail-btn-row">' +
-    '<button class="wb-icon-btn wb-icon-star" onclick="wbToggleCategory(\'' + escAttr(key) + '\',\'' + cat + '\')" title="' + (cat === 'temp' ? '转为长期记忆' : '转回暂时错题') + '">☆</button>' +
+    '<button class="wb-icon-btn wb-icon-star' + (isLongTerm ? ' is-long' : '') + '" onclick="wbToggleCategory(\'' + escAttr(key) + '\',\'' + cat + '\')" title="' + (cat === 'temp' ? '转为长期记忆' : '转回暂时错题') + '">' + (isLongTerm ? '★' : '☆') + '</button>' +
     '<button class="wb-icon-btn wb-icon-remove" onclick="wbRemove(\'' + escAttr(key) + '\',\'' + cat + '\')" title="移除">✈</button>' +
     '<button class="wb-icon-btn wb-icon-note" onclick="wbToggleNoteInput()" title="增加备注">📝</button>' +
     '</div>';
@@ -2562,6 +2619,9 @@ function renderWbItem() {
     html += '<div class="detail-opt correct">正确答案：' + q.answer + '</div>';
   } else if (q.type === 'calculation') {
     html += '<div class="review-answer correct-ans">正确答案：' + formatAnswer(q) + '</div>';
+  } else if (q.type === 'subjective') {
+    const ref = (q.answer && q.answer.reference) ? q.answer.reference : '';
+    html += '<div class="review-answer correct-ans">参考答案：' + escHtml(ref) + '</div>';
   } else {
     (q.options || []).forEach(opt => {
       const isCorrect = q.type === 'multiple_choice' ? (q.answer || '').includes(opt.label) : opt.label === q.answer;
@@ -2663,11 +2723,25 @@ function wbRemove(key, cat) {
   refreshWrongBookHome();
 
   if (key && cat) {
-    // 从三级列表调用：关闭详情，重新渲染列表
-    const d = document.getElementById('wb-detail');
-    if (d) { d.classList.add('hidden'); d.dataset.key = ''; }
+    // 从三级列表调用：删除后跳转到下一题（或上一题），若没有了则关闭
+    const list = wbBuildNavList();
+    const cur = key + '::' + cat;
+    const idx = list.findIndex(i => i.key + '::' + i.cat === cur);
+    // 先删除数据
+    // (数据已在上面删完)
     buildWbGrouped();
     renderWbThreeLevel();
+    // 找下一个可显示的题
+    const newList = wbBuildNavList();
+    if (newList.length === 0) {
+      const d = document.getElementById('wb-detail');
+      if (d) { d.classList.add('hidden'); d.dataset.key = ''; }
+      return;
+    }
+    // 优先显示同位置的下一题，超出则显示最后一题
+    const targetIdx = Math.min(idx, newList.length - 1);
+    const target = newList[targetIdx];
+    wbOpenDetail(target.key, target.cat);
   } else {
     // 老版路径（如分析页）：重新渲染单题视图
     buildWbList();
@@ -2711,13 +2785,12 @@ function wbToggleCategory(key, cat) {
 
   if (key && cat) {
     buildWbGrouped();
-    // 保持展开状态并刷新详情（或简单关闭）
-    const d = document.getElementById('wb-detail');
-    if (d) {
-      const newCat = cat === 'temp' ? 'long' : 'temp';
-      d.dataset.cat = newCat;
-    }
     renderWbThreeLevel();
+    // 临时清空 key 绕过 wbOpenDetail 的 toggle-self 检测，然后重新打开
+    const detail = document.getElementById('wb-detail');
+    if (detail) detail.dataset.key = '';
+    const newCat = cat === 'temp' ? 'long' : 'temp';
+    wbOpenDetail(key, newCat);
   } else {
     buildWbList();
     renderWbItem();
