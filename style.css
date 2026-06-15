@@ -561,3 +561,71 @@ html.cylinder-snap { scroll-snap-type: y proximity; }
 .segmentit-bar { position: fixed; top: 0; left: 0; height: 3px; background: #4a90d9; z-index: 99999; width: 0; animation: segmentit-progress 8s ease-in-out forwards; border-radius: 0 2px 2px 0; }
 .segmentit-bar.done { animation: none; width: 100% !important; background: #27ae60; transition: width 0.3s; }
 @keyframes segmentit-progress { 0% { width: 0; } 20% { width: 18%; } 50% { width: 42%; } 70% { width: 60%; } 90% { width: 82%; } 100% { width: 88%; } }
+
+/* ====== 引号高亮 ====== */
+/* 题干中的短引号 - 内联加粗 */
+.quote-inline-short {
+  font-weight: 600;
+  color: #2c5282;
+  background: rgba(74, 144, 217, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* 题干中的长引号内容 - 引用块 */
+.quote-block {
+  display: block;
+  margin: 12px 0;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(74, 144, 217, 0.08) 0%, rgba(74, 144, 217, 0.04) 100%);
+  border-left: 3px solid #4a90d9;
+  border-radius: 0 10px 10px 0;
+  font-style: italic;
+  color: #2c5282;
+  font-size: 15px;
+  line-height: 1.7;
+  position: relative;
+}
+.quote-block::before {
+  content: "\"";
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  font-size: 28px;
+  color: #4a90d9;
+  opacity: 0.25;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.quote-block .quote-content {
+  margin-left: 16px;
+}
+
+/* 选项中的引号内容 - 内联高亮 */
+.option-quote {
+  font-weight: 600;
+  color: #2c5282;
+  background: rgba(74, 144, 217, 0.12);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* 暗黑模式适配 */
+[data-theme="dark"] .quote-inline-short {
+  background: rgba(74, 144, 217, 0.2);
+  color: #90cdf4;
+}
+[data-theme="dark"] .quote-block {
+  background: linear-gradient(135deg, rgba(74, 144, 217, 0.15) 0%, rgba(74, 144, 217, 0.05) 100%);
+  border-left-color: #63b3ed;
+  color: #90cdf4;
+}
+[data-theme="dark"] .quote-block::before {
+  color: #63b3ed;
+}
+[data-theme="dark"] .option-quote {
+  background: rgba(74, 144, 217, 0.2);
+  color: #90cdf4;
+}

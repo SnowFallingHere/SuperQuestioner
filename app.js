@@ -203,6 +203,44 @@ function showSegmentitToast(msg) {
   setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 1200); }, 2000);
 }
 
+// ====== 引号高亮格式化 ======
+// 将题干中的引号内容格式化为引用块（长文本）或内联加粗（短文本）
+function formatQuestionQuotes(text) {
+  if (!text) return text;
+  // 匹配中文引号 "" (\u201C\u201D) 或英文引号 "" (\u0022) 及其内容
+  const quotePattern = /([\u201C\u0022])([^\u201C\u201D\u0022]+)([\u201D\u0022])/g;
+  let result = text;
+  let match;
+  const quotes = [];
+  while ((match = quotePattern.exec(text)) !== null) {
+    quotes.push({ full: match[0], content: match[2], index: match.index, length: match[2].length });
+  }
+  // 从后往前替换，避免索引偏移
+  for (let i = quotes.length - 1; i >= 0; i--) {
+    const q = quotes[i];
+    const before = result.slice(0, q.index);
+    const after = result.slice(q.index + q.full.length);
+    // 短引号（少于10个字）内联加粗，长引号用引用块
+    if (q.length < 10) {
+      result = before + '<span class="quote-inline-short">' + q.content + '</span>' + after;
+    } else {
+      // 长引号后紧跟的 ，。 吞掉（包括英文标点）
+      let afterClean = after;
+      if (afterClean.startsWith('，') || afterClean.startsWith('。') || afterClean.startsWith(',') || afterClean.startsWith('.')) {
+        afterClean = afterClean.slice(1);
+      }
+      result = before + '<span class="quote-block"><span class="quote-content">' + q.content + '</span></span>' + afterClean;
+    }
+  }
+  return result;
+}
+
+// 将选项中的引号内容格式化为内联高亮
+function formatOptionQuotes(text) {
+  if (!text) return text;
+  return text.replace(/([\u201C\u0022])([^\u201C\u201D\u0022]+)([\u201D\u0022])/g, '<span class="option-quote">$2</span>');
+}
+
 function loadAnalysis() {
   try {
     const raw = localStorage.getItem('quizAnalysis');
@@ -1183,7 +1221,7 @@ function renderQuestion() {
   if (wrongBookLong[key]) metaParts.push('长期记忆');
   document.getElementById('question-meta').textContent = metaParts.join(' · ');
 
-  document.getElementById('question-text').textContent = q.question;
+  document.getElementById('question-text').innerHTML = formatQuestionQuotes(q.question);
 
   const area = document.getElementById('options-area');
   area.innerHTML = '';
@@ -1222,7 +1260,7 @@ function renderQuestion() {
     let html = '<div class="options">';
     shuffled.forEach((opt, i) => {
       const newLabel = String.fromCharCode(65 + i);
-      const text = opt.text || '';
+      const text = formatOptionQuotes(opt.text || '');
       html += '<div class="option" data-label="'+newLabel+'" onclick="clickOption(this,'+isMulti+')">' +
         newLabel + '. ' + text + '</div>';
     });
@@ -1883,7 +1921,7 @@ function renderWrongSummary() {
             : correct.value !== undefined && Math.abs(parseFloat(userVal) - correct.value) < 0.001
         );
         html += '<div class="detail-opt' + (isRight ? ' correct' : ' wrong') + '">' +
-          escHtml(sq.text) + '<br><span style="font-size:12px;color:#888">你的答案：' + escHtml(userVal) +
+          formatOptionQuotes(escHtml(sq.text)) + '<br><span style="font-size:12px;color:#888">你的答案：' + escHtml(userVal) +
           ' | 正确答案：' + correctStr + '</span></div>';
       });
     } else if (q.type === 'true_false') {
@@ -1904,7 +1942,7 @@ function renderWrongSummary() {
         const isMissing = isMulti && isCorrectOpt && !isSelected;
         html += '<div class="' + cls + '">' +
           (isMissing ? '<span class="miss-badge" title="漏选">漏</span> ' : '') +
-          label + (label ? '. ' : '') + escHtml(text) +
+          label + (label ? '. ' : '') + formatOptionQuotes(escHtml(text)) +
           (isSelected ? ' ← 你的选择' : '') + (isCorrectOpt && !isSelected ? ' (正确)' : '') + '</div>';
       });
     }
@@ -1947,7 +1985,7 @@ function renderReviewItem() {
   if (Object.keys(sourceData).length > 1) metaParts.push(q.source);
 
   let html = '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
-  html += '<div class="question-text">' + escHtml(q.question) + '</div>';
+  html += '<div class="question-text">' + formatQuestionQuotes(escHtml(q.question)) + '</div>';
 
   if (q.type === 'true_false') {
     html += '<div class="review-option' + (selected === '正确' ? ' wrong' : '') + '">正确' + (selected === '正确' ? ' (你的选择)' : '') + (q.answer === '正确' && selected !== '正确' ? ' (正确)' : '') + '</div>';
@@ -1971,7 +2009,7 @@ function renderReviewItem() {
       const isMissing = isMulti && isCorrectOpt && !isSelected;
       html += '<div class="' + cls + '">' +
         (isMissing ? '<span class="miss-badge" title="漏选">漏</span> ' : '') +
-        label + (label ? '. ' : '') + escHtml(text) +
+        label + (label ? '. ' : '') + formatOptionQuotes(escHtml(text)) +
         (isSelected ? ' (你的选择)' : '') + (isCorrectOpt && !isSelected ? ' (正确)' : '') + '</div>';
     });
     html += '<div class="review-answer correct-ans">正确答案：' + q.answer + '</div>';
@@ -2306,14 +2344,14 @@ function renderSingleAnalysisItem(q, qKeyVal, qa) {
   if (typeLabel) metaParts.push(typeLabel);
   html += metaParts.join(' · ');
   html += '</div>';
-  html += '<div class="question-text" style="font-size:15px;line-height:1.6;margin-bottom:14px">' + escapeHtml(q.question) + '</div>';
+  html += '<div class="question-text" style="font-size:15px;line-height:1.6;margin-bottom:14px">' + formatQuestionQuotes(escapeHtml(q.question)) + '</div>';
 
   if (q.options && q.options.length) {
     html += '<div class="options" style="margin-bottom:12px">';
     q.options.forEach((opt, i) => {
       const isCorrect = opt.label === q.answer;
       html += '<div class="option' + (isCorrect ? ' correct' : '') + '" style="padding:10px 12px;margin:6px 0;border:1px solid #e5e5e5;border-radius:6px;cursor:default">';
-      html += '<span style="font-weight:bold;margin-right:8px">' + (opt.label || (String.fromCharCode(65 + i))) + '</span>' + escapeHtml(opt.text || '');
+      html += '<span style="font-weight:bold;margin-right:8px">' + (opt.label || (String.fromCharCode(65 + i))) + '</span>' + formatOptionQuotes(escapeHtml(opt.text || ''));
       if (isCorrect) html += ' <span style="color:#27ae60;margin-left:6px;font-weight:bold">✓</span>';
       html += '</div>';
     });
@@ -2445,7 +2483,7 @@ function wbOpenDetail(key, cat) {
     '<span class="wb-detail-close" onclick="wbCloseDetail()">×</span>' +
     '</div>';
   html += '<div class="wb-detail-meta">' + meta.join(' · ') + '</div>';
-  html += '<div class="wb-detail-q">' + escHtml(q.question) + '</div>';
+  html += '<div class="wb-detail-q">' + formatQuestionQuotes(escHtml(q.question)) + '</div>';
 
   if (q.type === 'calculation') {
     const subQuestions = q.sub_questions || [];
@@ -2472,7 +2510,7 @@ function wbOpenDetail(key, cat) {
     (q.options || []).forEach(opt => {
       const isCorrect = q.type === 'multiple_choice' ? (q.answer || '').includes(opt.label) : opt.label === q.answer;
       html += '<div class="detail-opt' + (isCorrect ? ' correct' : '') + '">' +
-        (opt.label ? opt.label + '. ' : '') + escHtml(opt.text || '') + (isCorrect ? ' ✓' : '') + '</div>';
+        (opt.label ? opt.label + '. ' : '') + formatOptionQuotes(escHtml(opt.text || '')) + (isCorrect ? ' ✓' : '') + '</div>';
     });
     html += '<div class="detail-opt correct">正确答案：' + escHtml(q.answer || '') + '</div>';
   }
@@ -2611,7 +2649,7 @@ function renderWbItem() {
   if (typeLabel) metaParts.push(typeLabel);
 
   let html = '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
-  html += '<div class="question-text">' + escHtml(q.question) + '</div>';
+  html += '<div class="question-text">' + formatQuestionQuotes(escHtml(q.question)) + '</div>';
 
   if (q.type === 'true_false') {
     html += '<div class="detail-opt">正确</div>';
@@ -2626,7 +2664,7 @@ function renderWbItem() {
     (q.options || []).forEach(opt => {
       const isCorrect = q.type === 'multiple_choice' ? (q.answer || '').includes(opt.label) : opt.label === q.answer;
       html += '<div class="detail-opt' + (isCorrect ? ' correct' : '') + '">' +
-        (opt.label ? opt.label + '. ' : '') + escHtml(opt.text || '') + '</div>';
+        (opt.label ? opt.label + '. ' : '') + formatOptionQuotes(escHtml(opt.text || '')) + '</div>';
     });
     html += '<div class="detail-opt correct">正确答案：' + escHtml(q.answer || '') + '</div>';
   }
@@ -3548,7 +3586,7 @@ function renderPreviewItem() {
   } else if (q.type === 'true_false') {
     answerTag = ' <span class="preview-answer-tag">' + (q.answer === '正确' ? '正确' : q.answer === '错误' ? '错误' : '') + '</span>';
   }
-  html += '<div class="question-text">' + escHtml(q.question) + answerTag + '</div>';
+  html += '<div class="question-text">' + formatQuestionQuotes(escHtml(q.question)) + answerTag + '</div>';
 
   // Table for calculation questions
   if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
@@ -3579,7 +3617,7 @@ function renderPreviewItem() {
     q.options.forEach(opt => {
       const label = opt.label || '';
       const isCorrect = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
-      html += '<div class="review-option' + (isCorrect ? ' correct' : ' neutral') + '">' + label + (label ? '. ' : '') + escHtml(opt.text || '') + (isCorrect ? ' ✓' : '') + '</div>';
+      html += '<div class="review-option' + (isCorrect ? ' correct' : ' neutral') + '">' + label + (label ? '. ' : '') + formatOptionQuotes(escHtml(opt.text || '')) + (isCorrect ? ' ✓' : '') + '</div>';
     });
     html += '</div>';
   }
@@ -3652,7 +3690,7 @@ function renderPreviewList() {
     } else if (q.type === 'true_false') {
       listAnswerTag = ' <span class="preview-answer-tag">' + (q.answer === '正确' ? '正确' : q.answer === '错误' ? '错误' : '') + '</span>';
     }
-    html += '<div class="question-text" style="font-size:15px;margin-bottom:12px">' + escHtml(q.question) + listAnswerTag + '</div>';
+    html += '<div class="question-text" style="font-size:15px;margin-bottom:12px">' + formatQuestionQuotes(escHtml(q.question)) + listAnswerTag + '</div>';
 
     // Table for calculation
     if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
@@ -3677,14 +3715,14 @@ function renderPreviewList() {
       html += '<div class="review-option' + (q.answer === '正确' ? ' correct' : ' neutral') + '">正确' + (q.answer === '正确' ? ' ✓' : '') + '</div>';
       html += '<div class="review-option' + (q.answer === '错误' ? ' correct' : ' neutral') + '">错误' + (q.answer === '错误' ? ' ✓' : '') + '</div>';
     } else if (q.options && q.options.length > 0) {
-      q.options.forEach(opt => {
-        const label = opt.label || '';
-        const isCorrect = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
-        html += '<div class="review-option' + (isCorrect ? ' correct' : ' neutral') + '">' + label + (label ? '. ' : '') + escHtml(opt.text || '') + (isCorrect ? ' ✓' : '') + '</div>';
-      });
-    }
+    q.options.forEach(opt => {
+      const label = opt.label || '';
+      const isCorrect = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
+      html += '<div class="review-option' + (isCorrect ? ' correct' : ' neutral') + '">' + label + (label ? '. ' : '') + formatOptionQuotes(escHtml(opt.text || '')) + (isCorrect ? ' ✓' : '') + '</div>';
+    });
+  }
 
-    // Answer - 只有计算/主观题显示答案区块
+  // Answer - 只有计算/主观题显示答案区块
     if (q.type === 'calculation' || q.type === 'subjective') {
       html += buildPreviewAnswerHtml(q);
     }
