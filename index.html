@@ -19,7 +19,7 @@
   </div>
   <div id="wrongbook-area" class="hidden">
     <div class="source-section">
-      <h3>错题本</h3>
+      <h3>错题本 <span class="wb-default-badge-home" id="wb-default-badge-home" onclick="showDefaultWBSelectorHome()">默认错题本</span></h3>
       <div class="source-chips" id="wrongbook-chips">
         <!-- 动态渲染错题本列表 -->
       </div>
@@ -35,7 +35,11 @@
             <label class="toggle-switch"><input type="checkbox" id="wb-include-long" checked onchange="updateWrongBookCardText()"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <p>从错题本中抽取题目重做</p>
+        <p id="wb-card-desc">从错题本中抽取题目重做</p>
+        <div class="wb-select-row" onclick="event.stopPropagation()">
+          <span class="wb-select-btn" onclick="showSelectWBForRedo()">选择错题本</span>
+          <span class="wb-selected-name" id="wb-selected-name">默认错题本</span>
+        </div>
       </div>
       <div class="mode-card" onclick="showChallengeConfig()">
         <h2>闯关模式</h2>
@@ -288,6 +292,46 @@
   </div>
 </div>
 
+<!-- Move To Dialog -->
+<div id="move-to-overlay" class="move-to-overlay hidden">
+  <div class="move-to-dialog">
+    <h4>移动到</h4>
+    <div class="move-to-list" id="move-to-list"></div>
+    <div class="move-to-buttons">
+      <button class="btn btn-secondary" onclick="closeMoveToDialog()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Default Wrong Book Selector -->
+<div id="default-wb-overlay" class="default-wb-overlay hidden">
+  <div class="default-wb-dialog">
+    <h4>选择默认错题本</h4>
+    <div class="default-wb-list" id="default-wb-list"></div>
+    <div class="default-wb-buttons">
+      <button class="btn btn-secondary" onclick="closeDefaultWBSelector()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Select Wrong Book for Redo -->
+<div id="select-wb-redo-overlay" class="select-wb-redo-overlay hidden">
+  <div class="select-wb-redo-dialog">
+    <h4>选择要重做的错题本</h4>
+    <div class="select-wb-redo-list" id="select-wb-redo-list"></div>
+    <div class="select-wb-redo-options">
+      <label class="select-wb-redo-checkbox">
+        <input type="checkbox" id="select-wb-redo-include-long" checked>
+        <span>包含长期记忆</span>
+      </label>
+    </div>
+    <div class="select-wb-redo-buttons">
+      <button class="btn btn-secondary" onclick="closeSelectWBForRedo()">取消</button>
+      <button class="btn btn-primary" onclick="confirmSelectWBForRedo()">确定</button>
+    </div>
+  </div>
+</div>
+
 <!-- Wrong Book Browser -->
 <div id="page-wrongbook" class="hidden">
   <div class="wb-sticky-header">
@@ -295,13 +339,16 @@
       <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
       <div class="wb-global-tabs">
         <span class="chip active" data-filter="all" onclick="setWbFilter(this)">全部</span>
-        <span class="chip" data-filter="analysis" onclick="setWbFilter(this)">分析</span>
-        <span class="chip" data-filter="stats" onclick="setWbFilter(this)">统计</span>
+        <span class="chip" data-filter="analysis" onclick="setWbFilter(this)" title="分析"><span class="tab-text">分析</span><span class="tab-icon">◔</span></span>
+        <span class="chip" data-filter="stats" onclick="setWbFilter(this)" title="统计"><span class="tab-text">统计</span><span class="tab-icon">☑</span></span>
       </div>
       <span id="wb-counter"></span>
     </div>
     <div class="wb-header-bottom">
-      <h3 id="wb-current-name">错题本</h3>
+      <div class="wb-title-row">
+        <h3 id="wb-current-name">错题本</h3>
+        <span class="wb-default-badge" id="wb-default-badge" onclick="showDefaultWBSelector()">默认</span>
+      </div>
       <div class="wb-header-actions">
         <span class="wb-action-btn" onclick="renameCurrentWrongBook()" title="重命名">✏️</span>
         <span class="wb-action-btn" onclick="deleteCurrentWrongBook()" title="删除">🗑️</span>

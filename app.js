@@ -293,36 +293,37 @@ function scoreSubjectiveRef(userAnswer, referenceText) {
   return matched / refWords.size;
 }
 
-// 异步初始化分词（不阻塞页面渲染）
-setTimeout(ensureSegmenter, 100);
-
-// 动态加载 segmentit.js（不阻塞主流程），加载完成后注入主观题
+// 动态加载 segmentit.js（延迟加载，不阻塞主流程）
 function loadSegmentitAsync() {
-  // 显示加载条
-  const bar = showSegmentitBar();
+  // 延迟3秒后再加载segmentit，确保页面已经完全渲染
+  setTimeout(() => {
+    // 显示加载条
+    const bar = showSegmentitBar();
 
-  const script = document.createElement('script');
-  script.src = 'segmentit.js';
-  script.onload = function() {
-    ensureSegmenter().then(ready => {
-      if (bar) bar.classList.add('done');
-      setTimeout(() => { if (bar) bar.remove(); }, 600);
-      if (!ready) return;
-      _subjectivePending = false;
-      // 刷新题目池和界面
+    const script = document.createElement('script');
+    script.src = 'segmentit.js';
+    script.async = true; // 确保异步加载
+    script.onload = function() {
+      ensureSegmenter().then(ready => {
+        if (bar) bar.classList.add('done');
+        setTimeout(() => { if (bar) bar.remove(); }, 600);
+        if (!ready) return;
+        _subjectivePending = false;
+        // 刷新题目池和界面
+        renderSourceSelector();
+        updateActiveQuestions();
+        showSegmentitToast('主观题已加载完成');
+      });
+    };
+    script.onerror = function() {
+      if (bar) { bar.classList.add('done'); setTimeout(() => bar.remove(), 600); }
+      console.warn('segmentit.js 加载失败，主观题暂不可用');
+      _subjectivePending = false; // 显示主观题但不分词
       renderSourceSelector();
       updateActiveQuestions();
-      showSegmentitToast('主观题已加载完成');
-    });
-  };
-  script.onerror = function() {
-    if (bar) { bar.classList.add('done'); setTimeout(() => bar.remove(), 600); }
-    console.warn('segmentit.js 加载失败，主观题暂不可用');
-    _subjectivePending = false; // 显示主观题但不分词
-    renderSourceSelector();
-    updateActiveQuestions();
-  };
-  document.body.appendChild(script);
+    };
+    document.body.appendChild(script);
+  }, 3000); // 延迟3秒加载，让页面先完全渲染
 }
 
 function showSegmentitBar() {
@@ -423,14 +424,13 @@ function normalize(q, sourceName) {
 // ====== Init ======
 async function init() {
   try {
-    const results = await Promise.all(
-      QUIZ_SOURCES.map(s => fetch(s.file).then(r => r.json()))
-    );
-    results.forEach((questions, i) => {
-      const name = QUIZ_SOURCES[i].name;
-      questions.forEach(q => normalize(q, name));
-      sourceData[name] = questions;
-    });
+    // 先显示加载状态
+    const sourceArea = document.getElementById('source-area');
+    if (sourceArea) {
+      sourceArea.innerHTML = '<div class="source-section"><h3>选择题库</h3><div class="source-chips"><div class="loading">加载中...</div></div></div>';
+    }
+    
+    // 先加载本地数据（错题本等）
     const saved = localStorage.getItem('customDifficulty');
     if (saved) { try { customDifficulty = JSON.parse(saved); } catch(e) {} }
     
@@ -488,12 +488,43 @@ async function init() {
         localStorage.removeItem('wrongBook');
       } catch(e) {}
     }
+    
+    // 先渲染错题本（不依赖题库数据）
+    renderWrongBookChips();
+    updateWrongBookCardText();
+  
+    // 异步加载题库数据（不阻塞UI）
+    loadQuizDataAsync();
+    
+  } catch(e) {
+    console.error('Init error:', e);
+    document.getElementById('source-area').innerHTML =
+      '<div class="loading">加载失败：' + e.message + '<br>请按 F12 查看控制台详情</div>';
+  }
+}
+
+// 异步加载题库数据
+async function loadQuizDataAsync() {
+  try {
+    const results = await Promise.all(
+      QUIZ_SOURCES.map(s => fetch(s.file).then(r => r.json()))
+    );
+    results.forEach((questions, i) => {
+      const name = QUIZ_SOURCES[i].name;
+      questions.forEach(q => normalize(q, name));
+      sourceData[name] = questions;
+    });
+    
+    // 数据加载完成后渲染
     renderSourceSelector();
+    updateActiveQuestions();
+    
     // 异步加载 segmentit.js，不阻塞页面渲染
     loadSegmentitAsync();
   } catch(e) {
+    console.error('加载题库失败:', e);
     document.getElementById('source-area').innerHTML =
-      '<div class="loading">加载失败：' + e.message + '</div>';
+      '<div class="loading">加载题库失败：' + e.message + '</div>';
   }
 }
 
@@ -529,7 +560,9 @@ function renderWrongBookChips() {
     const tempCount = Object.keys(wb.temp).length;
     const longCount = Object.keys(wb.long).length;
     const totalCount = tempCount + longCount;
-    html += '<div class="source-chip wb-chip green' + (totalCount > 0 ? ' active' : '') + '" data-wb-id="' + id + '" onclick="openWrongBook(\'' + id + '\')">' +
+    // 有题目的错题本用绿色，空的用灰色边框样式
+    const chipClass = totalCount > 0 ? 'source-chip wb-chip green active' : 'source-chip wb-chip';
+    html += '<div class="' + chipClass + '" data-wb-id="' + id + '" onclick="openWrongBook(\'' + id + '\')">' +
       wb.name + '<span class="wb-count">(' + totalCount + '题)</span>' +
       '<span class="count-detail">暂' + tempCount + '/长' + longCount + '</span>' +
       '<span class="wb-actions" onclick="event.stopPropagation()">' +
@@ -782,6 +815,295 @@ function deleteWrongBookPrompt(id) {
   }
 }
 
+// 显示移动题目对话框
+let moveQuestionKey = null;
+let moveQuestionCat = null;
+
+function showMoveQuestionDialog(key, cat) {
+  moveQuestionKey = key;
+  moveQuestionCat = cat;
+  
+  const overlay = document.getElementById('move-to-overlay');
+  const listEl = document.getElementById('move-to-list');
+  if (!overlay || !listEl) return;
+  
+  // 生成其他错题本列表
+  let html = '';
+  Object.keys(wrongBooks).forEach(id => {
+    if (id === currentWrongBookId) return; // 跳过当前错题本
+    const wb = wrongBooks[id];
+    const tempCount = Object.keys(wb.temp).length;
+    const longCount = Object.keys(wb.long).length;
+    html += '<div class="move-to-item" data-wb-id="' + id + '" onclick="selectMoveQuestionTarget(\'' + id + '\')">' +
+      '<span class="move-to-item-name">' + wb.name + ' <small style="opacity:0.6">(暂' + tempCount + '/长' + longCount + ')</small></span>' +
+      '<span class="move-to-item-star" id="move-star-' + id + '">☆</span>' +
+      '</div>';
+  });
+  
+  if (html === '') {
+    html = '<div style="text-align:center;color:#888;padding:20px">没有其他错题本</div>';
+  }
+  
+  listEl.innerHTML = html;
+  overlay.classList.remove('hidden');
+}
+
+// 选择移动题目目标
+function selectMoveQuestionTarget(toId) {
+  // 切换选中状态
+  document.querySelectorAll('.move-to-item').forEach(item => {
+    item.classList.remove('selected');
+    const star = item.querySelector('.move-to-item-star');
+    if (star) star.classList.remove('active');
+  });
+  
+  const selectedItem = document.querySelector('.move-to-item[data-wb-id="' + toId + '"]');
+  if (selectedItem) {
+    selectedItem.classList.add('selected');
+    const star = document.getElementById('move-star-' + toId);
+    if (star) {
+      star.classList.add('active');
+      star.textContent = '★';
+    }
+  }
+  
+  // 执行移动
+  if (moveQuestionKey && moveQuestionCat && toId) {
+    moveQuestionToWrongBook(moveQuestionKey, moveQuestionCat, toId);
+  }
+  
+  // 关闭对话框
+  setTimeout(closeMoveToDialog, 300);
+}
+
+// 移动题目到指定错题本
+function moveQuestionToWrongBook(key, cat, toId) {
+  const fromWB = wrongBooks[currentWrongBookId];
+  const toWB = wrongBooks[toId];
+  if (!fromWB || !toWB) return;
+  
+  // 获取题目数据
+  const qData = fromWB[cat][key];
+  if (!qData) return;
+  
+  // 移动到目标错题本（保持相同分类）
+  toWB[cat][key] = qData;
+  
+  // 从原错题本移除
+  delete fromWB[cat][key];
+  
+  // 移动备注
+  if (fromWB.notes[key]) {
+    toWB.notes[key] = fromWB.notes[key];
+    delete fromWB.notes[key];
+  }
+  
+  saveWrongBooks();
+  
+  // 关闭详情浮层
+  const detail = document.getElementById('wb-detail');
+  if (detail) {
+    detail.classList.add('hidden');
+    detail.dataset.key = '';
+  }
+  
+  // 刷新显示
+  renderWbThreeLevel();
+  updateWbFilterCounter();
+}
+
+// 关闭移动到对话框
+function closeMoveToDialog() {
+  const overlay = document.getElementById('move-to-overlay');
+  if (overlay) overlay.classList.add('hidden');
+  moveQuestionKey = null;
+  moveQuestionCat = null;
+}
+
+// 显示默认错题本选择器
+function showDefaultWBSelector() {
+  const overlay = document.getElementById('default-wb-overlay');
+  const listEl = document.getElementById('default-wb-list');
+  if (!overlay || !listEl) return;
+  
+  const defaultId = localStorage.getItem('defaultWrongBookId') || 'default';
+  
+  let html = '';
+  Object.keys(wrongBooks).forEach(id => {
+    const wb = wrongBooks[id];
+    const isDefault = id === defaultId;
+    html += '<div class="default-wb-item' + (isDefault ? ' active' : '') + '" onclick="setDefaultWrongBook(\'' + id + '\')">' +
+      '<span class="default-wb-item-name">' + wb.name + '</span>' +
+      '<span class="default-wb-item-check">✓</span>' +
+      '</div>';
+  });
+  
+  listEl.innerHTML = html;
+  overlay.classList.remove('hidden');
+}
+
+// 设置默认错题本
+function setDefaultWrongBook(id) {
+  if (!wrongBooks[id]) return;
+  
+  localStorage.setItem('defaultWrongBookId', id);
+  
+  // 更新徽章文字
+  const badge = document.getElementById('wb-default-badge');
+  if (badge) {
+    badge.textContent = wrongBooks[id].name;
+  }
+  
+  // 更新选中状态
+  document.querySelectorAll('.default-wb-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  const selected = document.querySelector('.default-wb-item:nth-child(' + (Object.keys(wrongBooks).indexOf(id) + 1) + ')');
+  if (selected) selected.classList.add('active');
+  
+  closeDefaultWBSelector();
+}
+
+// 关闭默认错题本选择器
+function closeDefaultWBSelector() {
+  const overlay = document.getElementById('default-wb-overlay');
+  if (overlay) overlay.classList.add('hidden');
+}
+
+// 显示首页默认错题本选择器
+function showDefaultWBSelectorHome() {
+  const overlay = document.getElementById('default-wb-overlay');
+  const listEl = document.getElementById('default-wb-list');
+  if (!overlay || !listEl) return;
+  
+  const defaultId = localStorage.getItem('defaultWrongBookId') || 'default';
+  
+  let html = '';
+  Object.keys(wrongBooks).forEach(id => {
+    const wb = wrongBooks[id];
+    const isDefault = id === defaultId;
+    html += '<div class="default-wb-item' + (isDefault ? ' active' : '') + '" onclick="setDefaultWrongBookHome(\'' + id + '\')">' +
+      '<span class="default-wb-item-name">' + wb.name + '</span>' +
+      '<span class="default-wb-item-check">✓</span>' +
+      '</div>';
+  });
+  
+  listEl.innerHTML = html;
+  overlay.classList.remove('hidden');
+}
+
+// 设置默认错题本（从首页）
+function setDefaultWrongBookHome(id) {
+  if (!wrongBooks[id]) return;
+  
+  localStorage.setItem('defaultWrongBookId', id);
+  
+  // 更新首页徽章
+  const badge = document.getElementById('wb-default-badge-home');
+  if (badge && wrongBooks[id]) {
+    badge.textContent = wrongBooks[id].name;
+  }
+  
+  // 更新重做错题卡片显示
+  updateWrongBookCardText();
+  
+  closeDefaultWBSelector();
+}
+
+// 获取默认错题本ID
+function getDefaultWrongBookId() {
+  const saved = localStorage.getItem('defaultWrongBookId');
+  if (saved && wrongBooks[saved]) return saved;
+  const ids = Object.keys(wrongBooks);
+  return ids.length > 0 ? ids[0] : null;
+}
+
+// 显示选择错题本重做对话框
+let selectedWBForRedo = null;
+
+function showSelectWBForRedo() {
+  const overlay = document.getElementById('select-wb-redo-overlay');
+  const listEl = document.getElementById('select-wb-redo-list');
+  if (!overlay || !listEl) return;
+  
+  // 获取上次选择的错题本或默认
+  const savedId = localStorage.getItem('selectedWBForRedo') || getDefaultWrongBookId();
+  selectedWBForRedo = savedId;
+  
+  // 同步含长期记忆开关
+  const includeLong = localStorage.getItem('redoIncludeLong') !== 'false';
+  const checkbox = document.getElementById('select-wb-redo-include-long');
+  if (checkbox) checkbox.checked = includeLong;
+  
+  // 生成列表
+  let html = '';
+  Object.keys(wrongBooks).forEach(id => {
+    const wb = wrongBooks[id];
+    const tempCount = Object.keys(wb.temp).length;
+    const longCount = Object.keys(wb.long).length;
+    const totalCount = tempCount + longCount;
+    const isSelected = id === selectedWBForRedo;
+    html += '<div class="select-wb-redo-item' + (isSelected ? ' selected' : '') + '" data-wb-id="' + id + '" onclick="selectWBForRedoItem(\'' + id + '\')">' +
+      '<span class="select-wb-redo-item-name">' + wb.name + '<span class="select-wb-redo-item-count">(暂' + tempCount + '/长' + longCount + ')</span></span>' +
+      '<span class="select-wb-redo-item-star">' + (isSelected ? '★' : '☆') + '</span>' +
+      '</div>';
+  });
+  
+  listEl.innerHTML = html;
+  overlay.classList.remove('hidden');
+}
+
+// 选择错题本项
+function selectWBForRedoItem(id) {
+  selectedWBForRedo = id;
+  
+  // 更新选中状态
+  document.querySelectorAll('.select-wb-redo-item').forEach(item => {
+    item.classList.remove('selected');
+    const star = item.querySelector('.select-wb-redo-item-star');
+    if (star) star.textContent = '☆';
+  });
+  
+  const selectedItem = document.querySelector('.select-wb-redo-item[data-wb-id="' + id + '"]');
+  if (selectedItem) {
+    selectedItem.classList.add('selected');
+    const star = selectedItem.querySelector('.select-wb-redo-item-star');
+    if (star) star.textContent = '★';
+  }
+}
+
+// 关闭选择错题本对话框
+function closeSelectWBForRedo() {
+  const overlay = document.getElementById('select-wb-redo-overlay');
+  if (overlay) overlay.classList.add('hidden');
+  selectedWBForRedo = null;
+}
+
+// 确认选择错题本
+function confirmSelectWBForRedo() {
+  if (!selectedWBForRedo || !wrongBooks[selectedWBForRedo]) {
+    closeSelectWBForRedo();
+    return;
+  }
+  
+  // 保存选择
+  localStorage.setItem('selectedWBForRedo', selectedWBForRedo);
+  
+  // 保存含长期记忆设置
+  const checkbox = document.getElementById('select-wb-redo-include-long');
+  if (checkbox) {
+    localStorage.setItem('redoIncludeLong', String(checkbox.checked));
+    // 同步到主开关
+    const mainCheckbox = document.getElementById('wb-include-long');
+    if (mainCheckbox) mainCheckbox.checked = checkbox.checked;
+  }
+  
+  // 更新卡片显示
+  updateWrongBookCardText();
+  
+  closeSelectWBForRedo();
+}
+
 // 重命名当前打开的错题本
 function renameCurrentWrongBook() {
   if (currentWrongBookId) {
@@ -812,6 +1134,7 @@ function updateActiveQuestions() {
   document.querySelectorAll('.source-chip.active').forEach(chip => {
     if (chip.dataset.type === 'wrongbook') return; // skip wrongbook chip
     const idx = parseInt(chip.dataset.idx);
+    if (isNaN(idx) || idx < 0 || idx >= QUIZ_SOURCES.length) return; // 安全检查
     const name = QUIZ_SOURCES[idx].name;
     let qs = sourceData[name] || [];
     if (_subjectivePending) qs = qs.filter(q => q.type !== 'subjective');
@@ -823,28 +1146,55 @@ function updateActiveQuestions() {
   } else {
     modeArea.classList.remove('hidden');
   }
-  // Update wrong book card
-  const totalCount = Object.keys(wrongBookTemp).length + Object.keys(wrongBookLong).length;
-  const card = document.getElementById('card-wrongbook');
-  if (totalCount === 0) {
-    card.classList.add('disabled');
-    card.querySelector('p').textContent = '错题本为空';
-  } else {
-    card.classList.remove('disabled');
-    updateWrongBookCardText();
-  }
+  // Update wrong book card - 始终启用卡片，根据选择的错题本更新上半部分状态
+  updateWrongBookCardText();
 }
-
 function updateWrongBookCardText() {
-  const includeLong = document.getElementById('wb-include-long').checked;
-  const tempCount = Object.keys(wrongBookTemp).length;
-  const longCount = Object.keys(wrongBookLong).length;
-  const count = includeLong ? tempCount + longCount : tempCount;
+  // 获取选择的错题本
+  const selectedId = localStorage.getItem('selectedWBForRedo') || getDefaultWrongBookId();
+  const wb = wrongBooks[selectedId];
   const card = document.getElementById('card-wrongbook');
-  if (card.querySelector('p')) {
-    card.querySelector('p').textContent = includeLong
-      ? '错题本共 ' + (tempCount + longCount) + ' 道题（暂' + tempCount + ' + 长' + longCount + '）'
-      : '暂时错题共 ' + tempCount + ' 道题';
+  
+  if (!wb) return;
+  
+  const includeLong = document.getElementById('wb-include-long')?.checked ?? true;
+  const tempCount = Object.keys(wb.temp).length;
+  const longCount = Object.keys(wb.long).length;
+  const totalCount = includeLong ? tempCount + longCount : tempCount;
+  
+  // 根据选择的错题本是否有题，设置卡片上半部分状态
+  const hasQuestions = totalCount > 0;
+  if (hasQuestions) {
+    card.classList.remove('disabled');
+  } else {
+    card.classList.add('disabled');
+  }
+  
+  // 更新描述文字
+  const descEl = document.getElementById('wb-card-desc');
+  if (descEl) {
+    if (hasQuestions) {
+      descEl.textContent = includeLong
+        ? '错题本共 ' + (tempCount + longCount) + ' 道题（暂' + tempCount + ' + 长' + longCount + '）'
+        : '暂时错题共 ' + tempCount + ' 道题';
+    } else {
+      descEl.textContent = '选择的错题本为空';
+    }
+  }
+  
+  // 更新选择的错题本名称
+  const nameEl = document.getElementById('wb-selected-name');
+  if (nameEl) {
+    nameEl.textContent = wb.name;
+  }
+  
+  // 更新首页默认错题本徽章
+  const homeBadge = document.getElementById('wb-default-badge-home');
+  if (homeBadge) {
+    const defaultId = getDefaultWrongBookId();
+    if (defaultId && wrongBooks[defaultId]) {
+      homeBadge.textContent = wrongBooks[defaultId].name;
+    }
   }
 }
 
@@ -1166,11 +1516,21 @@ function infiniteNextIndex() {
 
 // ====== Wrong Book Mode ======
 function startWrongBook() {
-  const includeLong = document.getElementById('wb-include-long').checked;
-  const tempQ = Object.values(wrongBookTemp);
-  const longQ = includeLong ? Object.values(wrongBookLong) : [];
+  // 获取选择的错题本
+  const selectedId = localStorage.getItem('selectedWBForRedo') || getDefaultWrongBookId();
+  const wb = wrongBooks[selectedId];
+  
+  if (!wb) return;
+  
+  const includeLong = document.getElementById('wb-include-long')?.checked ?? true;
+  const tempQ = Object.values(wb.temp);
+  const longQ = includeLong ? Object.values(wb.long) : [];
   const all = tempQ.concat(longQ);
   if (all.length === 0) return;
+  
+  // 设置当前错题本为选择的那个
+  currentWrongBookId = selectedId;
+  
   mode = 'wrongbook';
   wrongCount = 0; correctCount = 0; totalAnswered = 0; streak = 0;
   wrongList = [];
@@ -2588,6 +2948,13 @@ function openWrongBook(wbId) {
   const nameEl = document.getElementById('wb-current-name');
   if (nameEl) nameEl.textContent = wb.name;
   
+  // 更新默认错题本徽章
+  const defaultId = getDefaultWrongBookId();
+  const badge = document.getElementById('wb-default-badge');
+  if (badge && defaultId && wrongBooks[defaultId]) {
+    badge.textContent = wrongBooks[defaultId].name;
+  }
+  
   wbFilter = 'all';
   wbIndex = 0;
   wbExpanded = { source: {}, cat: {} };
@@ -3029,6 +3396,7 @@ function wbOpenDetail(key, cat) {
   html += '<div class="wb-detail-btn-row">' +
     '<button class="wb-icon-btn wb-icon-star' + (isLongTerm ? ' is-long' : '') + '" onclick="wbToggleCategory(\'' + escAttr(key) + '\',\'' + cat + '\')" title="' + (cat === 'temp' ? '转为长期记忆' : '转回暂时错题') + '">' + (isLongTerm ? '★' : '☆') + '</button>' +
     '<button class="wb-icon-btn wb-icon-remove" onclick="wbRemove(\'' + escAttr(key) + '\',\'' + cat + '\')" title="移除">✈</button>' +
+    '<button class="wb-icon-btn wb-icon-move" onclick="showMoveQuestionDialog(\'' + escAttr(key) + '\',\'' + cat + '\')" title="移动到其他错题本">☇</button>' +
     '<button class="wb-icon-btn wb-icon-note" onclick="wbToggleNoteInput()" title="增加备注">📝</button>' +
     '</div>';
 
@@ -4263,4 +4631,9 @@ function previewNext() {
 }
 
 // ====== Start ======
-init();
+// 确保DOM加载完成后再初始化
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
