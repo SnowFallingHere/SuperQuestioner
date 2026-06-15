@@ -1,4 +1,5 @@
 import json
+import re
 
 with open('Marxism.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
@@ -6,15 +7,17 @@ with open('Marxism.json', 'r', encoding='utf-8') as f:
 print(f"总题目数: {len(data)}")
 print("=" * 80)
 
-# 问题1: 选项数量不是4的
-print("\n【问题1】选项数量 != 4 的题目:")
+# 问题1: 选项数量不是4的 (仅检查 choice 类型)
+print("\n【问题1】single_choice/multiple_choice 选项数量 != 4 的题目:")
 bad_options = []
 for i, q in enumerate(data):
+    t = q.get('type', '')
+    if t not in ('single_choice', 'multiple_choice'):
+        continue
     opts = q.get('options', [])
     if len(opts) != 4:
         bad_options.append((i, q))
         seq = q.get('sequence', '?')
-        t = q.get('type', '?')
         print(f"  [{i}] sequence={seq} type={t} options_count={len(opts)}")
         print(f"        question: {q.get('question', '')[:80]}")
         if opts:
@@ -31,7 +34,6 @@ prefixes = ['一、单项选择题', '二、多项选择题', '三、判断题',
             '五、论述题', '六、材料分析题', '七、辨析题']
 for i, q in enumerate(data):
     question = q.get('question', '')
-    # 检查各种前缀
     for p in prefixes:
         if question.startswith(p):
             bad_prefix.append((i, q, p))
@@ -39,33 +41,54 @@ for i, q in enumerate(data):
             print(f"  [{i}] sequence={seq} type={q.get('type','?')} 前缀='{p}'")
             print(f"        原始question: {question[:120]}")
             break
-    # 也检查 "X." 数字+点 开头的（如 "1."）
-    import re
-    if re.match(r'^[一二三四五六七八九十\d]+[、.\s]', question) and not any(question.startswith(p) for p in prefixes):
-        # 排除正常的以数字/汉字开头的合理题目
-        pass
 
 print(f"\n共 {len(bad_prefix)} 题题干含异常前缀")
 print("=" * 80)
 
-# 额外: 检查 label 是否连续 A B C D
-print("\n【问题3】选项label不连续/不标准(A/B/C/D)的:")
-bad_labels = []
+# 问题3: difficulty == unknown
+print("\n【问题3】difficulty == 'unknown' 的题目:")
+unknown_diff = []
 for i, q in enumerate(data):
-    opts = q.get('options', [])
-    if not opts:
-        continue
-    labels = [o.get('label', '') for o in opts]
-    expected = ['A', 'B', 'C', 'D'][:len(opts)]
-    if labels != expected:
-        bad_labels.append((i, q, labels))
+    if q.get('difficulty') == 'unknown':
+        unknown_diff.append((i, q))
         seq = q.get('sequence', '?')
-        print(f"  [{i}] sequence={seq} labels={labels} (期望{expected})")
+        t = q.get('type', '?')
+        ques = q.get('question', '')
+        length = len(ques)
+        # 根据长度判断建议难度
+        if length <= 30:
+            suggest = 'easy'
+        elif length <= 60:
+            suggest = 'medium'
+        else:
+            suggest = 'hard'
+        print(f"  [{i}] sequence={seq} type={t} 当前=unknown 建议={suggest} (字数={length})")
+        print(f"        question: {ques[:100]}")
 
-print(f"\n共 {len(bad_labels)} 题label不标准")
+print(f"\n共 {len(unknown_diff)} 题 difficulty=unknown")
+print("=" * 80)
+
+# 问题4: 题干以数字+点开头（如 "1." "12."）或含多余空格
+print("\n【问题4】题干以数字+点开头或含异常格式的题目:")
+bad_format = []
+num_prefix_pattern = re.compile(r'^[\d一二三四五六七八九十]+[\.、]\s*')
+for i, q in enumerate(data):
+    question = q.get('question', '')
+    if num_prefix_pattern.match(question):
+        if not any(question.startswith(p) for p in prefixes):
+            bad_format.append((i, q))
+            seq = q.get('sequence', '?')
+            print(f"  [{i}] sequence={seq} type={q.get('type','?')}")
+            print(f"        question: {question[:100]}")
+
+print(f"\n共 {len(bad_format)} 题题干格式异常")
 print("=" * 80)
 
 # 汇总
-total_issues = len(bad_options) + len(bad_prefix) + len(bad_labels)
-print(f"\n汇总: 选项数异常={len(bad_options)}, 前缀异常={len(bad_prefix)}, label异常={len(bad_labels)}")
+total_issues = len(bad_options) + len(bad_prefix) + len(unknown_diff) + len(bad_format)
+print(f"\n汇总:")
+print(f"  - 选项数异常: {len(bad_options)}")
+print(f"  - 前缀异常: {len(bad_prefix)}")
+print(f"  - difficulty=unknown: {len(unknown_diff)}")
+print(f"  - 题干格式异常: {len(bad_format)}")
 print(f"总计问题题目: {total_issues}")

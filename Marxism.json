@@ -6020,6 +6020,10 @@
       {
         "label": "C",
         "text": "马克思主义认识论"
+      },
+      {
+        "label": "D",
+        "text": "马克思主义实践论"
       }
     ]
   },
@@ -6382,8 +6386,8 @@
         "text": "与党的路线方针政策相符合"
       },
       {
-        "label":"D",
-        "text":"与已被实践证明的理论相符合"
+        "label": "D",
+        "text": "与已被实践证明的理论相符合"
       }
     ]
   },
@@ -12609,7 +12613,7 @@
     "sequence": 567,
     "chapter": "第五章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "国家垄断资本主义的产生，是垄断资本主义生产关系在自身范围内的部分质变，标志着资本主义发展进入了新的阶段。",
     "answer": "正确"
   },
@@ -12657,8 +12661,8 @@
     "sequence": 573,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
-    "question": "第六章题库 【单选】 1、空想社会主义的开山之作是1516年英国人托马斯·莫尔所著",
+    "difficulty": "medium",
+    "question": "【单选】 1、空想社会主义的开山之作是1516年英国人托马斯·莫尔所著",
     "answer": "C",
     "options": [
       {
@@ -12683,7 +12687,7 @@
     "sequence": 574,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "科学社会主义创立的理论基础是",
     "answer": "C",
     "options": [
@@ -12709,7 +12713,7 @@
     "sequence": 575,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "社会主义实现由空想到科学发展的标志是",
     "answer": "A",
     "options": [
@@ -12735,7 +12739,7 @@
     "sequence": 576,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "19世纪末20世纪初，资本主义进入",
     "answer": "D",
     "options": [
@@ -12761,7 +12765,7 @@
     "sequence": 577,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "无产阶级夺取政权和建立无产阶级政权的第一次尝试是",
     "answer": "A",
     "options": [
@@ -12787,7 +12791,7 @@
     "sequence": 578,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "“资本主义必然灭亡，社会主义必然胜利”的根本依据是",
     "answer": "C",
     "options": [
@@ -12813,7 +12817,7 @@
     "sequence": 579,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "实现社会主义从理想到现实的伟大飞跃、开辟人类历史新纪元的无产阶级革命是",
     "answer": "D",
     "options": [
@@ -12839,7 +12843,7 @@
     "sequence": 580,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "无产阶级进行斗争的最高形式是",
     "answer": "B",
     "options": [
@@ -12865,7 +12869,7 @@
     "sequence": 581,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "无产阶级革命的根本问题是",
     "answer": "B",
     "options": [
@@ -12891,7 +12895,7 @@
     "sequence": 582,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "世界上第一个社会主义国家是",
     "answer": "B",
     "options": [
@@ -12917,7 +12921,7 @@
     "sequence": 583,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "标志着科学社会主义理论公开面世的第一个纲领性文件是",
     "answer": "A",
     "options": [
@@ -12943,7 +12947,7 @@
     "sequence": 584,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "马克思主义认为，共产主义社会将经历两个不同的发展阶段，第一个阶段是",
     "answer": "C",
     "options": [
@@ -12969,7 +12973,7 @@
     "sequence": 585,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "邓小平指出：“社会主义究竟是个什么样子，苏联搞了很多年，也并没有完全搞清楚。可能列宁的思路比较好，搞了个新经济政策，但是后来苏联的模式僵化了。”列宁新经济政策关于社会主义的思路之所以“比较好”，是因为",
     "answer": "B",
     "options": [
@@ -12995,7 +12999,7 @@
     "sequence": 586,
     "chapter": "第六章",
     "type": "single_choice",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "十月革命之前，列宁总结当时变化了的新情况，得出“社会主义可能首先在少数甚至在单独一个资本主义国家内获得胜利”的结论。列宁得出这结论的理论依据是",
     "answer": "A",
     "options": [
@@ -13021,8 +13025,8 @@
     "sequence": 587,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
-    "question": "【多选】 1、空想社会主义的发展经历了三个阶段，即",
+    "difficulty": "easy",
+    "question": "空想社会主义的发展经历了三个阶段，即",
     "answer": "BCD",
     "options": [
       {
@@ -13047,7 +13051,7 @@
     "sequence": 588,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "列宁领导的苏维埃俄国对社会主义道路的探索大体上经历了三个时期，即",
     "answer": "ABD",
     "options": [
@@ -13073,7 +13077,7 @@
     "sequence": 589,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "苏联模式弊端主要表现在",
     "answer": "ABC",
     "options": [
@@ -13099,7 +13103,7 @@
     "sequence": 590,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "在俄国社会主义革命取得胜利的初期，列宁对苏俄如何建设社会主义进行了深刻的理论思考，提出了许多精辟的论述，这些论述包括",
     "answer": "ABCD",
     "options": [
@@ -13125,7 +13129,7 @@
     "sequence": 591,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "科学社会主义的核心命题是",
     "answer": "CD",
     "options": [
@@ -13151,7 +13155,7 @@
     "sequence": 592,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "经济文化相对落后国家建设社会主义的长期性是因为",
     "answer": "ABCD",
     "options": [
@@ -13177,7 +13181,7 @@
     "sequence": 593,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "社会主义发展道路多样性的原因是",
     "answer": "BCD",
     "options": [
@@ -13203,7 +13207,7 @@
     "sequence": 594,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "空想社会主义的历史功绩是",
     "answer": "AC",
     "options": [
@@ -13229,7 +13233,7 @@
     "sequence": 595,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "社会主义发展道路多样性的原因在于",
     "answer": "ABD",
     "options": [
@@ -13255,7 +13259,7 @@
     "sequence": 596,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "习近平指出：“当代中国的伟大社会变革，不是简单延续我国历史文化的母版，不是简单套用马克思主义经典作家设想的模板，中国不是其他国家社会主义实践的再版，不是国外现代化发展的翻版。”这对我们理解科学社会主义一般原则的启示是",
     "answer": "BCD",
     "options": [
@@ -13281,7 +13285,7 @@
     "sequence": 597,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "实现共产主义是一个",
     "answer": "ABD",
     "options": [
@@ -13307,7 +13311,7 @@
     "sequence": 598,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "我们说的共产主义，是指一种",
     "answer": "ABC",
     "options": [
@@ -13333,7 +13337,7 @@
     "sequence": 599,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "19世纪中叶，马克思恩格斯把社会主义由空想变为科学，奠定这一飞跃的理论基石是",
     "answer": "CD",
     "options": [
@@ -13359,7 +13363,7 @@
     "sequence": 600,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "1516年，英国人托马斯·莫尔发表了《乌托邦》一书，标志着空想社会主义的诞生。1848年，马克思恩格斯发表了《共产党宣言》，标准着科学社会主义的产生，社会主义实现了从空想到科学的历史性飞跃。科学社会主义超越空想社会主义之处在于",
     "answer": "CD",
     "options": [
@@ -13385,7 +13389,7 @@
     "sequence": 601,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "1921年3月，俄共(布)召开十大，决定从战时共产主义政策过渡到新经济政策。在实施新经济政策期间，列宁对苏维埃俄国如何建设社会主义进行了深刻的理论思考，提出了许多精辟的论述，其主要内容包括",
     "answer": "ABCD",
     "options": [
@@ -13411,7 +13415,7 @@
     "sequence": 602,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "列宁指出：\"一切民族都将走向社会主义，这是不可避免的，但是一切民族的走法却不会完全一样，在民主的这种或那种形式上，在无产阶级专政的这种或那种形态上，在社会生活各方面的社会主义改造的速度上，每个民族都会有自己的特点。\"这一论述从历史唯物主义的高度揭示了各民族发展道路的多样性的内涵，下列关于社会主义发展道路多样性特点的正确观点有",
     "answer": "ABD",
     "options": [
@@ -13437,7 +13441,7 @@
     "sequence": 603,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "习近平指出:“当代中国的伟大社会变革,不是简单延续我国历史文化的母版，不是简单套用马克思主义经典作家设想的模板,不是其他国家社会主义实践的再现，不是国外现代化发展的翻版。”这对我们理解科学社会主义一般原则的启示是",
     "answer": "ACD",
     "options": [
@@ -13463,7 +13467,7 @@
     "sequence": 604,
     "chapter": "第六章",
     "type": "multiple_choice",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "1871 巴黎公社革命，马、恩总结的经验主要有",
     "answer": "ABCD",
     "options": [
@@ -13489,15 +13493,15 @@
     "sequence": 605,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
-    "question": "【判断】 1、社会主义社会不需要有计划地指导和调节社会生产。",
+    "difficulty": "easy",
+    "question": "社会主义社会不需要有计划地指导和调节社会生产。",
     "answer": "错误"
   },
   {
     "sequence": 606,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "资本主义的历史进步性并不能掩盖其自身的局限性。",
     "answer": "正确"
   },
@@ -13505,7 +13509,7 @@
     "sequence": 607,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "改良主义是资产阶级对工人的欺骗，只要存在着资本的统治，尽管有某些改善，工人总还是雇佣奴隶。",
     "answer": "正确"
   },
@@ -13513,7 +13517,7 @@
     "sequence": 608,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "政治和经济发展的不平衡不是资本主义的绝对规律。",
     "answer": "错误"
   },
@@ -13521,7 +13525,7 @@
     "sequence": 609,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "社会主义发展的历史证明，苏联模式是社会主义的唯一模式。",
     "answer": "错误"
   },
@@ -13529,7 +13533,7 @@
     "sequence": 610,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "中国革命的胜利是继十月革命之后20世纪最重大的事件。",
     "answer": "正确"
   },
@@ -13537,7 +13541,7 @@
     "sequence": 611,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "中国特色社会主义是科学社会主义在当代中国的成功实践，标志着世界社会主义正在开拓新的历史征程。",
     "answer": "正确"
   },
@@ -13545,15 +13549,15 @@
     "sequence": 612,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
-    "question": "社会主义社会的生产力超过了资本主义社会，因而社会主义社会要实行按需分配的制度。答案：错误 9、暴力革命是无产阶级革命的唯一形式。",
+    "difficulty": "medium",
+    "question": "社会主义社会的生产力超过了资本主义社会，因而社会主义社会要实行按需分配的制度。",
     "answer": "错误"
   },
   {
     "sequence": 613,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "中国特色社会主义的成功，为解决人类问题贡献了中国智慧和中国方案。",
     "answer": "正确"
   },
@@ -13561,7 +13565,7 @@
     "sequence": 614,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "社会主义事业的推进是一个自发的过程。",
     "answer": "错误"
   },
@@ -13569,7 +13573,7 @@
     "sequence": 615,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "easy",
     "question": "社会主义社会必须坚持生产资料公有制。",
     "answer": "正确"
   },
@@ -13577,7 +13581,7 @@
     "sequence": 616,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "坚持从科学社会主义基本原则与中国特色社会主义的关系出发，就要求我们要把马克思主义思想精髓同中华优秀传统文化精华贯通起来、同人民群众日用而不觉的共同价值观念融通起来，不断赋予科学理论鲜明的中国特色，不断夯实马克思主义中国化时代化的历史基础和群众基础。",
     "answer": "正确"
   },
@@ -13585,7 +13589,7 @@
     "sequence": 617,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "“两个确立”的重要论断：“党确立习近平同志党中央的核心、全党的核心地位，确立习近平新时代中国特色社会主义思想的指导地位，反映了全党全军全国各族人民共同心愿，对新时代党和国家事业发展、对推进中华民族伟大复兴历史进程具有决定性意义。”从新时代十多年的伟大变革来看，“两个确立”是新时代党和国家事业取得历史性成就、发生历史性变革而得出的重大结论，是党的十八大以来取得的重要政治成果，深刻体现了马克思主义中国化时代化进程的必然逻辑。",
     "answer": "正确"
   },
@@ -13593,7 +13597,7 @@
     "sequence": 618,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "hard",
     "question": "人民民主是社会主义的生命，是全面建设社会主义现代化国家的应有之义。全过程人民民主是社会主义民主政治的本质属性，是最广泛、最真实、最管用的民主。",
     "answer": "正确"
   },
@@ -13601,7 +13605,7 @@
     "sequence": 619,
     "chapter": "第六章",
     "type": "true_false",
-    "difficulty": "unknown",
+    "difficulty": "medium",
     "question": "中国式现代化就是西方化，就是要学习西方先进国家经济建设和科技管理的宝贵经验。",
     "answer": "错误"
   },
@@ -13610,7 +13614,7 @@
     "chapter": "第七章",
     "type": "single_choice",
     "difficulty": "easy",
-    "question": "一、单项选择题 1.十月革命之前，列宁总结当时变化了的新情况，得出“社会主义可能首先在少数甚至在单独一个资本主义国家内获得胜利”的结论。列宁得出这一结论的理论依据是",
+    "question": "十月革命之前，列宁总结当时变化了的新情况，得出“社会主义可能首先在少数甚至在单独一个资本主义国家内获得胜利”的结论。列宁得出这一结论的理论依据是",
     "answer": "A",
     "options": [
       {
