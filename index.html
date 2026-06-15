@@ -17,6 +17,14 @@
   <div id="source-area">
     <div class="loading">加载题库中...</div>
   </div>
+  <div id="wrongbook-area" class="hidden">
+    <div class="source-section">
+      <h3>错题本</h3>
+      <div class="source-chips" id="wrongbook-chips">
+        <!-- 动态渲染错题本列表 -->
+      </div>
+    </div>
+  </div>
   <div id="mode-area" class="hidden">
     <div class="mode-cards">
       <div class="mode-card" id="card-wrongbook" onclick="startWrongBook()">
@@ -268,21 +276,42 @@
   </div>
 </div>
 
+<!-- Custom Prompt Dialog -->
+<div id="custom-prompt-overlay" class="custom-prompt-overlay hidden">
+  <div class="custom-prompt-dialog">
+    <h4 id="custom-prompt-title">请输入</h4>
+    <input type="text" id="custom-prompt-input" placeholder="">
+    <div class="custom-prompt-buttons">
+      <button class="btn btn-secondary" onclick="closeCustomPrompt(false)">取消</button>
+      <button class="btn btn-primary" onclick="closeCustomPrompt(true)">确定</button>
+    </div>
+  </div>
+</div>
+
 <!-- Wrong Book Browser -->
 <div id="page-wrongbook" class="hidden">
-  <div class="review-header">
-    <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
-    <h3>错题本</h3>
-    <span id="wb-counter"></span>
+  <div class="wb-sticky-header">
+    <div class="wb-header-top">
+      <span class="quiz-back-btn" onclick="showHome()">← 返回</span>
+      <div class="wb-global-tabs">
+        <span class="chip active" data-filter="all" onclick="setWbFilter(this)">全部</span>
+        <span class="chip" data-filter="analysis" onclick="setWbFilter(this)">分析</span>
+        <span class="chip" data-filter="stats" onclick="setWbFilter(this)">统计</span>
+      </div>
+      <span id="wb-counter"></span>
+    </div>
+    <div class="wb-header-bottom">
+      <h3 id="wb-current-name">错题本</h3>
+      <div class="wb-header-actions">
+        <span class="wb-action-btn" onclick="renameCurrentWrongBook()" title="重命名">✏️</span>
+        <span class="wb-action-btn" onclick="deleteCurrentWrongBook()" title="删除">🗑️</span>
+      </div>
+    </div>
   </div>
-  <div class="wb-filter-row" id="wb-filter-row">
-    <span class="chip active" data-filter="all" onclick="setWbFilter(this)">全部</span>
-    <span class="chip" data-filter="analysis" onclick="setWbFilter(this)">分析</span>
-    <span class="chip" data-filter="stats" onclick="setWbFilter(this)">统计</span>
-  </div>
-  <div class="review-card" id="wb-card"></div>
-  <div class="review-card hidden" id="wb-analysis"></div>
-  <div class="review-card hidden" id="wb-stats"></div>
+  <div class="wb-content">
+    <div class="review-card" id="wb-card"></div>
+    <div class="review-card hidden" id="wb-analysis"></div>
+    <div class="review-card hidden" id="wb-stats"></div>
   </div>
 </div>
 
