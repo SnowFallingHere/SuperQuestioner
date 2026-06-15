@@ -41,9 +41,15 @@
           <span class="wb-selected-name" id="wb-selected-name">默认错题本</span>
         </div>
       </div>
-      <div class="mode-card" onclick="showChallengeConfig()">
-        <h2>闯关模式</h2>
-        <p>自定义胜利/失败条件，挑战极限</p>
+      <div class="mode-card" id="card-challenge" onclick="showChallengeConfig()">
+        <div class="mode-card-row">
+          <h2>闯关模式</h2>
+          <div class="toggle-row" onclick="event.stopPropagation()">
+            <span class="toggle-label">启用主观题</span>
+            <label class="toggle-switch"><input type="checkbox" id="challenge-include-subjective" onchange="updateChallengeCardText()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <p id="challenge-card-desc">自定义胜利/失败条件，挑战极限</p>
       </div>
       <div class="mode-card" onclick="startInfinite()">
         <div class="mode-card-row">
@@ -286,7 +292,7 @@
     <h4 id="custom-prompt-title">请输入</h4>
     <input type="text" id="custom-prompt-input" placeholder="">
     <div class="custom-prompt-buttons">
-      <button class="btn btn-secondary" onclick="closeCustomPrompt(false)">取消</button>
+      <button class="btn btn-secondary" onclick="closeCustomPrompt(false)">关闭</button>
       <button class="btn btn-primary" onclick="closeCustomPrompt(true)">确定</button>
     </div>
   </div>
@@ -298,7 +304,7 @@
     <h4>移动到</h4>
     <div class="move-to-list" id="move-to-list"></div>
     <div class="move-to-buttons">
-      <button class="btn btn-secondary" onclick="closeMoveToDialog()">取消</button>
+      <button class="btn btn-secondary" onclick="closeMoveToDialog()">关闭</button>
     </div>
   </div>
 </div>
@@ -309,7 +315,7 @@
     <h4>选择默认错题本</h4>
     <div class="default-wb-list" id="default-wb-list"></div>
     <div class="default-wb-buttons">
-      <button class="btn btn-secondary" onclick="closeDefaultWBSelector()">取消</button>
+      <button class="btn btn-secondary" onclick="closeDefaultWBSelector()">关闭</button>
     </div>
   </div>
 </div>
@@ -326,7 +332,7 @@
       </label>
     </div>
     <div class="select-wb-redo-buttons">
-      <button class="btn btn-secondary" onclick="closeSelectWBForRedo()">取消</button>
+      <button class="btn btn-secondary" onclick="closeSelectWBForRedo()">关闭</button>
       <button class="btn btn-primary" onclick="confirmSelectWBForRedo()">确定</button>
     </div>
   </div>
@@ -346,6 +352,7 @@
     </div>
     <div class="wb-header-bottom">
       <div class="wb-title-row">
+        <span class="wb-next-btn" onclick="switchToNextWrongBook()" title="下一个错题本">→</span>
         <h3 id="wb-current-name">错题本</h3>
         <span class="wb-default-badge" id="wb-default-badge" onclick="showDefaultWBSelector()">默认</span>
       </div>

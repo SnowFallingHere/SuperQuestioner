@@ -483,15 +483,17 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 [data-theme="dark"] .readonly-note-toggle { color: #ffbb66; }
 [data-theme="dark"] .readonly-note-content { color: #ffcc88; }
 
-[data-theme="dark"] .stats-chart svg text,
+[data-theme="dark"] .stats-charts svg text,
 [data-theme="dark"] #wb-analysis svg text,
 [data-theme="dark"] .analysis-row svg text { fill: var(--text-secondary) !important; }
-[data-theme="dark"] .stats-chart svg line,
+[data-theme="dark"] .stats-charts svg line,
 [data-theme="dark"] #wb-analysis svg line { stroke: #3a4a6a !important; }
 
 /* Stats chart */
 .stats-filter-row { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
-.stats-chart { overflow-x: auto; padding: 8px 0; }
+.stats-charts { overflow-x: auto; padding: 0 0 16px; }
+.stats-charts svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.review-card#wb-stats { overflow: hidden; }
 
 /* Preview Mode */
 .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 14px; color: #888; position: sticky; top: 0; padding: 12px 60px 12px 8px; margin: -16px -16px 16px -16px; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
@@ -1082,6 +1084,21 @@ html.cylinder-snap { scroll-snap-type: y proximity; }
   align-items: center;
   gap: 10px;
 }
+.wb-next-btn {
+  font-size: 18px;
+  color: #4a90d9;
+  background: rgba(74,144,217,0.12);
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+  user-select: none;
+}
+.wb-next-btn:hover {
+  background: rgba(74,144,217,0.2);
+  transform: scale(1.05);
+}
 .wb-default-badge {
   font-size: 12px;
   color: #4a90d9;
@@ -1178,6 +1195,13 @@ html.cylinder-snap { scroll-snap-type: y proximity; }
   background: rgba(99,179,237,0.15);
 }
 [data-theme="dark"] .wb-default-badge:hover {
+  background: rgba(99,179,237,0.25);
+}
+[data-theme="dark"] .wb-next-btn {
+  color: #63b3ed;
+  background: rgba(99,179,237,0.15);
+}
+[data-theme="dark"] .wb-next-btn:hover {
   background: rgba(99,179,237,0.25);
 }
 [data-theme="dark"] .default-wb-dialog {

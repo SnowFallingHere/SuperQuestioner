@@ -68,6 +68,7 @@ let wrongList = [];
 // 多错题本结构: wrongBooks = { [id]: { name, temp: {}, long: {}, notes: {} } }
 let wrongBooks = {};
 let currentWrongBookId = null; // 当前打开的错题本ID
+let targetWrongBookId = null; // 用于收集错题的目标错题本ID（用户选择的）
 let _subjectivePending = true; // segmentit 未加载时过滤主观题
 
 // 兼容旧数据：迁移到新的多错题本结构
@@ -106,6 +107,16 @@ function getCurrentWB() {
     }
   }
   return wrongBooks[currentWrongBookId];
+}
+
+// 获取目标错题本（用于收集错题）
+function getTargetWB() {
+  // 优先使用用户选择的目标错题本
+  if (targetWrongBookId && wrongBooks[targetWrongBookId]) {
+    return wrongBooks[targetWrongBookId];
+  }
+  // 否则使用当前错题本
+  return getCurrentWB();
 }
 
 // 保存所有错题本
@@ -149,20 +160,20 @@ function deleteWrongBook(id) {
   return false;
 }
 
-// 兼容旧代码的访问器
+// 兼容旧代码的访问器 - 使用目标错题本（用户选择的）
 let wrongBookTemp = new Proxy({}, {
   get(target, prop) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     return wb.temp[prop];
   },
   set(target, prop, value) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     wb.temp[prop] = value;
     saveWrongBooks();
     return true;
   },
   deleteProperty(target, prop) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     delete wb.temp[prop];
     saveWrongBooks();
     return true;
@@ -171,17 +182,17 @@ let wrongBookTemp = new Proxy({}, {
 
 let wrongBookLong = new Proxy({}, {
   get(target, prop) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     return wb.long[prop];
   },
   set(target, prop, value) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     wb.long[prop] = value;
     saveWrongBooks();
     return true;
   },
   deleteProperty(target, prop) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     delete wb.long[prop];
     saveWrongBooks();
     return true;
@@ -190,11 +201,11 @@ let wrongBookLong = new Proxy({}, {
 
 let wrongBookNotes = new Proxy({}, {
   get(target, prop) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     return wb.notes[prop];
   },
   set(target, prop, value) {
-    const wb = getCurrentWB();
+    const wb = getTargetWB();
     wb.notes[prop] = value;
     saveWrongBooks();
     return true;
@@ -399,6 +410,15 @@ function resetAnalysis() {
   quizAnalysis = {byChapter:{}, byQuestion:{}, lastUpdated: null};
   saveAnalysis();
 }
+function resetAllStats() {
+  // 清空分析数据
+  resetAnalysis();
+  // 清空答题详情记录（统计图表数据）
+  localStorage.removeItem('quizDetailHistory');
+  // 刷新统计页面（如果当前在统计标签）
+  const statsContainer = document.getElementById('stats-charts');
+  if (statsContainer) renderAllCharts(statsContainer, statsTime);
+}
 
 // ====== Normalize question: fill missing fields ======
 let _qCounter = 0;
@@ -488,11 +508,29 @@ async function init() {
         localStorage.removeItem('wrongBook');
       } catch(e) {}
     }
-    
+
+    // 清理旧版 quizHistory 数据（已迁移到按题记录）
+    localStorage.removeItem('quizHistory');
+
+    // 初始化目标错题本（用于收集错题）
+    const savedSelectedWB = localStorage.getItem('selectedWBForRedo');
+    if (savedSelectedWB && wrongBooks[savedSelectedWB]) {
+      targetWrongBookId = savedSelectedWB;
+    } else {
+      targetWrongBookId = getDefaultWrongBookId();
+    }
+
     // 先渲染错题本（不依赖题库数据）
     renderWrongBookChips();
     updateWrongBookCardText();
-  
+
+    // 初始化闯关模式开关
+    const savedChallengeSubjective = localStorage.getItem('challengeIncludeSubjective');
+    if (savedChallengeSubjective !== null) {
+      const checkbox = document.getElementById('challenge-include-subjective');
+      if (checkbox) checkbox.checked = savedChallengeSubjective === 'true';
+    }
+
     // 异步加载题库数据（不阻塞UI）
     loadQuizDataAsync();
     
@@ -1085,10 +1123,13 @@ function confirmSelectWBForRedo() {
     closeSelectWBForRedo();
     return;
   }
-  
+
   // 保存选择
   localStorage.setItem('selectedWBForRedo', selectedWBForRedo);
-  
+
+  // 设置目标错题本（用于收集错题）
+  targetWrongBookId = selectedWBForRedo;
+
   // 保存含长期记忆设置
   const checkbox = document.getElementById('select-wb-redo-include-long');
   if (checkbox) {
@@ -1097,10 +1138,10 @@ function confirmSelectWBForRedo() {
     const mainCheckbox = document.getElementById('wb-include-long');
     if (mainCheckbox) mainCheckbox.checked = checkbox.checked;
   }
-  
+
   // 更新卡片显示
   updateWrongBookCardText();
-  
+
   closeSelectWBForRedo();
 }
 
@@ -1148,6 +1189,8 @@ function updateActiveQuestions() {
   }
   // Update wrong book card - 始终启用卡片，根据选择的错题本更新上半部分状态
   updateWrongBookCardText();
+  // 更新闯关模式卡片
+  updateChallengeCardText();
 }
 function updateWrongBookCardText() {
   // 获取选择的错题本
@@ -1194,6 +1237,26 @@ function updateWrongBookCardText() {
     const defaultId = getDefaultWrongBookId();
     if (defaultId && wrongBooks[defaultId]) {
       homeBadge.textContent = wrongBooks[defaultId].name;
+    }
+  }
+}
+
+// 更新闯关模式卡片显示
+function updateChallengeCardText() {
+  const includeSubjective = document.getElementById('challenge-include-subjective')?.checked ?? false;
+  const descEl = document.getElementById('challenge-card-desc');
+
+  // 保存设置
+  localStorage.setItem('challengeIncludeSubjective', String(includeSubjective));
+
+  if (descEl) {
+    if (includeSubjective) {
+      const allCount = ALL_QUESTIONS.length;
+      const subjectiveCount = ALL_QUESTIONS.filter(q => q.type === 'subjective').length;
+      descEl.textContent = '共 ' + allCount + ' 道题（含 ' + subjectiveCount + ' 道主观题）';
+    } else {
+      const nonSubjectiveCount = ALL_QUESTIONS.filter(q => q.type !== 'subjective').length;
+      descEl.textContent = '共 ' + nonSubjectiveCount + ' 道题（不含主观题）';
     }
   }
 }
@@ -1275,7 +1338,15 @@ function startChallenge() {
   mode = 'challenge';
   wrongCount = 0; correctCount = 0; totalAnswered = 0; streak = 0;
   wrongList = [];
-  quizQueue = shuffle(getActiveQuestions());
+
+  // 根据"启用主观题"开关过滤题目
+  const includeSubjective = localStorage.getItem('challengeIncludeSubjective') === 'true';
+  let questions = getActiveQuestions();
+  if (!includeSubjective) {
+    questions = questions.filter(q => q.type !== 'subjective');
+  }
+
+  quizQueue = shuffle(questions);
   currentIndex = 0;
   show('page-quiz');
   document.getElementById('gear-btn').classList.add('hidden');
@@ -2216,6 +2287,7 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   qa.chapter = chapter;
   saveAnalysis();
   // ——————————
+  logQuizAnswer(q, isCorrect);
 
   if (isCorrect) {
     correctCount++;
@@ -2407,6 +2479,7 @@ function judgeCalculation() {
   qa.question = q.question;
   qa.chapter = chapter;
   saveAnalysis();
+  logQuizAnswer(q, allCorrect);
 
   if (allCorrect) {
     correctCount++;
@@ -2555,6 +2628,7 @@ function judgeSubjective() {
   qa.question = q.question;
   qa.chapter = chapter;
   saveAnalysis();
+  logQuizAnswer(q, isCorrect);
 
   if (isCorrect) {
     correctCount++;
@@ -2593,7 +2667,6 @@ function quitQuiz() {
   clearTimeout(autoNextTimeout);
   clearInterval(timerInterval);
   clearPerQuestionTimer();
-  recordQuizSession();
   if (mode === 'infinite') saveInfiniteProgress();
   if (totalAnswered > 0) showResult();
   else showHome();
@@ -2604,7 +2677,6 @@ function showResult() {
   clearTimeout(autoNextTimeout);
   clearInterval(timerInterval);
   clearPerQuestionTimer();
-  recordQuizSession();
   if (mode === 'infinite') saveInfiniteProgress();
 
   show('page-result');
@@ -2922,12 +2994,27 @@ let wbSourceFilter = 'all'; // 'all' or source name
 // wbExpanded.cat[source+':temp' or source+':long'] = true / false (二级分组是否展开)
 let wbExpanded = { source: {}, cat: {} };
 
+// 切换到下一个错题本（按创建时间顺序）
+function switchToNextWrongBook() {
+  const ids = Object.keys(wrongBooks);
+  if (ids.length <= 1) return; // 只有一个或没有，不切换
+
+  // 找到当前索引
+  const currentIndex = ids.indexOf(currentWrongBookId);
+  // 下一个，循环
+  const nextIndex = (currentIndex + 1) % ids.length;
+  const nextId = ids[nextIndex];
+
+  // 切换到下一个错题本
+  openWrongBook(nextId);
+}
+
 function openWrongBook(wbId) {
   // 设置当前错题本
   if (wbId && wrongBooks[wbId]) {
     currentWrongBookId = wbId;
   }
-  
+
   // 确保有当前错题本
   if (!currentWrongBookId || !wrongBooks[currentWrongBookId]) {
     const ids = Object.keys(wrongBooks);
@@ -3036,6 +3123,7 @@ function setWbFilter(el) {
 
 // ====== 分析面板：逐题 SVG 柱状图 + 可点击跳转 ======
 function renderAnalysis() {
+  try {
   const analysisEl = document.getElementById('wb-analysis');
   if (!analysisEl) return;
 
@@ -3154,8 +3242,9 @@ function renderAnalysis() {
       '<h5 style="margin:8px 0 12px 0;font-size:14px">② 迟疑最久的题目（Top 10，单位：秒，点击可查看原题）</h5>' + questionChart +
     '</div>' +
     '<div style="padding:6px 18px 18px;text-align:right;border-top:1px solid #eee">' +
-      '<button class="btn btn-secondary" onclick="if(confirm(\'确认清空所有分析数据？\')){resetAnalysis();renderAnalysis();}">清空分析数据</button>' +
+      '<button class="btn btn-secondary" onclick="if(confirm(\'确认清空所有分析数据和答题记录？\')){resetAllStats();renderAnalysis();}">清空所有数据</button>' +
     '</div>';
+  } catch(e) { console.error('renderAnalysis error:', e); }
 }
 
 // 点击分析页某行 → 跳转到对应题目详情
@@ -3405,7 +3494,7 @@ function wbOpenDetail(key, cat) {
     '<textarea id="wb-note-text" placeholder="输入备注内容…" maxlength="500"></textarea>' +
     '<div class="wb-note-editor-actions">' +
     '<button class="btn btn-primary btn-sm" onclick="wbSaveDetailNote(\'' + escAttr(noteKey) + '\')">保存</button>' +
-    '<button class="btn btn-secondary btn-sm" onclick="wbCancelNote()">取消</button>' +
+    '<button class="btn btn-secondary btn-sm" onclick="wbCancelNote()">关闭</button>' +
     '</div></div>';
 
   // 底部导航：◀ ▶
@@ -3703,171 +3792,349 @@ function wbToggleCategory(key, cat) {
 }
 
 // ====== 答题历史统计（正确率图表） ======
-let statsScope = 'all', statsTime = 'day';
+let statsTime = 'day';
 
 function renderStatsPage(container) {
   let html = '<div class="stats-filter-row">';
-  html += '<span class="chip' + (statsScope === 'all' ? ' active' : '') + '" onclick="setStatsScope(this,\'all\')">全部</span>';
-  html += '<span class="chip' + (statsScope === 'chapter' ? ' active' : '') + '" onclick="setStatsScope(this,\'chapter\')">分章节</span>';
-  html += '<span style="width:12px;display:inline-block"></span>';
   html += '<span class="chip' + (statsTime === 'day' ? ' active' : '') + '" onclick="setStatsTime(this,\'day\')">按天</span>';
   html += '<span class="chip' + (statsTime === 'week' ? ' active' : '') + '" onclick="setStatsTime(this,\'week\')">按周</span>';
-  html += '</div><div class="stats-chart" id="stats-chart"></div>';
+  html += '</div><div class="stats-charts" id="stats-charts"></div>';
   container.innerHTML = html;
-  renderStatsChart(document.getElementById('stats-chart'), statsScope, statsTime);
-}
-
-function setStatsScope(el, val) {
-  statsScope = val;
-  document.querySelectorAll('#wb-stats .stats-filter-row .chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderStatsChart(document.getElementById('stats-chart'), statsScope, statsTime);
+  renderAllCharts(document.getElementById('stats-charts'), statsTime);
 }
 
 function setStatsTime(el, val) {
   statsTime = val;
   document.querySelectorAll('#wb-stats .stats-filter-row .chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  renderStatsChart(document.getElementById('stats-chart'), statsScope, statsTime);
-}
-function recordQuizSession() {
-  if (totalAnswered <= 0) return;
-  const now = new Date();
-  const dateStr = now.toISOString().slice(0, 10);
-  const entry = {
-    date: dateStr,
-    chapter: quizQueue?.[0]?.chapter || '未知',
-    source: quizQueue?.[0]?.source || '未知',
-    total: totalAnswered,
-    correct: correctCount,
-    accuracy: totalAnswered > 0 ? Math.round(correctCount / totalAnswered * 100) : 0,
-  };
-  let history = [];
-  try { history = JSON.parse(localStorage.getItem('quizHistory') || '[]'); } catch(e) {}
-  history.push(entry);
-  localStorage.setItem('quizHistory', JSON.stringify(history));
+  renderAllCharts(document.getElementById('stats-charts'), statsTime);
 }
 
-function renderStatsChart(container, filterScope, filterTime) {
-  let history = [];
-  try { history = JSON.parse(localStorage.getItem('quizHistory') || '[]'); } catch(e) {}
-  if (history.length === 0) { container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">暂无答题记录</div>'; return; }
+// —— 读取原始数据并分组 ——
+function loadStatsData(filterTime) {
+  let history = getQuizDetailHistory();
+  if (history.length === 0) return null;
 
-  // 按题库筛选（只显示已选题库）
+  // 按题库筛选
   const activeSources = new Set(Object.keys(sourceData).filter(s => sourceSelection[s] !== false));
-  history = history.filter(h => activeSources.has(h.source));
-  if (history.length === 0) { container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">当前题库无答题记录</div>'; return; }
+  if (activeSources.size > 0) {
+    history = history.filter(h => activeSources.has(h.source));
+  }
+  if (history.length === 0) return null;
 
-  // 分组
-  let groups;
-  if (filterScope === 'chapter') {
-    // 分章节：每个 chapter 一条线，按天聚合
-    const byChapter = {};
-    history.forEach(h => {
-      const ch = h.chapter || '未知';
-      if (!byChapter[ch]) byChapter[ch] = {};
-      const key = filterTime === 'week' ? getWeekKey(h.date) : h.date;
-      if (!byChapter[ch][key]) byChapter[ch][key] = { total: 0, correct: 0 };
-      byChapter[ch][key].total += h.total;
-      byChapter[ch][key].correct += h.correct;
-    });
-    groups = byChapter;
-  } else {
-    // 全部：按天/周聚合
-    const byTime = {};
-    history.forEach(h => {
-      const key = filterTime === 'week' ? getWeekKey(h.date) : h.date;
-      if (!byTime[key]) byTime[key] = { total: 0, correct: 0 };
-      byTime[key].total += h.total;
-      byTime[key].correct += h.correct;
-    });
-    groups = { '正确率': byTime };
+  // 生成时间键
+  history.forEach(h => {
+    h.timeKey = filterTime === 'week' ? getWeekKey(h.date) : h.date;
+  });
+
+  return history;
+}
+
+// —— 获取所有章节排序 ——
+function getChapterOrder(history) {
+  // 首次出现的顺序
+  const seen = new Set();
+  const order = [];
+  history.forEach(h => {
+    if (!seen.has(h.chapter)) { seen.add(h.chapter); order.push(h.chapter); }
+  });
+  return order;
+}
+
+// —— 渲染所有图表 ——
+function renderAllCharts(container, filterTime) {
+  const history = loadStatsData(filterTime);
+  if (!history) {
+    container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">暂无答题记录</div>';
+    return;
   }
 
-  // 收集所有时间点
-  const allKeys = new Set();
-  Object.values(groups).forEach(g => Object.keys(g).forEach(k => allKeys.add(k)));
-  const sortedKeys = Array.from(allKeys).sort();
-  if (sortedKeys.length === 0) { container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">暂无数据</div>'; return; }
+  let html = '';
 
-  const W = 560, H = 280, PAD = { top: 20, right: 20, bottom: 45, left: 45 };
+  // 1. 各章节学习次数（堆积百分比柱状图）
+  html += renderChapterStudyChart(history, filterTime);
+
+  // 2. 各题型做题次数
+  html += renderTypeCountChart(history);
+
+  // 3. 各章节总正确次数
+  html += renderChapterCorrectChart(history);
+
+  // 4. 各章节总错误次数
+  html += renderChapterWrongChart(history);
+
+  // 5. 各题库做题次数
+  html += renderSourceCountChart(history);
+
+  container.innerHTML = html;
+}
+
+// —— 调色板 ——
+const STATS_COLORS = ['#4a90d9','#27ae60','#e74c3c','#f39c12','#8e44ad','#1abc9c','#e67e22','#2c3e50','#16a085','#c0392b','#2980b9','#8e44ad','#d35400','#7f8c8d','#3498db','#2ecc71'];
+function getColor(idx) { return STATS_COLORS[idx % STATS_COLORS.length]; }
+
+// —— 1. 堆积百分比柱状图：各章节学习次数 ——
+function renderChapterStudyChart(history, filterTime) {
+  // 按时间键 + 章节分组
+  const timeKeys = [...new Set(history.map(h => h.timeKey))].sort();
+  const chapters = getChapterOrder(history);
+
+  // 统计每个时间键内各章节的做题次数
+  const data = {}; // timeKey -> { chapter: count }
+  const timeTotals = {}; // timeKey -> total
+  timeKeys.forEach(tk => {
+    data[tk] = {};
+    chapters.forEach(ch => data[tk][ch] = 0);
+  });
+  history.forEach(h => {
+    if (!data[h.timeKey]) data[h.timeKey] = {};
+    if (data[h.timeKey][h.chapter] === undefined) data[h.timeKey][h.chapter] = 0;
+    data[h.timeKey][h.chapter]++;
+    timeTotals[h.timeKey] = (timeTotals[h.timeKey] || 0) + 1;
+  });
+
+  const W = 600, H = 260, PAD = { top: 30, right: 20, bottom: 50, left: 45 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
-  const barW = Math.max(8, Math.min(36, chartW / sortedKeys.length * 0.6));
-  const gap = chartW / sortedKeys.length;
+  const barW = Math.max(14, Math.min(50, chartW / timeKeys.length * 0.7));
+  const gap = chartW / timeKeys.length;
 
-  // 计算全局最大正确率
-  let maxVal = 100;
-  Object.values(groups).forEach(g => {
-    sortedKeys.forEach(k => { if (g[k]) maxVal = Math.max(maxVal, Math.ceil(g[k].correct / g[k].total * 100 / 10) * 10); });
-  });
-  if (maxVal < 50) maxVal = 50;
+  let svg = `<h4 style="margin:12px 0 6px;color:var(--text,#333)">📊 各章节学习次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
 
-  // 颜色
-  const colors = ['#4a90d9', '#27ae60', '#e74c3c', '#f39c12', '#8e44ad', '#2c3e50', '#1abc9c', '#e67e22'];
-  let colorIdx = 0;
-
-  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
-
-  // Y 轴网格
-  for (let v = 0; v <= maxVal; v += 10) {
-    const y = chartH - (v / maxVal) * chartH;
-    svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#e0e0e0" stroke-dasharray="4,3"/>`;
-    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#888">${v}%</text>`;
+  // Y轴网格（百分比）
+  for (let pct = 0; pct <= 100; pct += 20) {
+    const y = chartH - (pct / 100) * chartH;
+    svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
+    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${pct}%</text>`;
   }
 
-  // X 轴标签
-  sortedKeys.forEach((k, i) => {
+  // 每个时间点绘制堆积柱
+  timeKeys.forEach((tk, i) => {
     const cx = i * gap + gap / 2;
-    const label = filterTime === 'week' ? k.replace('W', '') : k.slice(5);
-    svg += `<text x="${cx}" y="${chartH + 18}" text-anchor="end" font-size="10" fill="#888" transform="rotate(-30,${cx},${chartH + 18})">${label}</text>`;
-  });
+    const total = timeTotals[tk] || 1;
+    let stackBottom = 0;
 
-  // 绘制各组数据
-  const series = Object.entries(groups);
-  series.forEach(([name, data], si) => {
-    const color = colors[colorIdx % colors.length];
-    colorIdx++;
-    const points = [];
-
-    sortedKeys.forEach((k, i) => {
-      const d = data[k];
-      if (!d || d.total === 0) return;
-      const cx = i * gap + gap / 2;
-      const acc = d.correct / d.total * 100;
-      const barH = (acc / maxVal) * chartH;
-      const y = chartH - barH;
-      points.push({ x: cx, y, acc });
-
-      // 柱状图
-      if (filterScope !== 'chapter' || series.length <= 3) {
-        const w = si === 0 ? barW : barW * 0.5;
-        const offset = si === 0 ? -w / 2 : (si === 1 ? 2 : -w - 2);
-        svg += `<rect x="${cx + offset}" y="${y}" width="${w}" height="${barH}" fill="${color}" opacity=".7" rx="2"/>`;
+    const sortedChapters = chapters.filter(ch => (data[tk][ch] || 0) > 0);
+    sortedChapters.forEach((ch, si) => {
+      const cnt = data[tk][ch] || 0;
+      const pct = cnt / total;
+      const barH = pct * chartH;
+      const y = chartH - stackBottom - barH;
+      svg += `<rect x="${cx - barW/2}" y="${y}" width="${barW}" height="${Math.max(barH, 0.5)}" fill="${getColor(chapters.indexOf(ch))}" opacity=".85" rx="1"/>`;
+      // 如果比例 > 5%，显示文字
+      if (pct > 0.05) {
+        svg += `<text x="${cx}" y="${y + barH/2 + 4}" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">${Math.round(pct*100)}%</text>`;
       }
+      stackBottom += barH;
     });
 
-    // 趋势线
-    if (points.length >= 2) {
-      const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
-      svg += `<path d="${d}" stroke="${color}" stroke-width="2" fill="none" stroke-linejoin="round"/>`;
-      // 数据点
-      points.forEach(p => {
-        svg += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
-      });
-    }
+    // 总做题数标注
+    svg += `<text x="${cx}" y="${chartH + 14}" text-anchor="middle" font-size="10" fill="#999">${total}</text>`;
 
-    // 图例
-    if (filterScope === 'chapter') {
-      const ly = -10 - si * 18;
-      svg += `<rect x="${chartW - 120}" y="${ly}" width="12" height="12" fill="${color}" rx="2"/>
-        <text x="${chartW - 104}" y="${ly + 10}" font-size="11" fill="var(--text, #333)">${name}</text>`;
-    }
+    // X轴标签
+    const label = filterTime === 'week' ? tk.replace('W','') : tk.slice(5);
+    svg += `<text x="${cx}" y="${chartH + 32}" text-anchor="end" font-size="10" fill="#888" transform="rotate(-25,${cx},${chartH + 32})">${label}</text>`;
+  });
+
+  // 图例
+  const legendChapters = chapters.filter(ch => history.some(h => h.chapter === ch));
+  svg += '</g></svg><div style="text-align:center;margin:2px 0 10px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:0 8px">';
+  legendChapters.forEach((ch, i) => {
+    svg += `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text,#333)">
+      <span style="width:10px;height:10px;border-radius:2px;background:${getColor(i)};flex-shrink:0"></span>${ch}</span>`;
+  });
+  svg += '</div>';
+
+  return svg;
+}
+
+// —— 2. 各题型做题次数 ——
+function renderTypeCountChart(history) {
+  const typeMap = {};
+  history.forEach(h => {
+    typeMap[h.type] = (typeMap[h.type] || 0) + 1;
+  });
+  const types = Object.keys(typeMap);
+  if (types.length === 0) return '';
+
+  const TYPE_LABELS = { single_choice: '单选', multiple_choice: '多选', true_false: '判断', calculation: '计算', subjective: '主观' };
+  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+  const gap = chartW / types.length;
+  const maxVal = Math.max(...types.map(t => typeMap[t]));
+
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题型做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+
+  // Y轴
+  const yStep = Math.max(1, Math.ceil(maxVal / 5));
+  for (let v = 0; v <= maxVal + yStep; v += yStep) {
+    const y = chartH - (v / (maxVal || 1)) * chartH;
+    if (y < 0) continue;
+    svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
+    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+  }
+
+  types.forEach((t, i) => {
+    const cnt = typeMap[t];
+    const barH = (cnt / (maxVal || 1)) * chartH;
+    const cx = i * gap + gap / 2;
+    const bw = Math.max(18, Math.min(60, gap * 0.6));
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"/>`;
+    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="12" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
+    const label = TYPE_LABELS[t] || t;
+    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="middle" font-size="12" fill="var(--text,#333)">${label}</text>`;
   });
 
   svg += '</g></svg>';
-  container.innerHTML = svg;
+  return svg;
 }
+
+// —— 3. 各章节总正确次数 ——
+function renderChapterCorrectChart(history) {
+  const chMap = {};
+  history.forEach(h => {
+    if (h.correct) chMap[h.chapter] = (chMap[h.chapter] || 0) + 1;
+  });
+  const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
+  if (chapters.length === 0) return '';
+
+  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+  const gap = chartW / chapters.length;
+  const maxVal = Math.max(...chapters.map(ch => chMap[ch]));
+
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节正确次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+
+  const yStep = Math.max(1, Math.ceil(maxVal / 5));
+  for (let v = 0; v <= maxVal + yStep; v += yStep) {
+    const y = chartH - (v / (maxVal || 1)) * chartH;
+    if (y < 0) continue;
+    svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
+    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+  }
+
+  chapters.forEach((ch, i) => {
+    const cnt = chMap[ch];
+    const barH = (cnt / (maxVal || 1)) * chartH;
+    const cx = i * gap + gap / 2;
+    const bw = Math.max(14, Math.min(60, gap * 0.6));
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#27ae60" opacity=".8" rx="2"/>`;
+    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="600">${cnt}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 16})">${ch}</text>`;
+  });
+
+  svg += '</g></svg>';
+  return svg;
+}
+
+// —— 4. 各章节总错误次数 ——
+function renderChapterWrongChart(history) {
+  const chMap = {};
+  history.forEach(h => {
+    if (!h.correct) chMap[h.chapter] = (chMap[h.chapter] || 0) + 1;
+  });
+  const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
+  if (chapters.length === 0) return '';
+
+  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+  const gap = chartW / chapters.length;
+  const maxVal = Math.max(...chapters.map(ch => chMap[ch]));
+
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节错误次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+
+  const yStep = Math.max(1, Math.ceil(maxVal / 5));
+  for (let v = 0; v <= maxVal + yStep; v += yStep) {
+    const y = chartH - (v / (maxVal || 1)) * chartH;
+    if (y < 0) continue;
+    svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
+    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+  }
+
+  chapters.forEach((ch, i) => {
+    const cnt = chMap[ch];
+    const barH = (cnt / (maxVal || 1)) * chartH;
+    const cx = i * gap + gap / 2;
+    const bw = Math.max(14, Math.min(60, gap * 0.6));
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#e74c3c" opacity=".8" rx="2"/>`;
+    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="11" fill="#e74c3c" font-weight="600">${cnt}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 16})">${ch}</text>`;
+  });
+
+  svg += '</g></svg>';
+  return svg;
+}
+
+// —— 5. 各题库做题次数 ——
+function renderSourceCountChart(history) {
+  const srcMap = {};
+  history.forEach(h => {
+    srcMap[h.source] = (srcMap[h.source] || 0) + 1;
+  });
+  const sources = Object.keys(srcMap).filter(s => srcMap[s] > 0);
+  if (sources.length === 0) return '';
+
+  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+  const gap = chartW / sources.length;
+  const maxVal = Math.max(...sources.map(s => srcMap[s]));
+
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题库做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+
+  const yStep = Math.max(1, Math.ceil(maxVal / 5));
+  for (let v = 0; v <= maxVal + yStep; v += yStep) {
+    const y = chartH - (v / (maxVal || 1)) * chartH;
+    if (y < 0) continue;
+    svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
+    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+  }
+
+  sources.forEach((s, i) => {
+    const cnt = srcMap[s];
+    const barH = (cnt / (maxVal || 1)) * chartH;
+    const cx = i * gap + gap / 2;
+    const bw = Math.max(18, Math.min(100, gap * 0.6));
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"/>`;
+    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="12" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
+    // 题库名称较长，用旋转
+    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 16})">${s}</text>`;
+  });
+
+  svg += '</g></svg>';
+  return svg;
+}
+
+// —— 旧函数保留用于兼容，但不使用 ——
+// —— 按题记录答题详情 ——
+function logQuizAnswer(q, correct) {
+  if (!q) return;
+  const record = {
+    timestamp: Date.now(),
+    date: new Date().toISOString().slice(0, 10),
+    source: q.source || '未知',
+    chapter: q.chapter || '未分类',
+    type: q.type || 'unknown',
+    correct: !!correct,
+    mode: mode || 'unknown'
+  };
+  let history = [];
+  try { history = JSON.parse(localStorage.getItem('quizDetailHistory') || '[]'); } catch(e) {}
+  history.push(record);
+  // 只保留最近 50000 条
+  if (history.length > 50000) history = history.slice(-50000);
+  localStorage.setItem('quizDetailHistory', JSON.stringify(history));
+}
+
+// —— 读取答题详情 ——
+function getQuizDetailHistory() {
+  try { return JSON.parse(localStorage.getItem('quizDetailHistory') || '[]'); } catch(e) { return []; }
+}
+
+
 
 function getWeekKey(dateStr) {
   const d = new Date(dateStr);
