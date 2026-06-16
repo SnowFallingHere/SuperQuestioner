@@ -1540,7 +1540,7 @@ function registerPerQuestionTimeout() {
   const fb = document.getElementById('answer-feedback');
   if (fb) {
     const correctText = formatAnswer(q);
-    fb.innerHTML = '<div class="feedback wrong">时间到！正确答案：' + correctText + '</div>';
+    fb.innerHTML = '<div class="feedback wrong">时间已到！正确答案：' + correctText + '</div>';
   }
   autoNextTimeout = setTimeout(() => {
     currentIndex++;
@@ -5131,7 +5131,7 @@ function showJumpDialog() {
   function doJump() {
     const n = parseInt(input.value, 10);
     if (isNaN(n) || n < 1 || n > previewList.length) {
-      input.style.borderColor = '#e74c3c';
+      input.style.borderColor = '#d73522ff';
       input.focus();
       return;
     }
@@ -5181,7 +5181,7 @@ function previewNext() {
 }
 
 // ====== Start ======
-// 确保DOM加载完成后再初始化
+// 确保DOM加载完成后再进行初始化
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
