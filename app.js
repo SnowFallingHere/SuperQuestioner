@@ -191,66 +191,120 @@ function deleteWrongBook(id) {
     delete wrongBooks[id];
     saveWrongBooks();
     renderWrongBookChips();
+
+    // 如果被删的是"当前收集本"或"当前打开本"，必须把它们指到仍然存在的错题本，
+    // 否则 Proxy 访问 wrongBooks[id] 会拿到 undefined，后续读写立即报
+    // "Cannot set property of undefined"，页面整个功能崩溃。
+    const ids = Object.keys(wrongBooks);
+    const fallback = ids.length > 0 ? ids[0] : null;
+    if (!fallback) {
+      // 极端情况：全部被删，建一个保底的默认本
+      wrongBooks['默认'] = { name: '默认', temp: {}, long: {}, notes: {} };
+      targetWrongBookId = '默认';
+      currentWrongBookId = '默认';
+    } else {
+      if (targetWrongBookId === id || !wrongBooks[targetWrongBookId]) {
+        targetWrongBookId = fallback;
+      }
+      if (currentWrongBookId === id || !wrongBooks[currentWrongBookId]) {
+        currentWrongBookId = fallback;
+      }
+    }
+    if (targetWrongBookId) localStorage.setItem('defaultWrongBookId', targetWrongBookId);
+    saveWrongBooks();
+
+    // 更新首页默认本徽章（若存在）
+    const badge = document.getElementById('wb-default-badge-home');
+    if (badge && wrongBooks[targetWrongBookId]) badge.textContent = wrongBooks[targetWrongBookId].name;
+
     return true;
   }
   return false;
 }
 
 // 兼容旧代码的访问器 - 使用目标错题本（用户选择的）
+// 所有 Proxy 都对 getTargetWB() 结果做非空兜底，避免被删本后读写立即报 undefined 错误
 let wrongBookTemp = new Proxy({}, {
   get(target, prop) {
     const wb = getTargetWB();
-    return wb.temp[prop];
+    return (wb && wb.temp) ? wb.temp[prop] : undefined;
   },
   set(target, prop, value) {
     const wb = getTargetWB();
+    if (!wb || !wb.temp) return true;
     wb.temp[prop] = value;
     saveWrongBooks();
     return true;
   },
   deleteProperty(target, prop) {
     const wb = getTargetWB();
-    delete wb.temp[prop];
+    if (wb && wb.temp) delete wb.temp[prop];
     saveWrongBooks();
     return true;
+  },
+  has(target, prop) {
+    const wb = getTargetWB();
+    return !!(wb && wb.temp && prop in wb.temp);
+  },
+  ownKeys(target) {
+    const wb = getTargetWB();
+    return (wb && wb.temp) ? Object.keys(wb.temp) : [];
   }
 });
 
 let wrongBookLong = new Proxy({}, {
   get(target, prop) {
     const wb = getTargetWB();
-    return wb.long[prop];
+    return (wb && wb.long) ? wb.long[prop] : undefined;
   },
   set(target, prop, value) {
     const wb = getTargetWB();
+    if (!wb || !wb.long) return true;
     wb.long[prop] = value;
     saveWrongBooks();
     return true;
   },
   deleteProperty(target, prop) {
     const wb = getTargetWB();
-    delete wb.long[prop];
+    if (wb && wb.long) delete wb.long[prop];
     saveWrongBooks();
     return true;
+  },
+  has(target, prop) {
+    const wb = getTargetWB();
+    return !!(wb && wb.long && prop in wb.long);
+  },
+  ownKeys(target) {
+    const wb = getTargetWB();
+    return (wb && wb.long) ? Object.keys(wb.long) : [];
   }
 });
 
 let wrongBookNotes = new Proxy({}, {
   get(target, prop) {
     const wb = getTargetWB();
-    return wb.notes[prop];
+    return (wb && wb.notes) ? wb.notes[prop] : undefined;
   },
   set(target, prop, value) {
     const wb = getTargetWB();
+    if (!wb || !wb.notes) return true;
     wb.notes[prop] = value;
     saveWrongBooks();
     return true;
   },
   deleteProperty(target, prop) {
     const wb = getCurrentWB();
-    delete wb.notes[prop];
+    if (wb && wb.notes) delete wb.notes[prop];
     saveWrongBooks();
     return true;
+  },
+  has(target, prop) {
+    const wb = getTargetWB();
+    return !!(wb && wb.notes && prop in wb.notes);
+  },
+  ownKeys(target) {
+    const wb = getTargetWB();
+    return (wb && wb.notes) ? Object.keys(wb.notes) : [];
   }
 });
 let streak = 0;
@@ -991,7 +1045,6 @@ function moveQuestionToWrongBook(key, cat, toId) {
   
   // 刷新显示
   renderWbThreeLevel();
-  updateWbFilterCounter();
 }
 
 // 关闭移动到对话框
@@ -1027,22 +1080,30 @@ function showDefaultWBSelector() {
 // 设置默认错题本
 function setDefaultWrongBook(id) {
   if (!wrongBooks[id]) return;
-  
+
   localStorage.setItem('defaultWrongBookId', id);
-  
+  // 同步内存中的收集目标，让新增错题落到新的默认错题本
+  targetWrongBookId = id;
+
   // 更新徽章文字
   const badge = document.getElementById('wb-default-badge');
   if (badge) {
     badge.textContent = wrongBooks[id].name;
   }
-  
+
+  // 更新首页徽章
+  const homeBadge = document.getElementById('wb-default-badge-home');
+  if (homeBadge) {
+    homeBadge.textContent = wrongBooks[id].name;
+  }
+
   // 更新选中状态
   document.querySelectorAll('.default-wb-item').forEach(item => {
     item.classList.remove('active');
   });
   const selected = document.querySelector('.default-wb-item:nth-child(' + (Object.keys(wrongBooks).indexOf(id) + 1) + ')');
   if (selected) selected.classList.add('active');
-  
+
   closeDefaultWBSelector();
 }
 
@@ -1077,18 +1138,26 @@ function showDefaultWBSelectorHome() {
 // 设置默认错题本（从首页）
 function setDefaultWrongBookHome(id) {
   if (!wrongBooks[id]) return;
-  
+
   localStorage.setItem('defaultWrongBookId', id);
-  
+  // 同步内存中的收集目标，让新增错题落到新的默认错题本
+  targetWrongBookId = id;
+
   // 更新首页徽章
   const badge = document.getElementById('wb-default-badge-home');
   if (badge && wrongBooks[id]) {
     badge.textContent = wrongBooks[id].name;
   }
-  
+
+  // 顺带同步错题本详情页徽章
+  const detailBadge = document.getElementById('wb-default-badge');
+  if (detailBadge) {
+    detailBadge.textContent = wrongBooks[id].name;
+  }
+
   // 更新重做错题卡片显示
   updateWrongBookCardText();
-  
+
   closeDefaultWBSelector();
 }
 
@@ -1362,13 +1431,13 @@ function startChallenge() {
   let redEffect = true, combo = true, shake = false, showNote = false;
   if (wrongLimitEl) {
     wrongLimit = parseInt(wrongLimitEl.value, 10) || 50;
-    correctTarget = parseInt(correctTargetEl.value, 10) || 160;
-    useTimer = useTimerEl.checked;
-    timerSeconds = parseInt(timerSecondsEl.value, 10) || 30;
-    redEffect = redEffectEl.checked;
-    combo = comboEl.checked;
-    shake = shakeEl.checked;
-    showNote = showNoteEl.checked;
+    correctTarget = correctTargetEl ? (parseInt(correctTargetEl.value, 10) || 160) : correctTarget;
+    useTimer = useTimerEl?.checked ?? useTimer;
+    timerSeconds = timerSecondsEl ? (parseInt(timerSecondsEl.value, 10) || 30) : timerSeconds;
+    redEffect = redEffectEl?.checked ?? redEffect;
+    combo = comboEl?.checked ?? combo;
+    shake = shakeEl?.checked ?? shake;
+    showNote = showNoteEl?.checked ?? showNote;
   }
   if (wrongLimit < 1) wrongLimit = 1;
   if (correctTarget < 1) correctTarget = 1;
@@ -1438,16 +1507,23 @@ function onChallengeTimerToggle() {
 
 function saveChallengePrefs() {
   const we = document.getElementById('challenge-wrong-limit');
+  const ce = document.getElementById('challenge-correct-target');
+  const ute = document.getElementById('challenge-use-timer');
+  const tse = document.getElementById('challenge-timer-seconds');
+  const re = document.getElementById('challenge-red-effect');
+  const coe = document.getElementById('challenge-combo');
+  const se = document.getElementById('challenge-shake');
+  const sne = document.getElementById('challenge-show-note');
   if (!we) return;
   const p = {
     wrongLimit: parseInt(we.value, 10) || 50,
-    correctTarget: parseInt(document.getElementById('challenge-correct-target').value, 10) || 160,
-    useTimer: document.getElementById('challenge-use-timer').checked,
-    timerSeconds: parseInt(document.getElementById('challenge-timer-seconds').value, 10) || 30,
-    redEffect: document.getElementById('challenge-red-effect').checked,
-    combo: document.getElementById('challenge-combo').checked,
-    shake: document.getElementById('challenge-shake').checked,
-    showNote: document.getElementById('challenge-show-note').checked,
+    correctTarget: ce ? (parseInt(ce.value, 10) || 160) : 160,
+    useTimer: ute?.checked ?? true,
+    timerSeconds: tse ? (parseInt(tse.value, 10) || 30) : 30,
+    redEffect: re?.checked ?? true,
+    combo: coe?.checked ?? true,
+    shake: se?.checked ?? false,
+    showNote: sne?.checked ?? false,
   };
   localStorage.setItem('challengePrefs', JSON.stringify(p));
 }
@@ -2422,9 +2498,13 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
       }
     }
     // In wrongbook mode, only remove from temp, NOT from long
-    if (mode === 'wrongbook' && wrongBookTemp[key]) {
-      delete wrongBookTemp[key];
-      localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
+    // 多错题本：按当前答题的错题本 (currentWrongBookId) 删除，避免删错其他本
+    if (mode === 'wrongbook') {
+      const curWb = wrongBooks[currentWrongBookId];
+      if (curWb && curWb.temp[key]) {
+        delete curWb.temp[key];
+        saveWrongBooks();
+      }
     }
     // Streak effects
     handleStreak();
@@ -2439,9 +2519,15 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
     }
     wrongList.push({question: q, selectedAnswer: selectedAnswer});
     // Auto add to temp (if not already in long)
-    if (!wrongBookLong[key] && !wrongBookTemp[key]) {
+    if (mode === 'wrongbook') {
+      // 多错题本：答错 → 写进当前答题的错题本 (currentWrongBookId)
+      const curWb = wrongBooks[currentWrongBookId];
+      if (curWb && !curWb.long[key] && !curWb.temp[key]) {
+        curWb.temp[key] = qObj(q);
+        saveWrongBooks();
+      }
+    } else if (!wrongBookLong[key] && !wrongBookTemp[key]) {
       wrongBookTemp[key] = qObj(q);
-      localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
     }
   }
 
@@ -2598,13 +2684,27 @@ function judgeCalculation() {
   if (allCorrect) {
     correctCount++;
     if (correctCount > 0 && correctCount % 10 === 0) if (getComboSoundEnabled()) setTimeout(playAwesome, 200);
+    // 多错题本：答对 → 只移除 temp，保留 long
+    if (mode === 'wrongbook') {
+      const curWb = wrongBooks[currentWrongBookId];
+      if (curWb && curWb.temp[key]) {
+        delete curWb.temp[key];
+        saveWrongBooks();
+      }
+    }
   } else {
     wrongCount++;
     wrongList.push({question: q, selectedAnswer: JSON.stringify(Array.from(inputs).map(i => ({qid:i.dataset.qid, val:i.value})))
-  });
-    if (!wrongBookLong[key] && !wrongBookTemp[key]) {
+    });
+    // 多错题本：答错 → 写到当前答题的错题本
+    if (mode === 'wrongbook') {
+      const curWb = wrongBooks[currentWrongBookId];
+      if (curWb && !curWb.long[key] && !curWb.temp[key]) {
+        curWb.temp[key] = qObj(q);
+        saveWrongBooks();
+      }
+    } else if (!wrongBookLong[key] && !wrongBookTemp[key]) {
       wrongBookTemp[key] = qObj(q);
-      localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
     }
   }
 
@@ -3237,10 +3337,12 @@ function setWbFilter(el) {
 
 // ====== 分析面板：逐题 SVG 柱状图 + 可点击跳转 ======
 function renderAnalysis() {
-  try {
+  // analysisEl 必须在 try 之前声明：后续事件委托注册在 try/catch 外面，
+  // 若在这里面用 const/let，外面访问会抛 ReferenceError
   const analysisEl = document.getElementById('wb-analysis');
   if (!analysisEl) return;
 
+  try {
   // —— 实时同步：每次进入分析页都从 localStorage 重新读（保证"答一题，数据更新一次"）
   quizAnalysis = loadAnalysis();
 
@@ -3272,7 +3374,7 @@ function renderAnalysis() {
 
   // —— 每行一个独立 SVG（单一柱） ——
   // row: {label, value, color, onClick?}
-  function buildBarRow(row, maxVal, color, onClickHtml) {
+  function buildBarRow(row, maxVal, color, dataAttr) {
     const barHeight = 28;
     const labelWidth = 180;
     const valueSpace = 70;
@@ -3285,16 +3387,17 @@ function renderAnalysis() {
     const label = row.label.length > 22 ? row.label.substring(0, 20) + '…' : row.label;
     const valueText = Number.isInteger(row.value) ? row.value : row.value.toFixed(1);
 
-    let svg = '<svg viewBox="0 0 ' + totalWidth + ' ' + totalHeight + '" style="width:100%;height:auto;display:block">';
-    svg += '<text x="' + (labelWidth - 10) + '" y="' + (barHeight/2 + 4 + 4) + '" text-anchor="end" font-size="12" fill="#333">' + escapeXml(label) + '</text>';
-    svg += '<rect x="' + labelWidth + '" y="4" width="' + barW + '" height="' + barHeight + '" fill="' + color + '" rx="4" ry="4"></rect>';
-    svg += '<text x="' + (labelWidth + barW + 8) + '" y="' + (barHeight/2 + 4 + 4) + '" font-size="12" fill="#555">' + escapeXml(valueText) + '</text>';
+    // 把 data-* 同时写到 <div> 和 <svg> 上（SVG 命名空间节点的 closest 在某些内核上有兼容性问题，双层保险）
+    const extraHtml = dataAttr ? (' ' + dataAttr) : '';
+    const titleHtml = row.title ? ' title="' + escapeAttr(row.title) + '"' : '';
+
+    let svg = '<svg viewBox="0 0 ' + totalWidth + ' ' + totalHeight + '" class="analysis-svg"' + extraHtml + '>';
+    svg += '<text class="analysis-svg-label" x="' + (labelWidth - 10) + '" y="' + (barHeight/2 + 4 + 4) + '" text-anchor="end" font-size="14" fill="#333"' + extraHtml + '>' + escapeXml(label) + '</text>';
+    svg += '<rect class="analysis-svg-bar" x="' + labelWidth + '" y="4" width="' + barW + '" height="' + barHeight + '" fill="' + color + '" rx="4" ry="4"' + extraHtml + '></rect>';
+    svg += '<text class="analysis-svg-value" x="' + (labelWidth + barW + 8) + '" y="' + (barHeight/2 + 4 + 4) + '" font-size="14" fill="#555"' + extraHtml + '>' + escapeXml(valueText) + '</text>';
     svg += '</svg>';
 
-    if (onClickHtml) {
-      return '<div class="analysis-row" style="cursor:pointer;padding:4px 0" ' + onClickHtml + '>' + svg + '</div>';
-    }
-    return '<div class="analysis-row" style="padding:4px 0">' + svg + '</div>';
+    return '<div class="analysis-row"' + extraHtml + titleHtml + '>' + svg + '</div>';
   }
 
   // —— 跳转：把题目送入错题本浏览视图（若没在错题本里，临时塞到 wrongBookTemp 以便查看） ——
@@ -3310,32 +3413,43 @@ function renderAnalysis() {
   let slowestHtml = '';
   if (slowest && slowest.maxHesitation > 0) {
     const label = (slowest.chapter ? slowest.chapter + '·' : '') + slowest.question;
-    const slowestOnClick = 'onclick="jumpToAnalysisQuestion(\'' + escapeAttr(slowest.key) + '\')"';
+    const slowestOnClick = 'data-analysis-key="' + escapeAttr(slowest.key) + '"';
     slowestHtml = '最久迟疑的题目：<b style="color:#f39c12;cursor:pointer" ' + slowestOnClick + ' title="' + escapeAttr(label) + '">' +
       escapeXml(label.substring(0, 30)) + (label.length > 30 ? '…' : '') + '</b>（最长 ' + slowest.maxHesitation.toFixed(1) + ' 秒）<br>';
   }
 
-  // —— 章节图 ——
-  let chapterChart;
-  const chapterRows = byChapter.filter(c => c.wrong > 0);
-  if (chapterRows.length === 0) {
-    chapterChart = '<div style="color:#999;text-align:center;padding:30px">暂无错题记录</div>';
+  // —— 错题次数最多 Top 10（点击行 → 跳到该题浮窗） ——
+  // byQuestion 是其它位置（最久迟疑）已经用过的结构，里面有 {key, chapter, question, countWrong?, maxHesitation}
+  // 用 countWrong 排序后取前 10（如果某些题没有 countWrong 字段，视为 0，会自动沉到末尾）
+  let mostWrongChart;
+  // 取一份只含 (key, chapter, question, countWrong) 的副本，按错次降序
+  const mostWrongRows = (byQuestion || [])
+    .map(q => ({ key: q.key, chapter: q.chapter, question: q.question, countWrong: q.countWrong || 0 }))
+    .filter(q => q.countWrong > 0)
+    .sort((a, b) => b.countWrong - a.countWrong)
+    .slice(0, 40);
+  if (mostWrongRows.length === 0) {
+    mostWrongChart = '<div style="color:#999;text-align:center;padding:30px">暂无错题记录</div>';
   } else {
-    const maxWrong = Math.max(...chapterRows.map(c => c.wrong), 1);
-    chapterChart = chapterRows.map(r => buildBarRow({label: r.name, value: r.wrong}, maxWrong, '#e74c3c', null)).join('');
+    const maxC = Math.max(...mostWrongRows.map(q => q.countWrong), 1);
+    mostWrongChart = mostWrongRows.map(q => {
+      const label = (q.chapter ? q.chapter + '·' : '') + q.question;
+      const dataAttr = 'data-analysis-key="' + escapeAttr(q.key) + '"';
+      return buildBarRow({label: label, value: q.countWrong, title: '错题次数最多：' + label + '（点击查看原题）'}, maxC, '#e74c3c', dataAttr);
+    }).join('');
   }
 
   // —— 迟疑 Top 10 图（每行可点击） ——
   let questionChart;
-  const qRows = byQuestion.filter(q => q.maxHesitation > 0);
+  const qRows = byQuestion.filter(q => q.maxHesitation > 0).slice(0, 40);
   if (qRows.length === 0) {
     questionChart = '<div style="color:#999;text-align:center;padding:30px">暂无迟疑记录</div>';
   } else {
     const maxH = Math.max(...qRows.map(q => q.maxHesitation), 1);
     questionChart = qRows.map(q => {
       const label = (q.chapter ? q.chapter + '·' : '') + q.question;
-      const onClickHtml = buildJumpOnClickAttr(q.key, label);
-      return buildBarRow({label: label, value: q.maxHesitation}, maxH, '#f39c12', onClickHtml);
+      const dataAttr = 'data-analysis-key="' + escapeAttr(q.key) + '"';
+      return buildBarRow({label: label, value: q.maxHesitation, title: label}, maxH, '#f39c12', dataAttr);
     }).join('');
   }
 
@@ -3350,51 +3464,222 @@ function renderAnalysis() {
       '</div>' +
     '</div>' +
     '<div style="padding:10px 18px 18px;border-top:1px solid #eee">' +
-      '<h5 style="margin:8px 0 12px 0;font-size:14px">① 各章节错题数</h5>' + chapterChart +
+      '<h5 style="margin:8px 0 12px 0;font-size:14px">① 错题次数最多 Top 40（点击可查看原题）</h5>' + mostWrongChart +
     '</div>' +
     '<div style="padding:10px 18px 18px;border-top:1px solid #eee">' +
-      '<h5 style="margin:8px 0 12px 0;font-size:14px">② 迟疑最久的题目（Top 10，单位：秒，点击可查看原题）</h5>' + questionChart +
+      '<h5 style="margin:8px 0 12px 0;font-size:14px">② 迟疑最久的题目（Top 40，单位：秒，点击可查看原题）</h5>' + questionChart +
     '</div>' +
     '<div style="padding:6px 18px 18px;text-align:right;border-top:1px solid #eee">' +
-      '<button class="btn btn-secondary" onclick="if(confirm(\'确认清空所有分析数据和答题记录？\')){resetAllStats();renderAnalysis();}">清空所有数据</button>' +
+    '<button class="btn btn-secondary" onclick="if(confirm(\'确认清空所有分析数据和答题记录？\')){resetAllStats();renderAnalysis();}">清空所有数据</button>' +
     '</div>';
   } catch(e) { console.error('renderAnalysis error:', e); }
-}
 
-// 点击分析页某行 → 跳转到对应题目详情
-function jumpToAnalysisQuestion(qKeyVal) {
-  const qa = quizAnalysis.byQuestion && quizAnalysis.byQuestion[qKeyVal];
-  if (!qa) return;
+  // 事件委托：注册在 analysisEl 上，点击任何带 data-analysis-chapter / data-analysis-key 的节点即跳转。
+  // 注意必须放在 try/catch 外面，否则前面任何报错都会导致"不能点"。
+  if (analysisEl && !analysisEl.dataset.analysisClickBound) {
+    analysisEl.dataset.analysisClickBound = '1';
+    console.log('[analysis] 事件委托已注册');
 
-  // 构造一个和现有题目结构一致的对象，用于浏览视图
-  // 若题库中有这道题（通过 key 匹配），优先用原题；否则用 qa 里保留的副本
-  let q = ALL_QUESTIONS.find(x => qKey(x) === qKeyVal);
-  if (!q) {
-    q = {question: qa.question, chapter: qa.chapter, type: 'single_choice', answer: '', options: []};
+    analysisEl.addEventListener('click', function(e) {
+      let node = null;
+      let cur = e.target;
+      const maxDepth = 20;
+      for (let i = 0; i < maxDepth && cur && cur !== analysisEl.parentNode; i++) {
+        if (cur.nodeType === 1) {
+          const ch = cur.dataset && cur.dataset.analysisChapter;
+          const ck = cur.dataset && cur.dataset.analysisKey;
+          if (ch || ck) { node = cur; break; }
+          const gch = cur.getAttribute && cur.getAttribute('data-analysis-chapter');
+          const gck = cur.getAttribute && cur.getAttribute('data-analysis-key');
+          if (gch || gck) { node = cur; break; }
+        }
+        cur = cur.parentNode;
+      }
+      console.log('[analysis] 点击, target=', e.target, '命中节点=', node);
+      if (!node) return;
+
+      const chapterVal = node.getAttribute('data-analysis-chapter');
+      const keyVal = node.getAttribute('data-analysis-key');
+      try {
+        const flashTarget = node.closest ? node.closest('.analysis-row, .analysis-svg') : node;
+        if (flashTarget && flashTarget.classList) {
+          flashTarget.classList.add('is-flash');
+          setTimeout(() => flashTarget.classList.remove('is-flash'), 200);
+        }
+        console.log('[analysis] 准备跳转, chapter=', chapterVal, 'key=', keyVal);
+        if (chapterVal) {
+          jumpToAnalysisQuestion({ chapter: chapterVal });
+        } else if (keyVal) {
+          jumpToAnalysisQuestion(keyVal);
+        }
+      } catch (err) {
+        console.error('[analysis click] 跳转失败:', err);
+      }
+    });
   }
 
-  // 切到"错题本"页面展示这道题
+  // 兜底：也绑一个在 document.body 上的事件委托，
+  // 万一 analysisEl 被 innerHTML 覆盖后原监听器也丢了（dataset 被重置），
+  // 全局委托仍然能工作。命中条件同上。
+  if (!document.body.dataset.analysisGlobalClickBound) {
+    document.body.dataset.analysisGlobalClickBound = '1';
+    document.body.addEventListener('click', function(e) {
+      let node = null;
+      let cur = e.target;
+      const maxDepth = 20;
+      for (let i = 0; i < maxDepth && cur && cur !== document.body.parentNode; i++) {
+        if (cur.nodeType === 1) {
+          // 只在分析区域内才响应（wb-analysis 容器内）
+          if (cur.closest && cur.closest('#wb-analysis') == null) { cur = cur.parentNode; continue; }
+          const ch = cur.dataset && cur.dataset.analysisChapter;
+          const ck = cur.dataset && cur.dataset.analysisKey;
+          if (ch || ck) { node = cur; break; }
+          const gch = cur.getAttribute && cur.getAttribute('data-analysis-chapter');
+          const gck = cur.getAttribute && cur.getAttribute('data-analysis-key');
+          if (gch || gck) { node = cur; break; }
+        }
+        cur = cur.parentNode;
+      }
+      if (!node) return;
+
+      const chapterVal = node.getAttribute('data-analysis-chapter');
+      const keyVal = node.getAttribute('data-analysis-key');
+      try {
+        const flashTarget = node.closest ? node.closest('.analysis-row, .analysis-svg') : node;
+        if (flashTarget && flashTarget.classList) {
+          flashTarget.classList.add('is-flash');
+          setTimeout(() => flashTarget.classList.remove('is-flash'), 200);
+        }
+        if (chapterVal) {
+          jumpToAnalysisQuestion({ chapter: chapterVal });
+        } else if (keyVal) {
+          jumpToAnalysisQuestion(keyVal);
+        }
+      } catch (err) {
+        console.error('[analysis global click] 跳转失败:', err);
+      }
+    });
+  }
+}
+
+// 点击分析页某行 → 切到"全部" tab → 展开对应题库+分组 → 打开题目浮窗
+// 支持两种调用形式：
+//   jumpToAnalysisQuestion('source::seq')          —— 按题目 key 跳
+//   jumpToAnalysisQuestion({ chapter: '导论·…' }) —— 按章节名跳（章节图用）
+function jumpToAnalysisQuestion(arg) {
+  console.log('[jumpToAnalysisQuestion] 入参:', arg, 'typeof:', typeof arg);
+  try {
+  // 0. 当前打开的错题本兜底
+  if (!currentWrongBookId || !wrongBooks[currentWrongBookId]) {
+    const ids = Object.keys(wrongBooks);
+    if (ids.length > 0) {
+      currentWrongBookId = ids[0];
+    } else {
+      wrongBooks['默认'] = { name: '默认', temp: {}, long: {}, notes: {} };
+      currentWrongBookId = '默认';
+      saveWrongBooks();
+    }
+  }
+
+  // 解析 key / 章节
+  let qKeyVal = null;
+  let q = null;
+  if (typeof arg === 'string') {
+    qKeyVal = arg;
+    // 容错：先按原 key 找；如果 ALL_QUESTIONS 里没有，再去掉"双冒号"和"单冒号"两种格式都试
+    q = ALL_QUESTIONS.find(x => qKey(x) === qKeyVal);
+    if (!q) {
+      // 把形如 "src::seq" 拆成 src 和 seq，模糊匹配
+      const parts = qKeyVal.split(':').filter(Boolean);
+      if (parts.length >= 2) {
+        const seq = parts[parts.length - 1].trim();
+        const src = parts.slice(0, parts.length - 1).join(':').trim();
+        q = ALL_QUESTIONS.find(x => (x.source || '').trim() === src && String(x.seq) === seq);
+        if (q) qKeyVal = qKey(q);
+      }
+    }
+    if (!q) {
+      // 最后一档：按章节（key 里章节信息）模糊找
+      q = ALL_QUESTIONS.find(x => (qKeyVal + '').includes(x.chapter || '__nope__'));
+    }
+  } else if (arg && typeof arg === 'object') {
+    if (arg.chapter) {
+      q = ALL_QUESTIONS.find(x => x.chapter === arg.chapter);
+      if (q) qKeyVal = qKey(q);
+    } else if (arg.key) {
+      qKeyVal = arg.key;
+      q = ALL_QUESTIONS.find(x => qKey(x) === qKeyVal);
+    }
+  }
+  console.log('[jumpToAnalysisQuestion] 解析结果 q=', q, 'qKeyVal=', qKeyVal);
+
+  // 最终兜底：如果连题也找不到，就塞一个空题到 temp，保证浮窗一定能打开
+  if (!q) {
+    q = {
+      question: (typeof arg === 'string' ? arg : (arg && arg.chapter ? arg.chapter : '题目')) + '（分析页跳转）',
+      chapter: (typeof arg === 'string' ? '' : (arg && arg.chapter ? arg.chapter : '')),
+      type: 'single_choice',
+      answer: '',
+      options: []
+    };
+    if (!qKeyVal) qKeyVal = 'analysis_fallback_' + Date.now();
+  }
+
+  // 1. 把题目塞到当前本的 temp（如果本来不在 temp/long 里）
+  const curWb = getCurrentWB();
+  let targetCat = 'temp';
+  if (curWb.long[qKeyVal]) targetCat = 'long';
+  else if (!curWb.temp[qKeyVal]) {
+    curWb.temp[qKeyVal] = qObj(q);
+    saveWrongBooks();
+  }
+
+  // 2. 切到错题本浏览页 → 切到"全部" tab
   show('page-wrongbook');
-  wbList = [{key: qKeyVal, q: q, cat: 'analysis'}];
-  wbIndex = 0;
-
-  // 临时切换显示：把视图改为单题详情
-  const cardEl = document.getElementById('wb-card');
-  const counterEl = document.getElementById('wb-counter');
-  cardEl.classList.remove('hidden');
-  document.getElementById('wb-analysis').classList.add('hidden');
-
-  // 高亮"全部"作为活跃状态（和原筛选逻辑保持一致）
-  document.querySelectorAll('#wb-filter-row .chip').forEach(c => {
-    c.classList.remove('active', 'active-green');
-    c.style.background = ''; c.style.color = ''; c.style.borderColor = '';
-  });
-  const allChip = document.querySelector('#wb-filter-row .chip[data-filter="all"]');
+  console.log('[jumpToAnalysisQuestion] show(page-wrongbook) 完成, 容器class=', document.getElementById('page-wrongbook') && document.getElementById('page-wrongbook').className);
+  wbFilter = 'all';
+  document.querySelectorAll('.wb-global-tabs .chip').forEach(c => c.classList.remove('active'));
+  const allChip = document.querySelector('.wb-global-tabs .chip[data-filter="all"]');
   if (allChip) allChip.classList.add('active');
 
-  counterEl.textContent = '分析跳转 · 1 题';
-  // 直接渲染这道题的详情视图
-  renderSingleAnalysisItem(q, qKeyVal, qa);
+  // 3. 基于最新 data 重建三级列表
+  buildWbGrouped();
+
+  // 4. 展开它所在的题库 + 分组（如果找不到就全部展开）
+  const foundItem = findWbGroup(qKeyVal, targetCat);
+  console.log('[jumpToAnalysisQuestion] findWbGroup 结果:', foundItem);
+  if (foundItem) {
+    wbExpanded.source[foundItem.sourceName] = true;
+    wbExpanded.cat[foundItem.sourceName + ':' + targetCat] = true;
+  } else {
+    wbGrouped.forEach(src => {
+      wbExpanded.source[src.name] = true;
+      wbExpanded.cat[src.name + ':temp'] = true;
+      wbExpanded.cat[src.name + ':long'] = true;
+    });
+  }
+  renderWbThreeLevel();
+
+  // 5. 打开浮窗
+  console.log('[jumpToAnalysisQuestion] 调用 wbOpenDetail, key=', qKeyVal, 'cat=', targetCat);
+  wbOpenDetail(qKeyVal, targetCat);
+  console.log('[jumpToAnalysisQuestion] 完成');
+  } catch (e) {
+    console.error('[jumpToAnalysisQuestion] 出错:', e);
+  }
+}
+// 挂到 window 上，保证 inline onclick 能找到
+window.jumpToAnalysisQuestion = jumpToAnalysisQuestion;
+
+// 辅助：在 wbGrouped 中找到 key 所在的 source + 分类
+function findWbGroup(key, cat) {
+  for (let i = 0; i < wbGrouped.length; i++) {
+    const src = wbGrouped[i];
+    if (src[cat] && src[cat].some(it => it.key === key)) {
+      return { sourceName: src.name, cat: cat };
+    }
+  }
+  return null;
 }
 
 function renderSingleAnalysisItem(q, qKeyVal, qa) {
@@ -3488,8 +3773,9 @@ function renderWbThreeLevel() {
     html += '</div>';
   });
   html += '</div>';
-  html += '<div id="wb-detail" class="wb-detail hidden"></div>';
   cardEl.innerHTML = html;
+  // 注意：#wb-detail 必须挂在 wb-card 外面（page-wrongbook 里），所以这里不再 append 到 cardEl。
+  // wbOpenDetail 自己会负责创建/迁移这个节点。
 }
 
 function buildWbCatBlock(src, cat) {
@@ -3532,16 +3818,59 @@ function wbToggleCat(key) {
 }
 
 function wbOpenDetail(key, cat) {
-  const store = cat === 'temp' ? wrongBookTemp : wrongBookLong;
-  const q = store[key];
-  if (!q) return;
-  const detail = document.getElementById('wb-detail');
-  if (!detail) return;
-  if (detail.dataset.key === key && detail.dataset.cat === cat) {
-    detail.classList.add('hidden');
-    detail.dataset.key = '';
-    return;
+  // 多错题本：始终从当前打开的错题本 (currentWrongBookId) 取，避免"选了A本打开B本却找不到题"
+  const curWb = getCurrentWB();
+  const tempStore = curWb.temp;
+  const longStore = curWb.long;
+  const notesStore = curWb.notes;
+  const cardEl = document.getElementById('wb-card');
+
+  let q = (cat === 'long' ? longStore[key] : tempStore[key]);
+  console.log('[wbOpenDetail] 拿题, key=', key, 'cat=', cat, '当前temp有数据:', Object.keys(tempStore).length, 'long有数据:', Object.keys(longStore).length, '拿到q:', q);
+  if (!q) {
+    // 兜底：当前错题本里没有这道题（可能跳转来自分析页 / 来自其他本 / temp 刚被清空），
+    // 直接从 ALL_QUESTIONS 找原题；若仍然没有，再尝试用 key 模糊匹配。
+    if (typeof ALL_QUESTIONS !== 'undefined' && Array.isArray(ALL_QUESTIONS)) {
+      q = ALL_QUESTIONS.find(x => {
+        try { return qKey(x) === key; } catch(e) { return false; }
+      });
+      if (!q) {
+        // 模糊：按 source/seq 拆解 key
+        const parts = (key || '').split(':').filter(Boolean);
+        if (parts.length >= 2) {
+          const seq = parts[parts.length - 1].trim();
+          const src = parts.slice(0, parts.length - 1).join(':').trim();
+          q = ALL_QUESTIONS.find(x => (x.source || '').trim() === src && String(x.seq) === seq);
+        }
+      }
+    }
+    if (!q) {
+      console.warn('[wbOpenDetail] 找不到题目 key=', key, 'cat=', cat);
+      return;
+    }
+    // 顺手把题塞到当前本的 temp，方便下次从三级列表也能打开
+    if (cat !== 'long' && curWb && curWb.temp) {
+      curWb.temp[key] = qObj(q);
+      saveWrongBooks();
+    }
+    console.log('[wbOpenDetail] 从 ALL_QUESTIONS 兜底拿到题, key=', key);
   }
+  let detail = document.getElementById('wb-detail');
+  // 详情容器必须挂在 wb-card 之外，否则 renderWbThreeLevel 重写 wb-card.innerHTML 时会把它覆盖掉
+  if (!detail || (cardEl && detail.parentNode === cardEl)) {
+    detail = document.createElement('div');
+    detail.id = 'wb-detail';
+    detail.className = 'wb-detail hidden';
+    const target = (cardEl && cardEl.parentNode) || document.body;
+    target.appendChild(detail);
+  }
+  // 注释：去掉"点同一 key 就关闭浮窗"的逻辑。浮窗由 wbCloseDetail() 显式关闭，
+  // 否则委托的 click 冒泡可能让用户感觉"一闪就消失"。
+  // if (detail.dataset.key === key && detail.dataset.cat === cat) {
+  //   detail.classList.add('hidden');
+  //   detail.dataset.key = '';
+  //   return;
+  // }
   detail.dataset.key = key;
   detail.dataset.cat = cat;
 
@@ -3587,9 +3916,9 @@ function wbOpenDetail(key, cat) {
     html += '<div class="detail-opt correct">正确答案：' + escHtml(q.answer || '') + '</div>';
   }
 
-  // 备注显示
-  const noteKey = qKey(q);
-  const noteVal = wrongBookNotes[noteKey];
+  // 备注显示（来自当前错题本的 notes）
+  const noteKey = key;
+  const noteVal = notesStore[noteKey];
   if (noteVal) {
     html += '<div class="note-display">📝 ' + escHtml(noteVal) + '</div>';
   }
@@ -3626,6 +3955,12 @@ function wbOpenDetail(key, cat) {
   }
 
   detail.classList.remove('hidden');
+  // 关键诊断：浮层在屏幕内是否真正可见
+  const rect = detail.getBoundingClientRect();
+  const style = window.getComputedStyle(detail);
+  console.log('[wbOpenDetail] 写入并显示, parent=', detail.parentNode && detail.parentNode.id, 'detail class=', detail.className, 'isInDocument=', document.body.contains(detail));
+  console.log('[wbOpenDetail] 浮层rect:', {top: rect.top, left: rect.left, width: rect.width, height: rect.height, bottom: rect.bottom, right: rect.right}, '视口高:', window.innerHeight);
+  console.log('[wbOpenDetail] 浮层css:', {position: style.position, bottom: style.bottom, transform: style.transform, display: style.display, visibility: style.visibility, opacity: style.opacity, zIndex: style.zIndex});
 }
 
 function wbCloseDetail() {
@@ -3651,12 +3986,22 @@ function wbSaveDetailNote(noteKey) {
   const ta = document.getElementById('wb-note-text');
   if (!ta) return;
   const val = ta.value.trim();
+  // 多错题本：备注写入当前打开的错题本 (currentWrongBookId)
+  const curWb = currentWrongBookId && wrongBooks[currentWrongBookId]
+    ? wrongBooks[currentWrongBookId]
+    : getTargetWB();
   if (val) {
-    wrongBookNotes[noteKey] = val;
+    curWb.notes[noteKey] = val;
   } else {
-    delete wrongBookNotes[noteKey];
+    delete curWb.notes[noteKey];
   }
-  localStorage.setItem('wrongBookNotes', JSON.stringify(wrongBookNotes));
+  // 加了备注 → 自动把当前题目从 temp 转成 long（若存在于 temp）
+  const q = curWb.temp[noteKey];
+  if (q) {
+    curWb.long[noteKey] = q;
+    delete curWb.temp[noteKey];
+  }
+  saveWrongBooks();
   // 刷新浮层以更新备注显示
   const key = document.getElementById('wb-detail').dataset.key;
   const cat = document.getElementById('wb-detail').dataset.cat;
@@ -3810,24 +4155,24 @@ function refreshWrongBookHome() {
 // 2) wbRemove() —— 老版（基于 wbIndex/wbList）
 function wbRemove(key, cat) {
   let removed = false;
+  const curWb = getCurrentWB();
   if (key && cat) {
     if (cat === 'temp') {
-      if (wrongBookTemp[key]) { delete wrongBookTemp[key]; removed = true; }
+      if (curWb.temp[key]) { delete curWb.temp[key]; removed = true; }
     } else if (cat === 'long') {
-      if (wrongBookLong[key]) { delete wrongBookLong[key]; removed = true; }
+      if (curWb.long[key]) { delete curWb.long[key]; removed = true; }
     }
   } else if (wbList.length > 0) {
     const item = wbList[wbIndex];
     const k = item.key;
     if (item.cat === 'temp') {
-      if (wrongBookTemp[k]) { delete wrongBookTemp[k]; removed = true; }
+      if (curWb.temp[k]) { delete curWb.temp[k]; removed = true; }
     } else if (item.cat === 'long') {
-      if (wrongBookLong[k]) { delete wrongBookLong[k]; removed = true; }
+      if (curWb.long[k]) { delete curWb.long[k]; removed = true; }
     }
   }
   if (!removed) return;
-  localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
-  localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
+  saveWrongBooks();
   refreshWrongBookHome();
 
   if (key && cat) {
@@ -3861,34 +4206,34 @@ function wbRemove(key, cat) {
 
 function wbToggleCategory(key, cat) {
   let q = null;
+  const curWb = getCurrentWB();
   if (key && cat) {
     if (cat === 'temp') {
-      if (!wrongBookTemp[key]) return;
-      q = wrongBookTemp[key];
-      delete wrongBookTemp[key];
-      wrongBookLong[key] = q;
+      if (!curWb.temp[key]) return;
+      q = curWb.temp[key];
+      delete curWb.temp[key];
+      curWb.long[key] = q;
     } else if (cat === 'long') {
-      if (!wrongBookLong[key]) return;
-      q = wrongBookLong[key];
-      delete wrongBookLong[key];
-      wrongBookTemp[key] = q;
+      if (!curWb.long[key]) return;
+      q = curWb.long[key];
+      delete curWb.long[key];
+      curWb.temp[key] = q;
     }
   } else if (wbList.length > 0) {
     const item = wbList[wbIndex];
     const k = item.key;
     q = item.q;
     if (item.cat === 'temp') {
-      delete wrongBookTemp[k];
-      wrongBookLong[k] = q;
+      delete curWb.temp[k];
+      curWb.long[k] = q;
     } else if (item.cat === 'long') {
-      delete wrongBookLong[k];
-      wrongBookTemp[k] = q;
+      delete curWb.long[k];
+      curWb.temp[k] = q;
     }
   } else {
     return;
   }
-  localStorage.setItem('wrongBookTemp', JSON.stringify(wrongBookTemp));
-  localStorage.setItem('wrongBookLong', JSON.stringify(wrongBookLong));
+  saveWrongBooks();
   refreshWrongBookHome();
 
   if (key && cat) {
@@ -3957,38 +4302,266 @@ function getChapterOrder(history) {
 
 // —— 渲染所有图表 ——
 function renderAllCharts(container, filterTime) {
+  if (!container) return;
   const history = loadStatsData(filterTime);
   if (!history) {
     container.innerHTML = '<div style="text-align:center;color:#888;padding:40px">暂无答题记录</div>';
     return;
   }
 
+  // 预计算"每章/每题库内错题次数最多的题"，渲染时塞到 data-* 上，tooltip 直接读
+  const mostWrongIndex = buildChartMostWrongIndex();
+
   let html = '';
 
   // 1. 各章节学习次数（堆积百分比柱状图）
-  html += renderChapterStudyChart(history, filterTime);
+  html += renderChapterStudyChart(history, filterTime, mostWrongIndex);
 
   // 2. 各题型做题次数
   html += renderTypeCountChart(history);
 
   // 3. 各章节总正确次数
-  html += renderChapterCorrectChart(history);
+  html += renderChapterCorrectChart(history, mostWrongIndex);
 
   // 4. 各章节总错误次数
-  html += renderChapterWrongChart(history);
+  html += renderChapterWrongChart(history, mostWrongIndex);
 
   // 5. 各题库做题次数
-  html += renderSourceCountChart(history);
+  html += renderSourceCountChart(history, mostWrongIndex);
 
   container.innerHTML = html;
+
+  // 安装 chart-tooltip 事件委托（mouseover/click 触发；空白处点击关闭）
+  installChartTooltip(container);
 }
+
+// —— 构建"每章/每题库内错题次数最多题"的索引 ——
+// 用 quizAnalysis.byQuestion（结构: {key: {question, chapter, source?, countWrong, countCorrect, ...}}）
+// 兼容 source 字段可能缺失：从 ALL_QUESTIONS 兜底补
+function buildChartMostWrongIndex() {
+  const result = { overall: null, byChapter: {}, bySource: {} };
+  try {
+    const bq = (typeof quizAnalysis !== 'undefined' && quizAnalysis && quizAnalysis.byQuestion) || {};
+    const items = Object.keys(bq).map(k => ({
+      key: k,
+      question: bq[k].question,
+      chapter: bq[k].chapter,
+      source: bq[k].source || (typeof qKey === 'function' && typeof ALL_QUESTIONS !== 'undefined'
+        ? ((ALL_QUESTIONS.find(x => qKey(x) === k) || {}).source)
+        : null) || '未知',
+      countWrong: bq[k].countWrong || 0
+    })).filter(x => x.countWrong > 0);
+
+    if (items.length) {
+      items.sort((a, b) => b.countWrong - a.countWrong);
+      result.overall = items[0];
+      items.forEach(it => {
+        if (!result.byChapter[it.chapter] || it.countWrong > result.byChapter[it.chapter].countWrong) {
+          result.byChapter[it.chapter] = it;
+        }
+        if (!result.bySource[it.source] || it.countWrong > result.bySource[it.source].countWrong) {
+          result.bySource[it.source] = it;
+        }
+      });
+    }
+  } catch (e) { /* 静默：tooltip 在没数据时显示"暂无错题" */ }
+  return result;
+}
+
+// 把数据属性写到 <rect> 上：chapter/source/timeKey/wrongCount/worstKey/worstQuestion
+// 顶层 escapeHtmlAttr / escapeXml —— 这两个函数原本定义在 renderAnalysis 内部，统计页 tooltip 也是顶层调用，所以提到顶层
+function escapeHtmlAttr(s) {
+  s = (s == null ? '' : String(s));
+  return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function escapeXml(s) {
+  s = (s == null ? '' : String(s));
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+// showChartTooltipNear 等旧代码用 escapeAttr 这个名字
+var escapeAttr = escapeHtmlAttr;
+function chartBarAttrs(scope, item, mostWrongIndex) {
+  let attrs = ' class="chart-bar"';
+  if (!item) return attrs;
+  attrs += ' data-chart-scope="' + escapeHtmlAttr(scope) + '"';
+  if (item.chapter) attrs += ' data-chart-chapter="' + escapeHtmlAttr(item.chapter) + '"';
+  if (item.source)  attrs += ' data-chart-source="'  + escapeHtmlAttr(item.source)  + '"';
+  if (item.timeKey) attrs += ' data-chart-timekey="' + escapeHtmlAttr(item.timeKey) + '"';
+  if (item.cnt != null) attrs += ' data-chart-wrongcount="' + item.cnt + '"';
+  if (item.total != null) attrs += ' data-chart-total="' + item.total + '"';
+  // 找"本章/本题库内错题最多题"
+  let worst = null;
+  if (mostWrongIndex) {
+    if (item.chapter && mostWrongIndex.byChapter[item.chapter]) worst = mostWrongIndex.byChapter[item.chapter];
+    else if (item.source && mostWrongIndex.bySource[item.source]) worst = mostWrongIndex.bySource[item.source];
+    else if (mostWrongIndex.overall) worst = mostWrongIndex.overall;
+  }
+  if (worst) {
+    attrs += ' data-chart-worst-key="' + escapeHtmlAttr(worst.key) + '"';
+    attrs += ' data-chart-worst-question="' + escapeHtmlAttr(worst.question || '') + '"';
+    attrs += ' data-chart-worst-count="' + worst.countWrong + '"';
+  }
+  return attrs;
+}
+
+// —— 图表 tooltip 浮层（单例） ——
+// 鼠标悬停：mouseover/mouseout 触发；触屏点击：click 触发；点击空白处/再点同一色块：关闭
+let _chartTooltipEl = null;
+function getChartTooltipEl() {
+  if (_chartTooltipEl && document.body.contains(_chartTooltipEl)) return _chartTooltipEl;
+  let el = document.getElementById('chart-tooltip');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'chart-tooltip';
+    el.className = 'chart-tooltip hidden';
+    document.body.appendChild(el);
+  }
+  _chartTooltipEl = el;
+  return el;
+}
+function hideChartTooltip() {
+  const el = getChartTooltipEl();
+  el.classList.add('hidden');
+}
+function showChartTooltipNear(target) {
+  const el = getChartTooltipEl();
+  const scope = target.dataset.chartScope;
+  const chapter = target.dataset.chartChapter || '';
+  const source  = target.dataset.chartSource  || '';
+  const timeKey = target.dataset.chartTimekey || '';
+  const wrongCount = parseInt(target.dataset.chartWrongcount || '0', 10);
+  const total = parseInt(target.dataset.chartTotal || '0', 10);
+  const worstKey = target.dataset.chartWorstKey || '';
+  const worstQ   = target.dataset.chartWorstQuestion || '';
+  const worstCnt = parseInt(target.dataset.chartWorstCount || '0', 10);
+
+  let title = '';
+  if (scope === 'chapter-study' || scope === 'chapter-correct' || scope === 'chapter-wrong') {
+    title = chapter;
+  } else if (scope === 'source') {
+    title = source;
+  } else if (scope === 'type') {
+    title = target.dataset.chartTypeLabel || scope;
+  } else {
+    title = chapter || source || scope;
+  }
+
+  // 构造 HTML
+  let html = '<div class="ct-title">' + escapeXml(title) + '</div>';
+  let metaParts = [];
+  if (scope === 'chapter-study') {
+    metaParts.push('做题次数：' + total);
+    metaParts.push('错题数：' + wrongCount);
+    if (timeKey) metaParts.push('时段：' + timeKey);
+  } else if (scope === 'chapter-correct' || scope === 'chapter-wrong') {
+    metaParts.push(scope === 'chapter-correct' ? '正确次数' : '错误次数');
+    metaParts.push(wrongCount + ' 次');
+  } else if (scope === 'source') {
+    metaParts.push('做题次数：' + total);
+  } else if (scope === 'type') {
+    metaParts.push('做题次数：' + total);
+  }
+  if (metaParts.length) html += '<div class="ct-meta">' + metaParts.join(' · ') + '</div>';
+
+  if (worstKey) {
+    const qtext = (worstQ || '').substring(0, 40) + ((worstQ || '').length > 40 ? '…' : '');
+    html += '<a class="ct-wrong-q" data-worst-key="' + escapeAttr(worstKey) + '" href="javascript:void(0)">'
+      + '<div class="ct-q-title">📌 ' + escapeXml(qtext) + '</div>'
+      + '<div class="ct-q-meta">本章/本库内错题最多：' + worstCnt + ' 次 · 点击查看原题</div>'
+      + '</a>';
+  } else {
+    html += '<div class="ct-empty">该范围内暂无错题记录</div>';
+  }
+
+  el.innerHTML = html;
+  el.classList.remove('hidden');
+
+  // 定位：靠近点击点 / 鼠标位置
+  let cx, cy;
+  if (window._lastChartEvent && window._lastChartEvent.clientX) {
+    cx = window._lastChartEvent.clientX;
+    cy = window._lastChartEvent.clientY;
+  } else {
+    const r = target.getBoundingClientRect();
+    cx = r.left + r.width / 2;
+    cy = r.top;
+  }
+  const elW = el.offsetWidth || 240;
+  const elH = el.offsetHeight || 100;
+  let left = cx + 12;
+  let top  = cy + 12;
+  if (left + elW > window.innerWidth - 8)  left = window.innerWidth - elW - 8;
+  if (top  + elH > window.innerHeight - 8) top  = window.innerHeight - elH - 8;
+  if (left < 8) left = 8;
+  if (top  < 8) top  = 8;
+  el.style.left = left + 'px';
+  el.style.top  = top  + 'px';
+}
+
+function installChartTooltip(container) {
+  if (container._chartTooltipBound) return;
+  container._chartTooltipBound = true;
+
+  container.addEventListener('mouseover', function(e) {
+    const bar = e.target && e.target.closest && e.target.closest('rect.chart-bar');
+    if (!bar) return;
+    window._lastChartEvent = e;
+    showChartTooltipNear(bar);
+  });
+  container.addEventListener('mouseout', function(e) {
+    const bar = e.target && e.target.closest && e.target.closest('rect.chart-bar');
+    if (!bar) return;
+    // 移入到 tooltip 内部不关闭
+    const related = e.relatedTarget;
+    if (related && _chartTooltipEl && _chartTooltipEl.contains(related)) return;
+    hideChartTooltip();
+  });
+  // 触屏：click 切换（点同一色块关闭，点其它色块切换，点空白关闭）
+  container.addEventListener('click', function(e) {
+    const bar = e.target && e.target.closest && e.target.closest('rect.chart-bar');
+    if (bar) {
+      window._lastChartEvent = e;
+      const el = getChartTooltipEl();
+      if (!el.classList.contains('hidden') && el._lastBar === bar) {
+        hideChartTooltip();
+        el._lastBar = null;
+      } else {
+        showChartTooltipNear(bar);
+        el._lastBar = bar;
+      }
+      e.stopPropagation();
+    }
+  });
+}
+
+// 空白处点击关闭
+document.addEventListener('click', function(e) {
+  if (!_chartTooltipEl) return;
+  if (_chartTooltipEl.classList.contains('hidden')) return;
+  // 点击 tooltip 内部的"错题最多题"链接 → 跳转
+  const qLink = e.target.closest && e.target.closest('.ct-wrong-q');
+  if (qLink) {
+    const k = qLink.dataset.worstKey;
+    if (k) {
+      hideChartTooltip();
+      // 复用你已经验证的跳转路径
+      if (typeof jumpToAnalysisQuestion === 'function') jumpToAnalysisQuestion(k);
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    return;
+  }
+  if (e.target.closest('rect.chart-bar')) return;
+  if (e.target.closest('.chart-tooltip')) return;
+  hideChartTooltip();
+});
 
 // —— 调色板 ——
 const STATS_COLORS = ['#4a90d9','#27ae60','#e74c3c','#f39c12','#8e44ad','#1abc9c','#e67e22','#2c3e50','#16a085','#c0392b','#2980b9','#8e44ad','#d35400','#7f8c8d','#3498db','#2ecc71'];
 function getColor(idx) { return STATS_COLORS[idx % STATS_COLORS.length]; }
 
 // —— 1. 堆积百分比柱状图：各章节学习次数 ——
-function renderChapterStudyChart(history, filterTime) {
+function renderChapterStudyChart(history, filterTime, mostWrongIndex) {
   // 按时间键 + 章节分组
   const timeKeys = [...new Set(history.map(h => h.timeKey))].sort();
   const chapters = getChapterOrder(history);
@@ -4007,19 +4580,31 @@ function renderChapterStudyChart(history, filterTime) {
     timeTotals[h.timeKey] = (timeTotals[h.timeKey] || 0) + 1;
   });
 
-  const W = 600, H = 480, PAD = { top: 30, right: 20, bottom: 150, left: 45 };
+  // 错题数（按章节累加，不限时间）
+  const wrongByChapter = {};
+  if (typeof quizAnalysis !== 'undefined' && quizAnalysis && quizAnalysis.byChapter) {
+    Object.keys(quizAnalysis.byChapter).forEach(ch => {
+      wrongByChapter[ch] = quizAnalysis.byChapter[ch].wrong || 0;
+    });
+  }
+
+  const W = 600, H = 520, PAD = { top: 30, right: 20, bottom: 170, left: 55 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
-  const barW = Math.max(14, Math.min(50, chartW / timeKeys.length * 0.7));
-  const gap = chartW / timeKeys.length;
+  const barW = Math.max(14, Math.min(50, chartW / Math.max(timeKeys.length,1) * 0.7));
+  const gap = chartW / Math.max(timeKeys.length, 1);
 
-  let svg = `<h4 style="margin:12px 0 6px;color:var(--text,#333)">📊 各章节学习次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
+  // 用 viewBox，让 SVG 在窄屏时自动缩放；容器 max-width:100%
+  let svg = `<h4 style="margin:12px 0 6px;color:var(--text,#333)">📊 各章节学习次数</h4>
+    <div style="max-width:100%;overflow-x:auto">
+      <svg viewBox="0 0 ${W} ${H}" class="chart-svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
+      <g transform="translate(${PAD.left},${PAD.top})">`;
 
   // Y轴网格（百分比）
   for (let pct = 0; pct <= 100; pct += 20) {
     const y = chartH - (pct / 100) * chartH;
     svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
-    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${pct}%</text>`;
+    svg += `<text x="-6" y="${y+5}" text-anchor="end" font-size="14" fill="#999">${pct}%</text>`;
   }
 
   // 每个时间点绘制堆积柱
@@ -4034,28 +4619,32 @@ function renderChapterStudyChart(history, filterTime) {
       const pct = cnt / total;
       const barH = pct * chartH;
       const y = chartH - stackBottom - barH;
-      svg += `<rect x="${cx - barW/2}" y="${y}" width="${barW}" height="${Math.max(barH, 0.5)}" fill="${getColor(chapters.indexOf(ch))}" opacity=".85" rx="1"/>`;
-      // 如果比例 > 5%，显示文字
-      if (pct > 0.05) {
-        svg += `<text x="${cx}" y="${y + barH/2 + 4}" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">${Math.round(pct*100)}%</text>`;
+      const wrongCount = wrongByChapter[ch] || 0;
+      const item = { chapter: ch, timeKey: tk, cnt: wrongCount, total: total };
+      const extraAttrs = chartBarAttrs('chapter-study', item, mostWrongIndex);
+      svg += `<rect x="${cx - barW/2}" y="${y}" width="${barW}" height="${Math.max(barH, 0.5)}" fill="${getColor(chapters.indexOf(ch))}" opacity=".85" rx="1"${extraAttrs}/>`;
+      // 只有当柱内剩余高度 > 18 时，才把百分比写进柱内；否则省略，避免小屏拥挤
+      if (pct > 0.08 && barH > 18) {
+        svg += `<text x="${cx}" y="${y + barH/2 + 5}" text-anchor="middle" font-size="14" fill="#fff" font-weight="600">${Math.round(pct*100)}%</text>`;
       }
       stackBottom += barH;
     });
 
     // 总做题数标注
-    svg += `<text x="${cx}" y="${chartH + 14}" text-anchor="middle" font-size="10" fill="#999">${total}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 20}" text-anchor="middle" font-size="14" fill="#999">${total}</text>`;
 
     // X轴标签 - 旋转25度，位置下移
     const label = filterTime === 'week' ? tk.replace('W','') : tk.slice(5);
-    svg += `<text x="${cx}" y="${chartH + 45}" text-anchor="end" font-size="10" fill="#888" transform="rotate(-25,${cx},${chartH + 45})">${label}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 52}" text-anchor="end" font-size="12" fill="#888" transform="rotate(-25,${cx},${chartH + 52})">${label}</text>`;
   });
 
   // 图例
   const legendChapters = chapters.filter(ch => history.some(h => h.chapter === ch));
-  svg += '</g></svg><div style="text-align:center;margin:2px 0 10px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:0 8px">';
+  svg += '</g></svg></div>';
+  svg += '<div class="legend-row">';
   legendChapters.forEach((ch, i) => {
-    svg += `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text,#333)">
-      <span style="width:10px;height:10px;border-radius:2px;background:${getColor(i)};flex-shrink:0"></span>${ch}</span>`;
+    svg += `<span class="legend-item">
+      <span class="legend-dot" style="background:${getColor(i)}"></span>${ch}</span>`;
   });
   svg += '</div>';
 
@@ -4063,7 +4652,7 @@ function renderChapterStudyChart(history, filterTime) {
 }
 
 // —— 2. 各题型做题次数 ——
-function renderTypeCountChart(history) {
+function renderTypeCountChart(history, mostWrongIndex) {
   const typeMap = {};
   history.forEach(h => {
     typeMap[h.type] = (typeMap[h.type] || 0) + 1;
@@ -4072,13 +4661,16 @@ function renderTypeCountChart(history) {
   if (types.length === 0) return '';
 
   const TYPE_LABELS = { single_choice: '单选', multiple_choice: '多选', true_false: '判断', calculation: '计算', subjective: '主观' };
-  const W = 600, H = 440, PAD = { top: 30, right: 20, bottom: 140, left: 50 };
+  const W = 600, H = 480, PAD = { top: 40, right: 20, bottom: 110, left: 60 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
-  const gap = chartW / types.length;
-  const maxVal = Math.max(...types.map(t => typeMap[t]));
+  const gap = chartW / Math.max(types.length,1);
+  const maxVal = Math.max(...types.map(t => typeMap[t]), 1);
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题型做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题型做题次数</h4>
+    <div style="max-width:100%;overflow-x:auto">
+      <svg viewBox="0 0 ${W} ${H}" class="chart-svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
+      <g transform="translate(${PAD.left},${PAD.top})">`;
 
   // Y轴
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
@@ -4086,7 +4678,7 @@ function renderTypeCountChart(history) {
     const y = chartH - (v / (maxVal || 1)) * chartH;
     if (y < 0) continue;
     svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
-    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+    svg += `<text x="-6" y="${y+5}" text-anchor="end" font-size="14" fill="#999">${v}</text>`;
   }
 
   types.forEach((t, i) => {
@@ -4094,18 +4686,23 @@ function renderTypeCountChart(history) {
     const barH = (cnt / (maxVal || 1)) * chartH;
     const cx = i * gap + gap / 2;
     const bw = Math.max(18, Math.min(60, gap * 0.6));
-    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"/>`;
-    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="12" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
+    const item = { cnt: cnt, total: cnt };
+    // 题型不绑定 chapter/source，额外用 chartTypeLabel 让 tooltip 标题显示"单选/多选/..."
+    let extraAttrs = chartBarAttrs('type', item, mostWrongIndex);
+    extraAttrs = extraAttrs.replace('class="chart-bar"', 'class="chart-bar" data-chart-type-label="' + escapeHtmlAttr(TYPE_LABELS[t] || t) + '"');
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"${extraAttrs}/>`;
+    // 数值标在柱顶
+    svg += `<text x="${cx}" y="${chartH - barH - 8}" text-anchor="middle" font-size="14" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
     const label = TYPE_LABELS[t] || t;
-    svg += `<text x="${cx}" y="${chartH + 35}" text-anchor="middle" font-size="12" fill="var(--text,#333)">${label}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 35}" text-anchor="middle" font-size="14" fill="#333">${label}</text>`;
   });
 
-  svg += '</g></svg>';
+  svg += '</g></svg></div>';
   return svg;
 }
 
 // —— 3. 各章节总正确次数 ——
-function renderChapterCorrectChart(history) {
+function renderChapterCorrectChart(history, mostWrongIndex) {
   const chMap = {};
   history.forEach(h => {
     if (h.correct) chMap[h.chapter] = (chMap[h.chapter] || 0) + 1;
@@ -4113,20 +4710,23 @@ function renderChapterCorrectChart(history) {
   const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
   if (chapters.length === 0) return '';
 
-  const W = 600, H = 400, PAD = { top: 30, right: 20, bottom: 140, left: 50 };
+  const W = 600, H = 420, PAD = { top: 40, right: 20, bottom: 130, left: 60 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
-  const gap = chartW / chapters.length;
-  const maxVal = Math.max(...chapters.map(ch => chMap[ch]));
+  const gap = chartW / Math.max(chapters.length,1);
+  const maxVal = Math.max(...chapters.map(ch => chMap[ch]), 1);
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节正确次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节正确次数</h4>
+    <div style="max-width:100%;overflow-x:auto">
+      <svg viewBox="0 0 ${W} ${H}" class="chart-svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
+      <g transform="translate(${PAD.left},${PAD.top})">`;
 
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
   for (let v = 0; v <= maxVal + yStep; v += yStep) {
     const y = chartH - (v / (maxVal || 1)) * chartH;
     if (y < 0) continue;
     svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
-    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+    svg += `<text x="-6" y="${y+5}" text-anchor="end" font-size="14" fill="#999">${v}</text>`;
   }
 
   chapters.forEach((ch, i) => {
@@ -4134,17 +4734,19 @@ function renderChapterCorrectChart(history) {
     const barH = (cnt / (maxVal || 1)) * chartH;
     const cx = i * gap + gap / 2;
     const bw = Math.max(14, Math.min(60, gap * 0.6));
-    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#27ae60" opacity=".8" rx="2"/>`;
-    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="600">${cnt}</text>`;
-    svg += `<text x="${cx}" y="${chartH + 35}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 35})">${ch}</text>`;
+    const item = { chapter: ch, cnt: cnt };
+    const extraAttrs = chartBarAttrs('chapter-correct', item, mostWrongIndex);
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#27ae60" opacity=".8" rx="2"${extraAttrs}/>`;
+    svg += `<text x="${cx}" y="${chartH - barH - 8}" text-anchor="middle" font-size="14" fill="#27ae60" font-weight="600">${cnt}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 42}" text-anchor="end" font-size="12" fill="#333" transform="rotate(-22,${cx},${chartH + 42})">${ch}</text>`;
   });
 
-  svg += '</g></svg>';
+  svg += '</g></svg></div>';
   return svg;
 }
 
 // —— 4. 各章节总错误次数 ——
-function renderChapterWrongChart(history) {
+function renderChapterWrongChart(history, mostWrongIndex) {
   const chMap = {};
   history.forEach(h => {
     if (!h.correct) chMap[h.chapter] = (chMap[h.chapter] || 0) + 1;
@@ -4152,20 +4754,23 @@ function renderChapterWrongChart(history) {
   const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
   if (chapters.length === 0) return '';
 
-  const W = 600, H = 400, PAD = { top: 30, right: 20, bottom: 140, left: 50 };
+  const W = 600, H = 420, PAD = { top: 40, right: 20, bottom: 130, left: 60 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
-  const gap = chartW / chapters.length;
-  const maxVal = Math.max(...chapters.map(ch => chMap[ch]));
+  const gap = chartW / Math.max(chapters.length,1);
+  const maxVal = Math.max(...chapters.map(ch => chMap[ch]), 1);
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节错误次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节错误次数</h4>
+    <div style="max-width:100%;overflow-x:auto">
+      <svg viewBox="0 0 ${W} ${H}" class="chart-svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
+      <g transform="translate(${PAD.left},${PAD.top})">`;
 
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
   for (let v = 0; v <= maxVal + yStep; v += yStep) {
     const y = chartH - (v / (maxVal || 1)) * chartH;
     if (y < 0) continue;
     svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
-    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+    svg += `<text x="-6" y="${y+5}" text-anchor="end" font-size="14" fill="#999">${v}</text>`;
   }
 
   chapters.forEach((ch, i) => {
@@ -4173,17 +4778,19 @@ function renderChapterWrongChart(history) {
     const barH = (cnt / (maxVal || 1)) * chartH;
     const cx = i * gap + gap / 2;
     const bw = Math.max(14, Math.min(60, gap * 0.6));
-    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#e74c3c" opacity=".8" rx="2"/>`;
-    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="11" fill="#e74c3c" font-weight="600">${cnt}</text>`;
-    svg += `<text x="${cx}" y="${chartH + 35}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 35})">${ch}</text>`;
+    const item = { chapter: ch, cnt: cnt };
+    const extraAttrs = chartBarAttrs('chapter-wrong', item, mostWrongIndex);
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#e74c3c" opacity=".8" rx="2"${extraAttrs}/>`;
+    svg += `<text x="${cx}" y="${chartH - barH - 8}" text-anchor="middle" font-size="14" fill="#e74c3c" font-weight="600">${cnt}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 42}" text-anchor="end" font-size="12" fill="#333" transform="rotate(-22,${cx},${chartH + 42})">${ch}</text>`;
   });
 
-  svg += '</g></svg>';
+  svg += '</g></svg></div>';
   return svg;
 }
 
 // —— 5. 各题库做题次数 ——
-function renderSourceCountChart(history) {
+function renderSourceCountChart(history, mostWrongIndex) {
   const srcMap = {};
   history.forEach(h => {
     srcMap[h.source] = (srcMap[h.source] || 0) + 1;
@@ -4191,20 +4798,23 @@ function renderSourceCountChart(history) {
   const sources = Object.keys(srcMap).filter(s => srcMap[s] > 0);
   if (sources.length === 0) return '';
 
-  const W = 600, H = 400, PAD = { top: 30, right: 20, bottom: 150, left: 50 };
+  const W = 600, H = 460, PAD = { top: 40, right: 20, bottom: 170, left: 60 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
-  const gap = chartW / sources.length;
-  const maxVal = Math.max(...sources.map(s => srcMap[s]));
+  const gap = chartW / Math.max(sources.length,1);
+  const maxVal = Math.max(...sources.map(s => srcMap[s]), 1);
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题库做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题库做题次数</h4>
+    <div style="max-width:100%;overflow-x:auto">
+      <svg viewBox="0 0 ${W} ${H}" class="chart-svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
+      <g transform="translate(${PAD.left},${PAD.top})">`;
 
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
   for (let v = 0; v <= maxVal + yStep; v += yStep) {
     const y = chartH - (v / (maxVal || 1)) * chartH;
     if (y < 0) continue;
     svg += `<line x1="0" y1="${y}" x2="${chartW}" y2="${y}" stroke="#ddd" stroke-dasharray="3,3"/>`;
-    svg += `<text x="-6" y="${y+4}" text-anchor="end" font-size="11" fill="#999">${v}</text>`;
+    svg += `<text x="-6" y="${y+5}" text-anchor="end" font-size="14" fill="#999">${v}</text>`;
   }
 
   sources.forEach((s, i) => {
@@ -4212,13 +4822,15 @@ function renderSourceCountChart(history) {
     const barH = (cnt / (maxVal || 1)) * chartH;
     const cx = i * gap + gap / 2;
     const bw = Math.max(18, Math.min(100, gap * 0.6));
-    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"/>`;
-    svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="12" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
+    const item = { source: s, cnt: cnt, total: cnt };
+    const extraAttrs = chartBarAttrs('source', item, mostWrongIndex);
+    svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"${extraAttrs}/>`;
+    svg += `<text x="${cx}" y="${chartH - barH - 8}" text-anchor="middle" font-size="14" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
     // 题库名称较长，用旋转 - 位置下移
-    svg += `<text x="${cx}" y="${chartH + 45}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 45})">${s}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 52}" text-anchor="end" font-size="12" fill="#333" transform="rotate(-22,${cx},${chartH + 52})">${s}</text>`;
   });
 
-  svg += '</g></svg>';
+  svg += '</g></svg></div>';
   return svg;
 }
 
