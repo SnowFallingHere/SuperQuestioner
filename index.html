@@ -13,7 +13,10 @@
 
 <!-- Home -->
 <div id="page-home">
-  <div class="home-title">题库练习</div>
+  <div class="home-title">
+    题库练习
+    <span class="combo-gear-btn" onclick="showComboSettings()" title="连击设置">⚙️</span>
+  </div>
   <div id="source-area">
     <div class="loading">加载题库中...</div>
   </div>
@@ -139,13 +142,6 @@
         <span class="toggle-slider"></span>
       </label>
       <span>倒计时特效：剩余 5 秒时全屏变红</span>
-    </div>
-    <div class="config-toggle-row">
-      <label class="toggle-switch">
-        <input type="checkbox" id="challenge-combo" checked>
-        <span class="toggle-slider"></span>
-      </label>
-      <span>启用连击特效</span>
     </div>
     <div class="config-toggle-row">
       <label class="toggle-switch">
@@ -387,7 +383,33 @@
   </div>
 </div>
 </div>
+</div>
 
+<!-- Combo Settings Dialog -->
+<div id="combo-settings-overlay" class="combo-settings-overlay hidden">
+  <div class="combo-settings-dialog">
+    <div class="combo-settings-header">
+      <h4>连击设置</h4>
+      <span class="combo-settings-close" onclick="closeComboSettings()">&times;</span>
+    </div>
+    <div class="combo-settings-body">
+      <div class="combo-settings-row">
+        <label class="toggle-switch">
+          <input type="checkbox" id="combo-effects-toggle" checked onchange="saveComboSettings()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span>启用连击特效</span>
+      </div>
+      <div class="combo-settings-row">
+        <label class="toggle-switch">
+          <input type="checkbox" id="combo-sound-toggle" checked onchange="saveComboSettings()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span>启用连击音效</span>
+      </div>
+      <div class="combo-settings-hint">（全局通用）</div>
+    </div>
+  </div>
 </div>
 
 <script src="app.js"></script>

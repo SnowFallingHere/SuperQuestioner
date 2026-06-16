@@ -9,36 +9,72 @@ const DIFFICULTIES = ['easy','medium','hard','unknown'];
 const DIFF_LABELS = {easy:'易',medium:'中',hard:'难',unknown:'未知'};
 
 // 音效
-let AUDIO_ORB, AUDIO_LEVELUP, AUDIO_BREAK;
+let AUDIO_GOOD, AUDIO_PERFECT, AUDIO_AWESOME, AUDIO_UNBELIEVABLE, AUDIO_FABULOUS, AUDIO_MARVELOUS, AUDIO_WRONG;
 function initAudio() {
   try {
-    AUDIO_ORB = new Audio('orb.ogg');
-    AUDIO_LEVELUP = new Audio('levelup.ogg');
-    AUDIO_BREAK = new Audio('break.ogg');
-    AUDIO_ORB.volume = 0.6;
-    AUDIO_LEVELUP.volume = 0.8;
-    AUDIO_BREAK.volume = 0.7;
+    AUDIO_GOOD = new Audio('good.ogg');
+    AUDIO_PERFECT = new Audio('perfect.ogg');
+    AUDIO_AWESOME = new Audio('awesome.ogg');
+    AUDIO_UNBELIEVABLE = new Audio('unbelievable.ogg');
+    AUDIO_FABULOUS = new Audio('fabulous.ogg');
+    AUDIO_MARVELOUS = new Audio('marvelous.ogg');
+    AUDIO_WRONG = new Audio('wrong.ogg');
+    AUDIO_GOOD.volume = 0.6;
+    AUDIO_PERFECT.volume = 0.7;
+    AUDIO_AWESOME.volume = 0.75;
+    AUDIO_UNBELIEVABLE.volume = 0.8;
+    AUDIO_FABULOUS.volume = 0.85;
+    AUDIO_MARVELOUS.volume = 0.9;
+    AUDIO_WRONG.volume = 0.7;
   } catch (e) { /* noop */ }
 }
-function playOrb() {
+function playGood() {
   try {
-    if (!AUDIO_ORB) initAudio();
-    AUDIO_ORB.currentTime = 0;
-    AUDIO_ORB.play().catch(() => {});
+    if (!AUDIO_GOOD) initAudio();
+    AUDIO_GOOD.currentTime = 0;
+    AUDIO_GOOD.play().catch(() => {});
   } catch (e) {}
 }
-function playLevelup() {
+function playPerfect() {
   try {
-    if (!AUDIO_LEVELUP) initAudio();
-    AUDIO_LEVELUP.currentTime = 0;
-    AUDIO_LEVELUP.play().catch(() => {});
+    if (!AUDIO_PERFECT) initAudio();
+    AUDIO_PERFECT.currentTime = 0;
+    AUDIO_PERFECT.play().catch(() => {});
   } catch (e) {}
 }
-function playBreak() {
+function playAwesome() {
   try {
-    if (!AUDIO_BREAK) initAudio();
-    AUDIO_BREAK.currentTime = 0;
-    AUDIO_BREAK.play().catch(() => {});
+    if (!AUDIO_AWESOME) initAudio();
+    AUDIO_AWESOME.currentTime = 0;
+    AUDIO_AWESOME.play().catch(() => {});
+  } catch (e) {}
+}
+function playUnbelievable() {
+  try {
+    if (!AUDIO_UNBELIEVABLE) initAudio();
+    AUDIO_UNBELIEVABLE.currentTime = 0;
+    AUDIO_UNBELIEVABLE.play().catch(() => {});
+  } catch (e) {}
+}
+function playFabulous() {
+  try {
+    if (!AUDIO_FABULOUS) initAudio();
+    AUDIO_FABULOUS.currentTime = 0;
+    AUDIO_FABULOUS.play().catch(() => {});
+  } catch (e) {}
+}
+function playMarvelous() {
+  try {
+    if (!AUDIO_MARVELOUS) initAudio();
+    AUDIO_MARVELOUS.currentTime = 0;
+    AUDIO_MARVELOUS.play().catch(() => {});
+  } catch (e) {}
+}
+function playWrong() {
+  try {
+    if (!AUDIO_WRONG) initAudio();
+    AUDIO_WRONG.currentTime = 0;
+    AUDIO_WRONG.play().catch(() => {});
   } catch (e) {}
 }
 
@@ -496,8 +532,16 @@ async function init() {
         localStorage.removeItem('wrongBookNotes');
       } catch(e) {}
     }
-    const savedEffects = localStorage.getItem('effectsEnabled');
-    if (savedEffects !== null) effectsEnabled = savedEffects === 'true';
+    // 读取连击设置（迁移旧数据）
+    effectsEnabled = getComboEffectsEnabled();
+    localStorage.setItem('effectsEnabled', String(effectsEnabled));
+    // 如果旧版没有 comboEffectsEnabled，但有效果设置，迁移一下
+    if (localStorage.getItem('comboEffectsEnabled') === null && localStorage.getItem('effectsEnabled') !== null) {
+      localStorage.setItem('comboEffectsEnabled', localStorage.getItem('effectsEnabled'));
+    }
+    if (localStorage.getItem('comboSoundEnabled') === null) {
+      localStorage.setItem('comboSoundEnabled', 'true');
+    }
     // Migrate old wrongBook to temp
     const savedOld = localStorage.getItem('wrongBook');
     if (savedOld) {
@@ -1330,6 +1374,8 @@ function startChallenge() {
   if (correctTarget < 1) correctTarget = 1;
   if (timerSeconds < 5) timerSeconds = 5;
   challengeSettings = { wrongLimit, correctTarget, useTimer, timerSeconds, redEffect, combo, shake, showNote };
+  // 同步连击设置
+  localStorage.setItem('comboEffectsEnabled', String(combo));
   effectsEnabled = combo;
   localStorage.setItem('effectsEnabled', String(effectsEnabled));
   saveChallengePrefs();
@@ -1972,71 +2018,139 @@ function resetProgress() {
 }
 
 // ====== Streak Effects ======
-function handleStreak() {
-  if (effectsEnabled === false) return;
-  if (streak >= 3) {
-    // First time: ask user
-    if (effectsEnabled === null) {
-      effectsEnabled = true; // assume yes for now
-      localStorage.setItem('effectsEnabled', 'true');
-      showEffectsPrompt();
-    }
-    if (effectsEnabled) {
-      // Green glow
-      const card = document.querySelector('.quiz-card');
-      card.classList.remove('streak-glow');
-      void card.offsetWidth; // force reflow
-      card.classList.add('streak-glow');
-      setTimeout(() => card.classList.remove('streak-glow'), 700);
-    }
-  }
-  if (streak >= 10 && streak % 10 === 0 && effectsEnabled) {
-    triggerPerfect();
-  }
+// —— 连击设置 ——
+function getComboEffectsEnabled() {
+  const val = localStorage.getItem('comboEffectsEnabled');
+  return val !== 'false'; // 默认 true
+}
+function getComboSoundEnabled() {
+  const val = localStorage.getItem('comboSoundEnabled');
+  return val !== 'false'; // 默认 true
 }
 
-function showEffectsPrompt() {
-  const div = document.createElement('div');
-  div.className = 'effects-prompt';
-  div.innerHTML = '<p>连续答对3题！是否显示连击特效？</p>' +
-    '<div class="btn-row">' +
-    '<button class="btn btn-primary" onclick="enableEffects(true,this)">显示</button>' +
-    '<button class="btn btn-secondary" onclick="enableEffects(false,this)">关闭</button>' +
-    '</div>';
-  document.body.appendChild(div);
+function showComboSettings() {
+  document.getElementById('combo-effects-toggle').checked = getComboEffectsEnabled();
+  document.getElementById('combo-sound-toggle').checked = getComboSoundEnabled();
+  document.getElementById('combo-settings-overlay').classList.remove('hidden');
 }
 
-function enableEffects(val, btn) {
-  effectsEnabled = val;
-  localStorage.setItem('effectsEnabled', String(val));
-  const prompt = btn.closest('.effects-prompt');
-  if (prompt) prompt.remove();
+function closeComboSettings() {
+  document.getElementById('combo-settings-overlay').classList.add('hidden');
+}
+
+function saveComboSettings() {
+  const effects = document.getElementById('combo-effects-toggle').checked;
+  const sound = document.getElementById('combo-sound-toggle').checked;
+  localStorage.setItem('comboEffectsEnabled', String(effects));
+  localStorage.setItem('comboSoundEnabled', String(sound));
+  effectsEnabled = effects;
+  localStorage.setItem('effectsEnabled', String(effects));
+}
+
+// 根据连击次数获取显示文字
+function getComboText(streakCount) {
+  if (streakCount >= 50) return 'Marvelous!';
+  if (streakCount >= 40) return 'Fabulous!';
+  if (streakCount >= 30) return 'Unbelievable!';
+  if (streakCount >= 20) return 'Awesome!';
+  if (streakCount >= 10) return 'Perfect!';
+  if (streakCount >= 3) return 'GOOD';
+  return '';
 }
 
 function triggerPerfect() {
-  // Add Perfect text
+  // 只有在节点值才触发：3,10,20,30,40,50
+  const triggers = [3, 10, 20, 30, 40, 50];
+  if (!triggers.includes(streak)) return;
+
+  const text = getComboText(streak);
+  if (!text) return;
   const p = document.createElement('div');
   p.className = 'perfect-text';
-  p.textContent = 'Perfect!';
+  p.textContent = text;
   document.body.appendChild(p);
 
-  // Make all components fall
-  const components = document.querySelectorAll('.quiz-header, .quiz-card, #quiz-btns, .answer-feedback.show');
-  components.forEach((el, i) => {
-    el.style.transition = 'none';
-    el.classList.add('falling');
-    el.style.animationDelay = (i * 0.08) + 's';
-  });
-
-  // Clean up after animation
-  setTimeout(() => {
-    p.remove();
-    components.forEach(el => {
-      el.classList.remove('falling');
-      el.style.transition = '';
-      el.style.animationDelay = '';
+  // 30连及以上：先放金光，再掉落
+  if (streak >= 30) {
+    const card = document.querySelector('.quiz-card');
+    if (card) {
+      card.classList.remove('gold-glow');
+      void card.offsetWidth;
+      card.classList.add('gold-glow');
+    }
+    if (getComboSoundEnabled()) {
+      if (streak >= 50) setTimeout(playMarvelous, 200);
+      else if (streak >= 40) setTimeout(playFabulous, 200);
+      else if (streak >= 30) setTimeout(playUnbelievable, 200);
+    }
+    setTimeout(() => {
+      if (card) card.classList.remove('gold-glow');
+      const components = document.querySelectorAll('.quiz-header, .quiz-card, #quiz-btns, .answer-feedback.show');
+      components.forEach((el, i) => {
+        el.style.transition = 'none';
+        el.classList.add('falling');
+        el.style.animationDelay = (i * 0.08) + 's';
+      });
+      setTimeout(() => {
+        components.forEach(el => {
+          el.classList.remove('falling');
+          el.style.transition = '';
+          el.style.animationDelay = '';
+        });
+      }, 800);
+    }, 800);
+  } else if (streak >= 10) {
+    // 10-29连：直接掉落
+    const components = document.querySelectorAll('.quiz-header, .quiz-card, #quiz-btns, .answer-feedback.show');
+    components.forEach((el, i) => {
+      el.style.transition = 'none';
+      el.classList.add('falling');
+      el.style.animationDelay = (i * 0.08) + 's';
     });
-  }, 1600);
+    if (getComboSoundEnabled()) {
+      if (streak >= 20) setTimeout(playAwesome, 200);
+      else if (streak >= 10) setTimeout(playPerfect, 200);
+    }
+    setTimeout(() => {
+      components.forEach(el => {
+        el.classList.remove('falling');
+        el.style.transition = '';
+        el.style.animationDelay = '';
+      });
+    }, 1500);
+  } else {
+    // 3连=GOOD，只放音效不掉落
+    if (getComboSoundEnabled()) {
+      playGood();
+    }
+  }
+
+  if (streak < 30) {
+    setTimeout(() => {
+      p.remove();
+    }, 1500);
+  } else {
+    setTimeout(() => {
+      p.remove();
+    }, 2000);
+  }
+}
+
+function handleStreak() {
+  if (getComboEffectsEnabled() === false) return;
+  if (streak >= 3) {
+    // 30连及以上：不闪绿光，交给triggerPerfect处理金光
+    if (streak < 30) {
+      const card = document.querySelector('.quiz-card');
+      if (card) {
+        card.classList.remove('streak-glow');
+        void card.offsetWidth;
+        card.classList.add('streak-glow');
+        setTimeout(() => card.classList.remove('streak-glow'), 700);
+      }
+    }
+    triggerPerfect();
+  }
 }
 
 // ====== Render Question ======
@@ -2244,11 +2358,11 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   if (isCorrect) {
     fb.className = 'answer-feedback show correct-fb';
     fb.textContent = '回答正确！答案：' + correctAnswer;
-    playOrb();
+    if (getComboSoundEnabled()) playGood();
   } else {
     fb.className = 'answer-feedback show wrong-fb';
     fb.textContent = '回答错误！正确答案：' + correctAnswer;
-    playBreak();
+    if (getComboSoundEnabled()) playWrong();
     // 周围闪红光
     const card = document.querySelector('.quiz-card');
     if (card) {
@@ -2293,7 +2407,7 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
     correctCount++;
     streak++;
     if (correctCount > 0 && correctCount % 10 === 0) {
-      setTimeout(playLevelup, 200);
+      if (getComboSoundEnabled()) setTimeout(playAwesome, 200);
     }
     if (mode === 'infinite') {
       infiniteMap[key].correctCount++;
@@ -2442,11 +2556,11 @@ function judgeCalculation() {
   if (allCorrect) {
     fb.className = 'answer-feedback show correct-fb';
     fb.textContent = '全部正确！';
-    playOrb();
+    if (getComboSoundEnabled()) playGood();
   } else {
     fb.className = 'answer-feedback show wrong-fb';
     fb.textContent = '部分或全部错误，请查看各问反馈';
-    playBreak();
+    if (getComboSoundEnabled()) playWrong();
     const card = document.querySelector('.quiz-card');
     if (card) {
       card.classList.remove('flash-red');
@@ -2483,7 +2597,7 @@ function judgeCalculation() {
 
   if (allCorrect) {
     correctCount++;
-    if (correctCount > 0 && correctCount % 10 === 0) setTimeout(playLevelup, 200);
+    if (correctCount > 0 && correctCount % 10 === 0) if (getComboSoundEnabled()) setTimeout(playAwesome, 200);
   } else {
     wrongCount++;
     wrongList.push({question: q, selectedAnswer: JSON.stringify(Array.from(inputs).map(i => ({qid:i.dataset.qid, val:i.value})))
@@ -2572,11 +2686,11 @@ function judgeSubjective() {
   if (isCorrect) {
     fb.className = 'answer-feedback show correct-fb';
     fb.textContent = '优秀！匹配度 ' + pct + '%';
-    playOrb();
+    if (getComboSoundEnabled()) playGood();
   } else {
     fb.className = 'answer-feedback show wrong-fb';
     fb.textContent = '匹配度 ' + pct + '%';
-    playBreak();
+    if (getComboSoundEnabled()) playWrong();
     const card = document.querySelector('.quiz-card');
     if (card) {
       card.classList.remove('flash-red');
@@ -2632,7 +2746,7 @@ function judgeSubjective() {
 
   if (isCorrect) {
     correctCount++;
-    if (correctCount > 0 && correctCount % 10 === 0) setTimeout(playLevelup, 200);
+    if (correctCount > 0 && correctCount % 10 === 0) if (getComboSoundEnabled()) setTimeout(playAwesome, 200);
   } else {
     wrongCount++;
     wrongList.push({question: q, selectedAnswer: userAnswer});
@@ -3893,13 +4007,13 @@ function renderChapterStudyChart(history, filterTime) {
     timeTotals[h.timeKey] = (timeTotals[h.timeKey] || 0) + 1;
   });
 
-  const W = 600, H = 260, PAD = { top: 30, right: 20, bottom: 50, left: 45 };
+  const W = 600, H = 380, PAD = { top: 30, right: 20, bottom: 100, left: 45 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const barW = Math.max(14, Math.min(50, chartW / timeKeys.length * 0.7));
   const gap = chartW / timeKeys.length;
 
-  let svg = `<h4 style="margin:12px 0 6px;color:var(--text,#333)">📊 各章节学习次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:12px 0 6px;color:var(--text,#333)">📊 各章节学习次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
 
   // Y轴网格（百分比）
   for (let pct = 0; pct <= 100; pct += 20) {
@@ -3958,13 +4072,13 @@ function renderTypeCountChart(history) {
   if (types.length === 0) return '';
 
   const TYPE_LABELS = { single_choice: '单选', multiple_choice: '多选', true_false: '判断', calculation: '计算', subjective: '主观' };
-  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const W = 600, H = 340, PAD = { top: 30, right: 20, bottom: 100, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / types.length;
   const maxVal = Math.max(...types.map(t => typeMap[t]));
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题型做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题型做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
 
   // Y轴
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
@@ -3999,13 +4113,13 @@ function renderChapterCorrectChart(history) {
   const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
   if (chapters.length === 0) return '';
 
-  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const W = 600, H = 340, PAD = { top: 30, right: 20, bottom: 100, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / chapters.length;
   const maxVal = Math.max(...chapters.map(ch => chMap[ch]));
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节正确次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节正确次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
 
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
   for (let v = 0; v <= maxVal + yStep; v += yStep) {
@@ -4038,13 +4152,13 @@ function renderChapterWrongChart(history) {
   const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
   if (chapters.length === 0) return '';
 
-  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const W = 600, H = 340, PAD = { top: 30, right: 20, bottom: 100, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / chapters.length;
   const maxVal = Math.max(...chapters.map(ch => chMap[ch]));
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节错误次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各章节错误次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
 
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
   for (let v = 0; v <= maxVal + yStep; v += yStep) {
@@ -4077,13 +4191,13 @@ function renderSourceCountChart(history) {
   const sources = Object.keys(srcMap).filter(s => srcMap[s] > 0);
   if (sources.length === 0) return '';
 
-  const W = 600, H = 220, PAD = { top: 30, right: 20, bottom: 40, left: 50 };
+  const W = 600, H = 260, PAD = { top: 30, right: 20, bottom: 60, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / sources.length;
   const maxVal = Math.max(...sources.map(s => srcMap[s]));
 
-  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题库做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto"><g transform="translate(${PAD.left},${PAD.top})">`;
+  let svg = `<h4 style="margin:16px 0 6px;color:var(--text,#333)">📊 各题库做题次数</h4><svg width="${W}" height="${H}" style="display:block;margin:0 auto;overflow:visible"><g transform="translate(${PAD.left},${PAD.top})">`;
 
   const yStep = Math.max(1, Math.ceil(maxVal / 5));
   for (let v = 0; v <= maxVal + yStep; v += yStep) {
