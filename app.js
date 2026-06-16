@@ -4007,7 +4007,7 @@ function renderChapterStudyChart(history, filterTime) {
     timeTotals[h.timeKey] = (timeTotals[h.timeKey] || 0) + 1;
   });
 
-  const W = 600, H = 380, PAD = { top: 30, right: 20, bottom: 100, left: 45 };
+  const W = 600, H = 480, PAD = { top: 30, right: 20, bottom: 150, left: 45 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const barW = Math.max(14, Math.min(50, chartW / timeKeys.length * 0.7));
@@ -4045,9 +4045,9 @@ function renderChapterStudyChart(history, filterTime) {
     // 总做题数标注
     svg += `<text x="${cx}" y="${chartH + 14}" text-anchor="middle" font-size="10" fill="#999">${total}</text>`;
 
-    // X轴标签
+    // X轴标签 - 旋转25度，位置下移
     const label = filterTime === 'week' ? tk.replace('W','') : tk.slice(5);
-    svg += `<text x="${cx}" y="${chartH + 32}" text-anchor="end" font-size="10" fill="#888" transform="rotate(-25,${cx},${chartH + 32})">${label}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 45}" text-anchor="end" font-size="10" fill="#888" transform="rotate(-25,${cx},${chartH + 45})">${label}</text>`;
   });
 
   // 图例
@@ -4072,7 +4072,7 @@ function renderTypeCountChart(history) {
   if (types.length === 0) return '';
 
   const TYPE_LABELS = { single_choice: '单选', multiple_choice: '多选', true_false: '判断', calculation: '计算', subjective: '主观' };
-  const W = 600, H = 340, PAD = { top: 30, right: 20, bottom: 100, left: 50 };
+  const W = 600, H = 440, PAD = { top: 30, right: 20, bottom: 140, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / types.length;
@@ -4097,7 +4097,7 @@ function renderTypeCountChart(history) {
     svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"/>`;
     svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="12" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
     const label = TYPE_LABELS[t] || t;
-    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="middle" font-size="12" fill="var(--text,#333)">${label}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 35}" text-anchor="middle" font-size="12" fill="var(--text,#333)">${label}</text>`;
   });
 
   svg += '</g></svg>';
@@ -4113,7 +4113,7 @@ function renderChapterCorrectChart(history) {
   const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
   if (chapters.length === 0) return '';
 
-  const W = 600, H = 340, PAD = { top: 30, right: 20, bottom: 100, left: 50 };
+  const W = 600, H = 400, PAD = { top: 30, right: 20, bottom: 140, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / chapters.length;
@@ -4136,7 +4136,7 @@ function renderChapterCorrectChart(history) {
     const bw = Math.max(14, Math.min(60, gap * 0.6));
     svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#27ae60" opacity=".8" rx="2"/>`;
     svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="600">${cnt}</text>`;
-    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 16})">${ch}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 35}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 35})">${ch}</text>`;
   });
 
   svg += '</g></svg>';
@@ -4152,7 +4152,7 @@ function renderChapterWrongChart(history) {
   const chapters = Object.keys(chMap).filter(ch => chMap[ch] > 0);
   if (chapters.length === 0) return '';
 
-  const W = 600, H = 340, PAD = { top: 30, right: 20, bottom: 100, left: 50 };
+  const W = 600, H = 400, PAD = { top: 30, right: 20, bottom: 140, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / chapters.length;
@@ -4175,7 +4175,7 @@ function renderChapterWrongChart(history) {
     const bw = Math.max(14, Math.min(60, gap * 0.6));
     svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#e74c3c" opacity=".8" rx="2"/>`;
     svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="11" fill="#e74c3c" font-weight="600">${cnt}</text>`;
-    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 16})">${ch}</text>`;
+    svg += `<text x="${cx}" y="${chartH + 35}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 35})">${ch}</text>`;
   });
 
   svg += '</g></svg>';
@@ -4191,7 +4191,7 @@ function renderSourceCountChart(history) {
   const sources = Object.keys(srcMap).filter(s => srcMap[s] > 0);
   if (sources.length === 0) return '';
 
-  const W = 600, H = 260, PAD = { top: 30, right: 20, bottom: 60, left: 50 };
+  const W = 600, H = 400, PAD = { top: 30, right: 20, bottom: 150, left: 50 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const gap = chartW / sources.length;
@@ -4214,8 +4214,8 @@ function renderSourceCountChart(history) {
     const bw = Math.max(18, Math.min(100, gap * 0.6));
     svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"/>`;
     svg += `<text x="${cx}" y="${chartH - barH - 6}" text-anchor="middle" font-size="12" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
-    // 题库名称较长，用旋转
-    svg += `<text x="${cx}" y="${chartH + 16}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 16})">${s}</text>`;
+    // 题库名称较长，用旋转 - 位置下移
+    svg += `<text x="${cx}" y="${chartH + 45}" text-anchor="end" font-size="10" fill="var(--text,#333)" transform="rotate(-20,${cx},${chartH + 45})">${s}</text>`;
   });
 
   svg += '</g></svg>';
@@ -4276,20 +4276,6 @@ let previewList = [];
 let previewIndex = 0;
 let previewViewMode = 'card'; // 'card' or 'list'
 let previewSavedSelection = null; // { chapters: [...], types: [...] }
-let cylinderModeEnabled = false;
-let cylinderRafId = null;
-let cylinderScrollPending = false;
-let cylinderWheelAccum = 0;
-let cylinderWheelTimer = null;
-let cylinderSnapAnimating = false;
-let cylinderSnapIdleTimer = null;
-let cylinderFastMode = false;
-let cylinderFastExitTimer = null;
-let cylinderFocusIdx = 0; // index of currently focused item
-const CYLINDER_WHEEL_THRESHOLD = 80; // px of accumulated delta to trigger snap
-const CYLINDER_FAST_WINDOW = 2000; // 2 seconds window for fast detection
-const CYLINDER_FAST_COUNT = 2; // >=2 wheel events in window = fast mode
-const CYLINDER_FAST_EXIT = 500; // ms of no scroll before exiting fast mode
 
 function loadPreviewSelection() {
   try {
@@ -4486,332 +4472,357 @@ function renderPreviewView() {
     toggleEl.textContent = '⊟';
     toggleEl.title = '切换为卡片视图';
     cylinderRow.classList.remove('hidden');
+    // Render list first, then enable cylinder with a microtask delay
+    // to avoid scrollIntoView during initial render
     renderPreviewList();
-    if (cylinderModeEnabled) enableCylinderMode();
+    if (cylinderModeEnabled) {
+      requestAnimationFrame(() => enableCylinderMode());
+    }
   }
-  document.getElementById('preview-counter').textContent = previewList.length + ' 题';
   document.getElementById('preview-info').textContent = '预览模式';
+  updatePreviewCounter();
+}
+
+function updatePreviewCounter() {
+  const el = document.getElementById('preview-counter');
+  if (!el) return;
+  const total = previewList.length;
+  if (previewViewMode === 'card') {
+    el.innerHTML = '<span id="jump-counter" style="cursor:pointer;color:#4a90d9" title="点击跳转">' + (previewIndex + 1) + '</span> / ' + total;
+  } else if (cylinderModeEnabled) {
+    el.innerHTML = '<span id="jump-counter" style="cursor:pointer;color:#4a90d9" title="点击跳转">?</span> / ' + total;
+  } else {
+    el.textContent = total + ' 题';
+  }
+  const jumpEl = document.getElementById('jump-counter');
+  if (jumpEl) jumpEl.onclick = jumpToQuestion;
 }
 
 // ====== Cylinder Mode ======
+// Phase 1 (scroll): all items collapsed → equal heights → stable layout.
+//   Only scale/opacity animate based on distance from viewport center.
+// Phase 2 (stop): find item closest to center → expand it → wait layout →
+//   calculate exact scroll position → instant scrollTo to center.
+
+let cylinderModeEnabled = false;
+let cylinderRafId = null;
+let cylinderSettleTimer = null;
+let cylinderLocked = false;        // blocks ALL handlers during step/initial
+let cylinderKeyState = { ArrowUp: false, ArrowDown: false, ArrowRight: false, ArrowLeft: false };
+let cylinderAutoScrollId = null;
+
 function toggleCylinderMode(enabled) {
   cylinderModeEnabled = enabled;
   savePreviewViewState();
-  if (enabled) enableCylinderMode();
-  else disableCylinderMode();
+  if (enabled) {
+    virtualListState.enabled = false;
+    renderPreviewList();
+    enableCylinderMode();
+  } else {
+    disableCylinderMode();
+    renderPreviewList();
+  }
 }
 
 function enableCylinderMode() {
   const listEl = document.getElementById('preview-list');
+  if (!listEl) return;
   listEl.classList.add('cylinder-mode');
-  document.documentElement.classList.add('cylinder-snap');
 
-  // Reset all items
-  listEl.querySelectorAll('.pv-list-detail').forEach(d => { d.classList.remove('show'); d.classList.remove('half-show'); });
-  listEl.querySelectorAll('.pv-list-arrow').forEach(a => { a.style.transform = ''; });
+  // Collapse all, clear inline styles
+  listEl.querySelectorAll('.pv-list-detail').forEach(d => d.classList.remove('show', 'half-show'));
+  listEl.querySelectorAll('.pv-list-arrow').forEach(a => a.style.transform = '');
   listEl.querySelectorAll('.pv-list-item').forEach(item => {
-    item.style.marginTop = '';
-    item.style.marginBottom = '';
     item.style.transform = '';
     item.style.opacity = '';
+    item.classList.remove('focused', 'adjacent', 'far');
   });
 
-  // Spacers so first/last can reach center
-  const spacerH = Math.round(window.innerHeight / 2);
-  let topSpacer = listEl.querySelector('.cylinder-spacer-top');
-  let bottomSpacer = listEl.querySelector('.cylinder-spacer-bottom');
-  if (!topSpacer) {
-    topSpacer = document.createElement('div');
-    topSpacer.className = 'cylinder-spacer-top';
-    listEl.insertBefore(topSpacer, listEl.firstChild);
-  }
-  if (!bottomSpacer) {
-    bottomSpacer = document.createElement('div');
-    bottomSpacer.className = 'cylinder-spacer-bottom';
-    listEl.appendChild(bottomSpacer);
-  }
-  topSpacer.style.height = spacerH + 'px';
-  bottomSpacer.style.height = spacerH + 'px';
-
-  // Event listeners
   window.addEventListener('scroll', onCylinderScroll, { passive: true });
-  window.addEventListener('resize', onCylinderResize, { passive: true });
-  window.addEventListener('wheel', onCylinderWheel, { passive: false });
-  window.addEventListener('touchstart', onCylinderTouchStart, { passive: true });
-  window.addEventListener('touchend', onCylinderTouchEnd, { passive: true });
+  window.addEventListener('keydown', onCylinderKeyDown);
+  window.addEventListener('keyup', onCylinderKeyUp);
+  cylinderLocked = false;
 
-  cylinderWheelAccum = 0;
-  cylinderSnapAnimating = false;
-  cylinderFastMode = false;
-  cylinderFocusIdx = 0;
-
-  // First item to center
+  // Initial: center first item
   requestAnimationFrame(() => {
-    const items = listEl.querySelectorAll('.pv-list-item');
-    if (items.length > 0) {
-      const itemRect = items[0].getBoundingClientRect();
-      const targetScroll = window.scrollY + itemRect.top + itemRect.height / 2 - window.innerHeight / 2;
-      window.scrollTo({ top: targetScroll, behavior: 'instant' });
-    }
-    updateCylinderEffect();
+    cylinderLocked = true;
+    const firstHeader = listEl.querySelector('.pv-list-header');
+    if (firstHeader) firstHeader.scrollIntoView({ block: 'center' });
+    requestAnimationFrame(() => { cylinderScrollFx(); });
+    setTimeout(() => {
+      cylinderLocked = false;
+      if (cylinderModeEnabled) cylinderSettle();
+    }, 400);
   });
 }
 
 function disableCylinderMode() {
   const listEl = document.getElementById('preview-list');
+  if (!listEl) return;
   listEl.classList.remove('cylinder-mode');
-  listEl.classList.remove('cylinder-fast-mode');
-  document.documentElement.classList.remove('cylinder-snap');
 
   listEl.querySelectorAll('.pv-list-item').forEach(item => {
     item.style.transform = '';
     item.style.opacity = '';
-    item.style.marginBottom = '';
-    item.style.marginTop = '';
     item.classList.remove('focused', 'adjacent', 'far');
   });
-  listEl.querySelectorAll('.pv-list-detail').forEach(d => { d.classList.remove('show'); d.classList.remove('half-show'); });
-  listEl.querySelectorAll('.pv-list-arrow').forEach(a => { a.style.transform = ''; });
-
-  const topSpacer = listEl.querySelector('.cylinder-spacer-top');
-  const bottomSpacer = listEl.querySelector('.cylinder-spacer-bottom');
-  if (topSpacer) topSpacer.remove();
-  if (bottomSpacer) bottomSpacer.remove();
+  listEl.querySelectorAll('.pv-list-detail').forEach(d => d.classList.remove('show', 'half-show'));
+  listEl.querySelectorAll('.pv-list-arrow').forEach(a => a.style.transform = '');
 
   window.removeEventListener('scroll', onCylinderScroll);
-  window.removeEventListener('resize', onCylinderResize);
-  window.removeEventListener('wheel', onCylinderWheel);
-  window.removeEventListener('touchstart', onCylinderTouchStart);
-  window.removeEventListener('touchend', onCylinderTouchEnd);
-
+  window.removeEventListener('keydown', onCylinderKeyDown);
+  window.removeEventListener('keyup', onCylinderKeyUp);
   if (cylinderRafId) { cancelAnimationFrame(cylinderRafId); cylinderRafId = null; }
-  if (cylinderWheelTimer) { clearTimeout(cylinderWheelTimer); cylinderWheelTimer = null; }
-  if (cylinderSnapIdleTimer) { clearTimeout(cylinderSnapIdleTimer); cylinderSnapIdleTimer = null; }
-  if (cylinderFastExitTimer) { clearTimeout(cylinderFastExitTimer); cylinderFastExitTimer = null; }
-  cylinderScrollPending = false;
-  cylinderSnapAnimating = false;
-  cylinderWheelAccum = 0;
-  cylinderFastMode = false;
+  if (cylinderSettleTimer) { clearTimeout(cylinderSettleTimer); cylinderSettleTimer = null; }
+  if (cylinderAutoScrollId) { cancelAnimationFrame(cylinderAutoScrollId); cylinderAutoScrollId = null; }
+  cylinderLocked = false;
+  cylinderKeyState = { ArrowUp: false, ArrowDown: false, ArrowRight: false, ArrowLeft: false };
 }
+
+// ---- Scroll handler ----
 
 function onCylinderScroll() {
-  if (!cylinderScrollPending) {
-    cylinderScrollPending = true;
-    cylinderRafId = requestAnimationFrame(() => {
-      cylinderScrollPending = false;
-      // Find the item closest to center and make it focus
-      const listEl = document.getElementById('preview-list');
-      const items = listEl.querySelectorAll('.pv-list-item');
-      if (items.length === 0) return;
-      const viewCenter = window.innerHeight / 2;
-      let closestIdx = 0;
-      let closestDist = Infinity;
-      items.forEach((item, i) => {
-        const rect = item.getBoundingClientRect();
-        const dist = Math.abs(rect.top + rect.height / 2 - viewCenter);
-        if (dist < closestDist) { closestDist = dist; closestIdx = i; }
-      });
-      if (closestIdx !== cylinderFocusIdx) {
-        cylinderFocusIdx = closestIdx;
-      }
-      updateCylinderEffect();
-      // In fast mode: schedule exit when scrolling stops
-      if (cylinderFastMode) {
-        scheduleFastExit();
-      }
-    });
-  }
+  if (!cylinderModeEnabled || cylinderLocked) return;
+  // rAF throttle: scale/opacity effect, no expand/collapse
+  if (cylinderRafId) return;
+  cylinderRafId = requestAnimationFrame(() => {
+    cylinderRafId = null;
+    cylinderScrollFx();
+  });
+  // Debounce settle: when scrolling stops, expand + center
+  if (cylinderSettleTimer) clearTimeout(cylinderSettleTimer);
+  cylinderSettleTimer = setTimeout(cylinderSettle, 200);
 }
 
-function onCylinderResize() {
+// ---- Phase 1: scroll-time — only scale/opacity, all items collapsed ----
+
+function cylinderScrollFx() {
   const listEl = document.getElementById('preview-list');
-  const spacerH = Math.round(window.innerHeight / 2);
-  const topSpacer = listEl.querySelector('.cylinder-spacer-top');
-  const bottomSpacer = listEl.querySelector('.cylinder-spacer-bottom');
-  if (topSpacer) topSpacer.style.height = spacerH + 'px';
-  if (bottomSpacer) bottomSpacer.style.height = spacerH + 'px';
-  updateCylinderEffect();
-}
-
-let cylinderTouchStartY = 0;
-
-function onCylinderTouchStart(e) {
-  if (!cylinderModeEnabled) return;
-  cylinderTouchStartY = e.touches[0].clientY;
-}
-
-function onCylinderTouchEnd(e) {
-  if (!cylinderModeEnabled) return;
-  const deltaY = cylinderTouchStartY - (e.changedTouches[0]?.clientY || cylinderTouchStartY);
-  if (Math.abs(deltaY) > 30) {
-    // Fast-mode detection via touch: if we're already in fast mode, stay there
-    if (!cylinderFastMode) {
-      cylinderSnapToItem(deltaY > 0 ? 1 : -1);
-    }
-    // In fast mode, just let native scrolling continue
-  }
-}
-
-function onCylinderWheel(e) {
-  if (!cylinderModeEnabled) return;
-  const listEl = document.getElementById('preview-list');
-  if (!listEl || listEl.classList.contains('hidden')) return;
-
-  // In fast mode: don't intercept, let native scroll happen freely
-  if (cylinderFastMode) return;
-
-  // Ignore wheel during snap animation
-  if (cylinderSnapAnimating) return;
-
-  const delta = e.deltaY;
-  cylinderWheelAccum += delta;
-
-  if (cylinderWheelTimer) clearTimeout(cylinderWheelTimer);
-  cylinderWheelTimer = setTimeout(() => {
-    cylinderWheelAccum = 0;
-  }, 200);
-
-  if (Math.abs(cylinderWheelAccum) >= CYLINDER_WHEEL_THRESHOLD) {
-    const direction = cylinderWheelAccum > 0 ? 1 : -1;
-    cylinderWheelAccum = 0;
-
-    // Fast-mode detection: 2+ snap-triggering wheel events within 2s
-    if (!window._cylWheelTimes) window._cylWheelTimes = [];
-    window._cylWheelTimes.push(Date.now());
-    const windowNow = Date.now();
-    window._cylWheelTimes = window._cylWheelTimes.filter(t => windowNow - t <= CYLINDER_FAST_WINDOW);
-
-    if (window._cylWheelTimes.length >= CYLINDER_FAST_COUNT + 1) {
-      window._cylWheelTimes = [];
-      enterFastMode();
-      // After entering fast mode, still prevent this scroll from going beyond the list
-      e.preventDefault();
-      return;
-    }
-
-    cylinderSnapToItem(direction);
-  }
-
-  // Prevent page scroll during cylinder mode (when not in fast mode)
-  e.preventDefault();
-}
-
-function enterFastMode() {
-  cylinderFastMode = true;
-  document.documentElement.classList.remove('cylinder-snap'); // disable CSS snap
-  // Schedule auto-exit when scrolling stops
-  scheduleFastExit();
-}
-
-function scheduleFastExit() {
-  if (cylinderFastExitTimer) clearTimeout(cylinderFastExitTimer);
-  cylinderFastExitTimer = setTimeout(() => {
-    if (!cylinderFastMode) return;
-    exitFastMode();
-  }, CYLINDER_FAST_EXIT);
-}
-
-function exitFastMode() {
-  cylinderFastMode = false;
-  document.documentElement.classList.add('cylinder-snap'); // re-enable CSS snap
-  // Snap to nearest item
-  cylinderSnapToNearest();
-}
-
-function cylinderSnapToNearest() {
-  if (cylinderSnapAnimating) return;
-  const listEl = document.getElementById('preview-list');
+  if (!listEl || !listEl.classList.contains('cylinder-mode')) return;
   const items = listEl.querySelectorAll('.pv-list-item');
   if (items.length === 0) return;
 
   const viewCenter = window.innerHeight / 2;
-  let closestIdx = 0;
-  let closestDist = Infinity;
+  const radius = viewCenter * 0.8;
+
+  items.forEach(item => {
+    const rc = item.getBoundingClientRect();
+    const itemCenter = rc.top + rc.height / 2;
+    const dist = Math.abs(itemCenter - viewCenter);
+    const t = Math.min(1, dist / radius);
+    const e = t * t;
+    item.style.transform = `scale(${(1 - e * 0.22).toFixed(3)})`;
+    item.style.opacity = (1 - e * 0.72).toFixed(3);
+  });
+}
+
+// ---- Phase 2: stop-time — expand closest + center ----
+
+function cylinderSettle() {
+  if (!cylinderModeEnabled || cylinderLocked) return;
+  const listEl = document.getElementById('preview-list');
+  if (!listEl) return;
+  const items = Array.from(listEl.querySelectorAll('.pv-list-item'));
+  if (items.length === 0) return;
+
+  const viewCenter = window.innerHeight / 2;
+
+  // Find closest header
+  let closestIdx = 0, closestDist = Infinity;
   items.forEach((item, i) => {
-    const rect = item.getBoundingClientRect();
-    const dist = Math.abs(rect.top + rect.height / 2 - viewCenter);
+    const hdr = item.querySelector('.pv-list-header');
+    if (!hdr) return;
+    const rc = hdr.getBoundingClientRect();
+    const dist = Math.abs(rc.top + rc.height / 2 - viewCenter);
     if (dist < closestDist) { closestDist = dist; closestIdx = i; }
   });
 
-  cylinderFocusIdx = closestIdx;
-  cylinderAnimateSnapTo(items[closestIdx]);
-}
+  // Kill transitions for instant expand, then restore after calculation
+  items.forEach(item => {
+    const d = item.querySelector('.pv-list-detail');
+    const a = item.querySelector('.pv-list-arrow');
+    if (d) d.style.transition = 'none';
+    if (a) a.style.transition = 'none';
+  });
 
-function cylinderSnapToItem(direction) {
-  if (cylinderSnapAnimating) return;
-  const listEl = document.getElementById('preview-list');
-  const items = listEl.querySelectorAll('.pv-list-item');
-  if (items.length === 0) return;
-
-  let targetIdx = cylinderFocusIdx + direction;
-  targetIdx = Math.max(0, Math.min(items.length - 1, targetIdx));
-  if (targetIdx === cylinderFocusIdx) return;
-  cylinderFocusIdx = targetIdx;
-
-  cylinderAnimateSnapTo(items[targetIdx]);
-}
-
-function cylinderAnimateSnapTo(targetItem) {
-  if (!targetItem || cylinderSnapAnimating) return;
-  cylinderSnapAnimating = true;
-
-  const rect = targetItem.getBoundingClientRect();
-  const targetScroll = window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2;
-
-  window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-
-  setTimeout(() => {
-    cylinderSnapAnimating = false;
-    updateCylinderEffect();
-  }, 450);
-}
-
-function updateCylinderEffect() {
-  const listEl = document.getElementById('preview-list');
-  if (!listEl || !listEl.classList.contains('cylinder-mode')) return;
-
-  const items = listEl.querySelectorAll('.pv-list-item');
-  if (items.length === 0) return;
-
-  items.forEach((item, idx) => {
-    const idxDist = Math.abs(idx - cylinderFocusIdx);
-
-    // Clear inline styles that may have been set
-    item.style.transform = '';
-    item.style.opacity = '';
-    item.style.marginTop = '';
-    item.style.marginBottom = '';
-
-    // Set class for visual state
-    item.classList.remove('focused', 'adjacent', 'far');
-    if (idx === cylinderFocusIdx) item.classList.add('focused');
-    else if (idxDist === 1) item.classList.add('adjacent');
-    else item.classList.add('far');
-
-    // Expand/collapse: in fast mode, collapse all
-    const detail = item.querySelector('.pv-list-detail');
-    const arrow = item.querySelector('.pv-list-arrow');
-    if (detail) {
-      if (cylinderFastMode) {
-        // Fast mode: all collapsed, just visual scaling
-        detail.classList.remove('show');
-        detail.classList.remove('half-show');
-        if (arrow) arrow.style.transform = '';
-      } else if (idx === cylinderFocusIdx) {
-        detail.classList.add('show');
-        detail.classList.remove('half-show');
-        if (arrow) arrow.style.transform = 'rotate(180deg)';
-      } else if (idxDist === 1) {
-        detail.classList.remove('show');
-        detail.classList.add('half-show');
-        if (arrow) arrow.style.transform = 'rotate(90deg)';
-      } else {
-        detail.classList.remove('show');
-        detail.classList.remove('half-show');
-        if (arrow) arrow.style.transform = '';
-      }
+  // Expand target, collapse others (instant)
+  items.forEach((item, i) => {
+    const d = item.querySelector('.pv-list-detail');
+    const a = item.querySelector('.pv-list-arrow');
+    if (i === closestIdx) {
+      if (d) d.classList.add('show');
+      if (a) a.style.transform = 'rotate(180deg)';
+    } else {
+      if (d) d.classList.remove('show', 'half-show');
+      if (a) a.style.transform = '';
     }
   });
+
+  // Force reflow for stable layout
+  void items[closestIdx].offsetHeight;
+
+  const targetItem = items[closestIdx];
+  const targetHeader = targetItem.querySelector('.pv-list-header');
+  const hdrRc = targetHeader.getBoundingClientRect();
+  const expandedRc = targetItem.getBoundingClientRect();
+  // Center the whole item (not just header) in viewport
+  const ideal = Math.round(window.scrollY + expandedRc.top + expandedRc.height / 2 - viewCenter);
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+  if (expandedRc.height > window.innerHeight * 0.85) {
+    const topAlign = Math.round(window.scrollY + hdrRc.top - 48);
+    window.scrollTo({ top: Math.max(0, Math.min(maxScroll, topAlign)), behavior: 'auto' });
+  } else {
+    window.scrollTo({ top: Math.max(0, Math.min(maxScroll, ideal)), behavior: 'auto' });
+  }
+
+  // Restore CSS transitions
+  items.forEach(item => {
+    const d = item.querySelector('.pv-list-detail');
+    const a = item.querySelector('.pv-list-arrow');
+    if (d) d.style.transition = '';
+    if (a) a.style.transition = '';
+  });
+
+  cylinderScrollFx();
+}
+
+// ---- Keyboard shortcuts ----
+// ↓/↑ : step one item, expand, center
+// →/← : hold to auto-scroll (collapsed)
+
+function onCylinderKeyDown(e) {
+  if (!cylinderModeEnabled) return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+  const key = e.key;
+  if (!['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft'].includes(key)) return;
+  e.preventDefault();
+
+  if (key === 'ArrowDown' || key === 'ArrowUp') {
+    if (cylinderKeyState[key]) return;
+    cylinderKeyState[key] = true;
+    cylinderStepTo(key === 'ArrowDown' ? 1 : -1);
+    return;
+  }
+  if (key === 'ArrowRight' || key === 'ArrowLeft') {
+    if (cylinderKeyState[key]) return;
+    cylinderKeyState[key] = true;
+    cylinderAutoScrollStart(key === 'ArrowRight' ? 1 : -1);
+  }
+}
+
+function onCylinderKeyUp(e) {
+  if (!cylinderModeEnabled) return;
+  const key = e.key;
+  if (!['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft'].includes(key)) return;
+  cylinderKeyState[key] = false;
+  if (key === 'ArrowRight' || key === 'ArrowLeft') cylinderAutoScrollStop();
+}
+
+// ---- Step: one item, force expand + center via settle ----
+
+function cylinderStepTo(offset) {
+  const listEl = document.getElementById('preview-list');
+  if (!listEl) return;
+  const items = Array.from(listEl.querySelectorAll('.pv-list-item'));
+  if (items.length === 0) return;
+
+  cylinderLocked = true;
+  if (cylinderSettleTimer) { clearTimeout(cylinderSettleTimer); cylinderSettleTimer = null; }
+
+  const viewCenter = window.innerHeight / 2;
+  let closestIdx = 0, closestDist = Infinity;
+  items.forEach((item, i) => {
+    const hdr = item.querySelector('.pv-list-header');
+    if (!hdr) return;
+    const rc = hdr.getBoundingClientRect();
+    const dist = Math.abs(rc.top + rc.height / 2 - viewCenter);
+    if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+  });
+
+  const targetIdx = Math.max(0, Math.min(items.length - 1, closestIdx + offset));
+  if (targetIdx === closestIdx) { cylinderLocked = false; return; }
+
+  // Kill CSS transitions on detail/arrow so layout settles instantly
+  items.forEach(item => {
+    const d = item.querySelector('.pv-list-detail');
+    const a = item.querySelector('.pv-list-arrow');
+    if (d) d.style.transition = 'none';
+    if (a) a.style.transition = 'none';
+  });
+
+  // Expand target, collapse others (instant — no CSS transition running)
+  items.forEach((item, i) => {
+    const d = item.querySelector('.pv-list-detail');
+    const a = item.querySelector('.pv-list-arrow');
+    if (i === targetIdx) {
+      if (d) d.classList.add('show');
+      if (a) a.style.transform = 'rotate(180deg)';
+    } else {
+      if (d) d.classList.remove('show', 'half-show');
+      if (a) a.style.transform = '';
+    }
+  });
+
+  // Force reflow — browser now has final layout
+  void items[targetIdx].offsetHeight;
+
+  // Calculate exact center position with stable layout
+  const targetItem = items[targetIdx];
+  const targetHeader = targetItem.querySelector('.pv-list-header');
+  const hdrRc = targetHeader.getBoundingClientRect();
+  const expandedRc = targetItem.getBoundingClientRect();
+  // Center the whole item (not just header) in viewport
+  const ideal = Math.round(window.scrollY + expandedRc.top + expandedRc.height / 2 - viewCenter);
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+  if (expandedRc.height > window.innerHeight * 0.85) {
+    const topAlign = Math.round(window.scrollY + hdrRc.top - 48);
+    window.scrollTo({ top: Math.max(0, Math.min(maxScroll, topAlign)), behavior: 'auto' });
+  } else {
+    window.scrollTo({ top: Math.max(0, Math.min(maxScroll, ideal)), behavior: 'auto' });
+  }
+
+  // Restore CSS transitions for future smooth animations
+  items.forEach(item => {
+    const d = item.querySelector('.pv-list-detail');
+    const a = item.querySelector('.pv-list-arrow');
+    if (d) d.style.transition = '';
+    if (a) a.style.transition = '';
+  });
+
+  cylinderLocked = false;
+  cylinderScrollFx();
+}
+
+// ---- Auto-scroll (→/← hold) ----
+
+function cylinderAutoScrollStart(dir) {
+  const listEl = document.getElementById('preview-list');
+  if (!listEl) return;
+  // Collapse all, clear inline styles
+  listEl.querySelectorAll('.pv-list-detail').forEach(d => d.classList.remove('show', 'half-show'));
+  listEl.querySelectorAll('.pv-list-arrow').forEach(a => a.style.transform = '');
+  listEl.querySelectorAll('.pv-list-item').forEach(item => {
+    item.style.transform = '';
+    item.style.opacity = '';
+  });
+
+  const speed = 8;
+  function tick() {
+    if (!cylinderKeyState['ArrowRight'] && !cylinderKeyState['ArrowLeft']) {
+      cylinderAutoScrollId = null;
+      if (cylinderModeEnabled) cylinderSettle();
+      return;
+    }
+    window.scrollBy(0, dir * speed);
+    cylinderAutoScrollId = requestAnimationFrame(tick);
+  }
+  cylinderAutoScrollId = requestAnimationFrame(tick);
+}
+
+function cylinderAutoScrollStop() {
+  // tick detects key release and auto-settles
 }
 
 function renderPreviewItem() {
@@ -4824,7 +4835,7 @@ function renderPreviewItem() {
   if (typeLabel) metaParts.push(typeLabel);
   if (Object.keys(sourceData).length > 1) metaParts.push(q.source);
 
-  document.getElementById('preview-counter').textContent = (previewIndex + 1) + ' / ' + previewList.length;
+  updatePreviewCounter();
 
   let html = '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
   // 题干末尾加答案字母（选择/判断题）
@@ -4907,62 +4918,93 @@ function buildPreviewAnswerHtml(q) {
   return html;
 }
 
+// Virtual list for preview mode
+let virtualListState = {
+  enabled: false,
+  startIndex: 0,
+  endIndex: 0,
+  itemHeight: 70,
+  buffer: 10,
+  scrollTimer: null
+};
+
 function renderPreviewList() {
   const typeLabels = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'};
-  let html = '';
-  previewList.forEach((q, i) => {
-    const typeLabel = typeLabels[q.type] || '';
-    let metaParts = [];
-    if (q.chapter) metaParts.push(q.chapter);
-    if (typeLabel) metaParts.push(typeLabel);
-    if (Object.keys(sourceData).length > 1) metaParts.push(q.source);
-    const brief = q.question.length > 50 ? q.question.substring(0, 50) + '...' : q.question;
 
-    // 检查是否有备注
-    const listItemNoteKey = qKey(q);
-    const listItemHasNote = !!wrongBookNotes[listItemNoteKey];
+  virtualListState.enabled = previewList.length > 80 && !cylinderModeEnabled;
 
-    html += '<div class="pv-list-item' + (listItemHasNote ? ' has-note' : '') + '" onclick="togglePreviewListItem(this)">';
-    html += '<div class="pv-list-header">';
-    html += '<span class="pv-list-num">' + (i + 1) + '</span>';
-    html += '<span class="pv-list-meta">' + escHtml(metaParts.join(' · ')) + '</span>';
-    html += '<span class="pv-list-brief">' + escHtml(brief) + '</span>';
-    html += '<span class="pv-list-arrow">&#9662;</span>';
-    html += '</div>';
-    html += '<div class="pv-list-detail">';
+  if (!virtualListState.enabled) {
+    let html = '';
+    previewList.forEach((q, i) => {
+      html += buildPreviewListItemHTML(q, i, typeLabels);
+    });
+    document.getElementById('preview-list').innerHTML = html;
+    return;
+  }
 
-    // Full question text + 答案字母
-    let listAnswerTag = '';
-    if (q.type === 'single_choice' || q.type === 'multiple_choice') {
-      listAnswerTag = ' <span class="preview-answer-tag">' + (q.answer || '') + '</span>';
-    } else if (q.type === 'true_false') {
-      listAnswerTag = ' <span class="preview-answer-tag">' + (q.answer === '正确' ? '正确' : q.answer === '错误' ? '错误' : '') + '</span>';
-    }
-    html += '<div class="question-text" style="font-size:15px;margin-bottom:12px">' + formatQuestionQuotes(escHtml(q.question)) + listAnswerTag + '</div>';
+  const totalHeight = previewList.length * virtualListState.itemHeight;
+  virtualListState.buffer = 8;
 
-    // Table for calculation
-    if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
-      html += '<div class="calc-table-wrap"><table class="calc-table"><thead><tr>';
-      q.table.headers.forEach(h => { html += '<th>' + escHtml(h) + '</th>'; });
-      html += '</tr></thead><tbody>';
-      q.table.rows.forEach(row => {
-        html += '<tr>';
-        row.forEach(cell => { html += '<td>' + escHtml(cell) + '</td>'; });
-        html += '</tr>';
+  const wrapperHtml = `<div id="virtual-list-wrapper" style="height:${totalHeight}px;position:relative"></div>`;
+  document.getElementById('preview-list').innerHTML = wrapperHtml;
+
+  const listEl = document.getElementById('preview-list');
+  listEl.addEventListener('scroll', onVirtualScroll, { passive: true });
+
+  // Force reflow so clientHeight is valid, then populate virtual list
+  void listEl.offsetHeight;
+  updateVirtualList();
+}
+
+function buildPreviewListItemHTML(q, i, typeLabels) {
+  const typeLabel = typeLabels[q.type] || '';
+  let metaParts = [];
+  if (q.chapter) metaParts.push(q.chapter);
+  if (typeLabel) metaParts.push(typeLabel);
+  if (Object.keys(sourceData).length > 1) metaParts.push(q.source);
+  const brief = q.question.length > 50 ? q.question.substring(0, 50) + '...' : q.question;
+
+  const listItemNoteKey = qKey(q);
+  const listItemHasNote = !!wrongBookNotes[listItemNoteKey];
+
+  let html = '<div class="pv-list-item' + (listItemHasNote ? ' has-note' : '') + '" data-index="' + i + '" onclick="togglePreviewListItem(this)">';
+  html += '<div class="pv-list-header">';
+  html += '<span class="pv-list-num">' + (i + 1) + '</span>';
+  html += '<span class="pv-list-meta">' + escHtml(metaParts.join(' · ')) + '</span>';
+  html += '<span class="pv-list-brief">' + escHtml(brief) + '</span>';
+  html += '<span class="pv-list-arrow">&#9662;</span>';
+  html += '</div>';
+  html += '<div class="pv-list-detail">';
+
+  let listAnswerTag = '';
+  if (q.type === 'single_choice' || q.type === 'multiple_choice') {
+    listAnswerTag = ' <span class="preview-answer-tag">' + (q.answer || '') + '</span>';
+  } else if (q.type === 'true_false') {
+    listAnswerTag = ' <span class="preview-answer-tag">' + (q.answer === '正确' ? '正确' : q.answer === '错误' ? '错误' : '') + '</span>';
+  }
+  html += '<div class="question-text" style="font-size:15px;margin-bottom:12px">' + formatQuestionQuotes(escHtml(q.question)) + listAnswerTag + '</div>';
+
+  if (q.type === 'calculation' && q.table && q.table.headers && q.table.rows) {
+    html += '<div class="calc-table-wrap"><table class="calc-table"><thead><tr>';
+    q.table.headers.forEach(h => { html += '<th>' + escHtml(h) + '</th>'; });
+    html += '</tr></thead><tbody>';
+    q.table.rows.forEach(row => {
+      html += '<tr>';
+      row.forEach(cell => { html += '<td>' + escHtml(cell) + '</td>'; });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    if (q.sub_questions) {
+      q.sub_questions.forEach(sq => {
+        html += '<div class="preview-sub-q"><b>第' + sq.id + '问：</b>' + escHtml(sq.text) + '</div>';
       });
-      html += '</tbody></table></div>';
-      if (q.sub_questions) {
-        q.sub_questions.forEach(sq => {
-          html += '<div class="preview-sub-q"><b>第' + sq.id + '问：</b>' + escHtml(sq.text) + '</div>';
-        });
-      }
     }
+  }
 
-    // Options
-    if (q.type === 'true_false') {
-      html += '<div class="review-option' + (q.answer === '正确' ? ' correct' : ' neutral') + '">正确' + (q.answer === '正确' ? ' ✓' : '') + '</div>';
-      html += '<div class="review-option' + (q.answer === '错误' ? ' correct' : ' neutral') + '">错误' + (q.answer === '错误' ? ' ✓' : '') + '</div>';
-    } else if (q.options && q.options.length > 0) {
+  if (q.type === 'true_false') {
+    html += '<div class="review-option' + (q.answer === '正确' ? ' correct' : ' neutral') + '">正确' + (q.answer === '正确' ? ' ✓' : '') + '</div>';
+    html += '<div class="review-option' + (q.answer === '错误' ? ' correct' : ' neutral') + '">错误' + (q.answer === '错误' ? ' ✓' : '') + '</div>';
+  } else if (q.options && q.options.length > 0) {
     q.options.forEach(opt => {
       const label = opt.label || '';
       const isCorrect = q.type === 'multiple_choice' ? q.answer.includes(label) : label === q.answer;
@@ -4970,31 +5012,158 @@ function renderPreviewList() {
     });
   }
 
-  // Answer - 只有计算/主观题显示答案区块
-    if (q.type === 'calculation' || q.type === 'subjective') {
-      html += buildPreviewAnswerHtml(q);
-    }
+  if (q.type === 'calculation' || q.type === 'subjective') {
+    html += buildPreviewAnswerHtml(q);
+  }
 
-    // 只读备注（如果有）
-    const listNoteKey = qKey(q);
-    const listNote = wrongBookNotes[listNoteKey];
-    if (listNote) {
-      html += '<div class="note-display">📝 备注：' + escHtml(listNote) + '</div>';
-    }
+  const listNoteKey = qKey(q);
+  const listNote = wrongBookNotes[listNoteKey];
+  if (listNote) {
+    html += '<div class="note-display">📝 备注：' + escHtml(listNote) + '</div>';
+  }
 
-    html += '</div></div>';
-  });
-  document.getElementById('preview-list').innerHTML = html;
+  html += '</div></div>';
+  return html;
+}
+
+function onVirtualScroll() {
+  if (!virtualListState.enabled) return;
+  if (virtualListState.scrollTimer) clearTimeout(virtualListState.scrollTimer);
+  virtualListState.scrollTimer = setTimeout(() => {
+    updateVirtualList();
+  }, 16);
+}
+
+function updateVirtualList() {
+  if (!virtualListState.enabled) return;
+
+  const listEl = document.getElementById('preview-list');
+  const wrapperEl = document.getElementById('virtual-list-wrapper');
+  if (!wrapperEl) return;
+
+  const scrollTop = listEl.scrollTop;
+  const viewHeight = listEl.clientHeight;
+
+  const startIdx = Math.max(0, Math.floor(scrollTop / virtualListState.itemHeight) - virtualListState.buffer);
+  const endIdx = Math.min(previewList.length - 1, Math.ceil((scrollTop + viewHeight) / virtualListState.itemHeight) + virtualListState.buffer);
+
+  if (startIdx === virtualListState.startIndex && endIdx === virtualListState.endIndex) return;
+  virtualListState.startIndex = startIdx;
+  virtualListState.endIndex = endIdx;
+
+  const typeLabels = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'};
+
+  let html = '';
+  html += `<div style="height:${startIdx * virtualListState.itemHeight}px"></div>`;
+
+  for (let i = startIdx; i <= endIdx && i < previewList.length; i++) {
+    html += buildPreviewListItemHTML(previewList[i], i, typeLabels);
+  }
+
+  const remaining = previewList.length - endIdx - 1;
+  if (remaining > 0) {
+    html += `<div style="height:${remaining * virtualListState.itemHeight}px"></div>`;
+  }
+
+  wrapperEl.innerHTML = html;
+
+  if (cylinderModeEnabled) {
+    setTimeout(() => { cylinderSettle(); }, 0);
+  }
 }
 
 function togglePreviewListItem(el) {
-  if (cylinderModeEnabled) return; // cylinder mode manages open/close
+  if (cylinderModeEnabled) {
+    // In cylinder mode: just toggle expand/collapse directly
+    const detail = el.querySelector('.pv-list-detail');
+    const arrow = el.querySelector('.pv-list-arrow');
+    const isOpen = detail.classList.contains('show');
+    if (isOpen) {
+      detail.classList.remove('show');
+      if (arrow) arrow.style.transform = '';
+    } else {
+      detail.classList.add('show');
+      if (arrow) arrow.style.transform = 'rotate(180deg)';
+    }
+    return;
+  }
   const detail = el.querySelector('.pv-list-detail');
   const arrow = el.querySelector('.pv-list-arrow');
   const isOpen = detail.classList.contains('show');
   detail.classList.toggle('show', !isOpen);
   arrow.innerHTML = isOpen ? '&#9662;' : '&#9662;';
   arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+// Jump to question by number (click on counter)
+function jumpToQuestion() {
+  if (!previewList.length) return;
+  showJumpDialog();
+}
+
+function showJumpDialog() {
+  // Remove existing dialog if any
+  const existing = document.getElementById('jump-dialog');
+  if (existing) existing.remove();
+
+  const dialog = document.createElement('div');
+  dialog.id = 'jump-dialog';
+  dialog.innerHTML = `
+    <div class="jump-dialog-overlay"></div>
+    <div class="jump-dialog-box">
+      <div class="jump-dialog-title">跳转到题目</div>
+      <div class="jump-dialog-hint">输入题号 (1-${previewList.length})</div>
+      <input type="number" class="jump-dialog-input" min="1" max="${previewList.length}" value="${previewIndex + 1}">
+      <div class="jump-dialog-btns">
+        <button class="jump-dialog-btn cancel">取消</button>
+        <button class="jump-dialog-btn confirm">确定</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(dialog);
+
+  const input = dialog.querySelector('.jump-dialog-input');
+  const cancelBtn = dialog.querySelector('.jump-dialog-btn.cancel');
+  const confirmBtn = dialog.querySelector('.jump-dialog-btn.confirm');
+  const overlay = dialog.querySelector('.jump-dialog-overlay');
+
+  function close() { dialog.remove(); }
+  function doJump() {
+    const n = parseInt(input.value, 10);
+    if (isNaN(n) || n < 1 || n > previewList.length) {
+      input.style.borderColor = '#e74c3c';
+      input.focus();
+      return;
+    }
+    close();
+    const targetIdx = n - 1;
+    if (previewViewMode === 'list' && cylinderModeEnabled) {
+      const listEl = document.getElementById('preview-list');
+      if (!listEl) return;
+      const items = listEl.querySelectorAll('.pv-list-item');
+      if (items[targetIdx]) {
+        cylinderLocked = true;
+        if (cylinderSettleTimer) { clearTimeout(cylinderSettleTimer); cylinderSettleTimer = null; }
+        const hdr = items[targetIdx].querySelector('.pv-list-header');
+        if (hdr) hdr.scrollIntoView({ block: 'center' });
+        requestAnimationFrame(() => { cylinderScrollFx(); });
+        setTimeout(() => { cylinderLocked = false; cylinderSettle(); }, 400);
+      }
+    } else {
+      previewIndex = targetIdx;
+      renderPreviewItem();
+    }
+  }
+
+  cancelBtn.onclick = close;
+  overlay.onclick = close;
+  confirmBtn.onclick = doJump;
+  input.onkeydown = (e) => {
+    if (e.key === 'Enter') doJump();
+    else if (e.key === 'Escape') close();
+  };
+  input.focus();
+  input.select();
 }
 
 function previewPrev() {
