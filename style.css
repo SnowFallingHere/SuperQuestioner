@@ -127,7 +127,7 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 #timer-red-overlay.active { background: rgba(231,76,60,0.22); opacity: 1; animation: timerRedPulse 1s ease-in-out infinite; }
 @keyframes timerRedPulse {
   0%, 100% { background: rgba(231,76,60,0.18); }
-  50% { background: rgba(231,76,60,0.32); }
+  65% { background: rgba(231,76,60,0.32); }
 }
 
 /* 选项抖动 + 缩放 */
