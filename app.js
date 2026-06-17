@@ -2430,6 +2430,32 @@ function resumeTimersForDebug() {
 }
 
 // —— 显示该题目的答案（不提交） ——
+function debugHighlightAnswer() {
+  if (!debugEnabled) return;
+  const q = quizQueue && quizQueue[currentIndex];
+  if (!q) return;
+  if (q.type === 'calculation' || q.type === 'subjective') {
+    // 计算题/主观题无选项可高亮，fallback 到文字答案
+    closeDebugBallRadial();
+    debugShowAnswer();
+    return;
+  }
+  let answer;
+  if (q.type === 'true_false') {
+    answer = q.answer;
+  } else {
+    const fb = document.getElementById('answer-feedback');
+    answer = fb && fb.dataset.mappedAnswer ? fb.dataset.mappedAnswer : q.answer;
+  }
+  // 给对应选项加 .correct 类
+  const labels = String(answer).split('');
+  const optEls = document.querySelectorAll('.option, .tf-btn');
+  labels.forEach(l => {
+    const el = Array.from(optEls).find(e => e.dataset.label === l);
+    if (el) el.classList.add('correct');
+  });
+}
+
 function debugShowAnswer() {
   if (!debugEnabled) return;
   const q = quizQueue && quizQueue[currentIndex];
@@ -2786,7 +2812,11 @@ function openDebugBallRadial() {
   // 3) 排斥算法：先按理想位置放置，然后用基于距离的斥力做几次迭代
   // 初始角度分布
   let positions = [];
-  if (arc >= Math.PI * 2 - 0.01) {
+  if (n === 1) {
+    // 只有一项时居中放置
+    const a = startAngle + arc / 2;
+    positions.push({ x: cx + baseRadius * Math.cos(a), y: cy + baseRadius * Math.sin(a) });
+  } else if (arc >= Math.PI * 2 - 0.01) {
     // 360°：按 n 等分
     for (let i = 0; i < n; i++) {
       const a = startAngle + (arc / n) * i;
@@ -2995,6 +3025,9 @@ function showDebugSubRadial(key, parentEl) {
   container.innerHTML = '';
   container.classList.remove('hidden');
   debugBallActiveParent = key;
+  // 次级浮块展开时禁用遮罩，防止一级浮块隐藏后 click 事件穿透到遮罩导致关闭
+  const mask = document.getElementById('debug-radial-mask');
+  if (mask) mask.style.pointerEvents = 'none';
   let items;
   if (key === 'correct' || key === 'wrong') {
     items = DEBUG_SUB_ITEMS[key].map(n => ({
@@ -3085,7 +3118,11 @@ function showDebugSubRadial(key, parentEl) {
   }
   // 初始位置（绕小球中心 cx,cy）
   let positions = [];
-  if (arc >= Math.PI * 2 - 0.01) {
+  if (n === 1) {
+    // 只有一项时居中放置
+    const a = startAngle + arc / 2;
+    positions.push({ x: cx + baseRadius * Math.cos(a), y: cy + baseRadius * Math.sin(a) });
+  } else if (arc >= Math.PI * 2 - 0.01) {
     for (let i = 0; i < n; i++) {
       const a = startAngle + (arc / n) * i;
       positions.push({ x: cx + baseRadius * Math.cos(a), y: cy + baseRadius * Math.sin(a) });
@@ -3141,15 +3178,11 @@ function showDebugSubRadial(key, parentEl) {
     el.innerHTML = '<div class="ri-icon">' + (it.icon || '•') + '</div><div class="ri-label">' + (it.label || '') + '</div>';
     el.style.left = positions[i].x + 'px';
     el.style.top = positions[i].y + 'px';
-    el.addEventListener('pointerup', function(e) {
+    el.addEventListener('click', function(e) {
       e.stopPropagation();
       e.preventDefault();
       try { it.fn(); } catch (err) { console.error(err); }
-      // 只收起次级浮块，保留一级浮块，方便继续操作其他功能
       closeDebugSubRadial();
-    });
-    el.addEventListener('click', function(e) {
-      e.stopPropagation();
     });
     container.appendChild(el);
     setTimeout(() => el.classList.add('show'), 20 + i * 18);
@@ -3217,6 +3250,9 @@ function closeDebugSubRadial() {
     setTimeout(() => { if (container) container.classList.add('hidden'); }, 180);
   }
   debugBallActiveParent = null;
+  // 恢复遮罩交互
+  const mask = document.getElementById('debug-radial-mask');
+  if (mask) mask.style.pointerEvents = '';
   // 重新显示一级浮块
   showAllRadialItems();
 }
@@ -3227,7 +3263,14 @@ function runDebugAction(key, val) {
     const pauseChk = document.getElementById('debug-pause-timer');
     if (pauseChk) pauseChk.checked = debugTimerPausedByUser;
   } else if (key === 'answer') {
-    debugShowAnswer();
+    if (window.innerWidth < 480) {
+      // 移动端：正确选项变绿（不消失），不关放射菜单
+      debugHighlightAnswer();
+    } else {
+      // 桌面端：关闭放射菜单，恢复 debug 面板以显示答案
+      closeDebugBallRadial();
+      debugShowAnswer();
+    }
   }
 }
 
