@@ -2532,6 +2532,7 @@ function initDebugPanelDrag() {
     e.preventDefault();
   }, { passive: false });
   document.addEventListener('touchmove', function(e) {
+    if (!debugPanelDragState) return;
     const t = e.touches[0];
     if (!t) return;
     moveDrag(t.clientX, t.clientY);
