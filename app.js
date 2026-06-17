@@ -2140,14 +2140,23 @@ function saveComboSettings() {
 }
 
 // ====== Debug Panel（调试工具） ======
-// 触发：10 秒内点击 #theme-toggle ≥10 下，齿轮旁常驻显示调试入口按钮 🐛
+// 触发：10 秒内点击 #theme-toggle ≥10 下 → 齿轮集成调试入口（点击齿轮打开调试面板，面板内有"连击设置"入口）
 let debugThemeClickTimes = [];   // 记录 #theme-toggle 的点击时间戳
 let debugEntryRevealed = false;  // 是否已显示常驻调试入口
 let debugEnabled = false;        // 调试总开关
 let debugEffectsOverride = null; // null | true | false
 let debugSoundOverride = null;   // null | true | false
 let debugTimerPausedByUser = false; // 用户通过调试面板暂停计时
-let debugPanelDragState = null;  // 拖动状态
+let debugPanelDragState = null;  // 拖动状态（{startX, startY, origLeft, origTop}）
+
+// 齿轮点击：未解锁 → 打开连击设置；已解锁 → 打开调试面板
+function onComboGearClick() {
+  if (debugEntryRevealed) {
+    openDebugPanel();
+  } else {
+    showComboSettings();
+  }
+}
 
 // 初始化触发监听（在 DOM 加载后绑定）
 function initDebugTrigger() {
@@ -2155,7 +2164,6 @@ function initDebugTrigger() {
   if (themeToggle) {
     themeToggle.addEventListener('click', function() {
       const now = Date.now();
-      // 清理 10 秒前的记录
       debugThemeClickTimes = debugThemeClickTimes.filter(t => now - t < 10000);
       debugThemeClickTimes.push(now);
       if (debugThemeClickTimes.length >= 10 && !debugEntryRevealed) {
@@ -2164,27 +2172,60 @@ function initDebugTrigger() {
     });
   }
   initDebugPanelDrag();
+  initDebugBall();
+  restoreDebugBallPos();
 }
 
-// 显示常驻调试入口按钮
+// 解锁调试入口——改变齿轮外观（加边框/颜色），并自动启用总开关
 function revealDebugEntry() {
   debugEntryRevealed = true;
-  const btn = document.getElementById('debug-entry-btn');
-  if (btn) {
-    btn.classList.remove('hidden');
+  const gear = document.getElementById('combo-gear-btn');
+  if (gear) {
+    gear.title = '调试工具（已解锁）';
+    gear.style.color = '#6c5ce7';
+    gear.style.textShadow = '0 0 6px rgba(108,92,231,0.5)';
     // 短暂放大提示
-    btn.style.transition = 'transform .3s';
-    btn.style.transform = 'scale(1.6)';
-    setTimeout(() => { btn.style.transform = ''; }, 600);
+    gear.style.transition = 'transform .3s';
+    gear.style.transform = 'scale(1.6) rotate(90deg)';
+    setTimeout(() => { gear.style.transform = ''; }, 600);
   }
-  console.log('[Debug] 调试入口已常驻，点击 🐛 即可打开调试工具');
+  // 自动启用总开关（用户在解锁后即可使用）
+  if (!debugEnabled) {
+    debugEnabled = true;
+    const panelSwitch = document.getElementById('debug-enabled-toggle');
+    if (panelSwitch) {
+      panelSwitch.checked = true;
+      toggleDebugEnabled(true);
+    }
+  }
+  // 移动端显示小球
+  const ball = document.getElementById('debug-ball');
+  if (ball) {
+    ball.classList.remove('hidden');
+    syncDebugBall();
+    // 短暂放大提示
+    const inner = document.getElementById('debug-ball-inner');
+    if (inner) {
+      inner.style.transition = 'transform .3s';
+      inner.style.transform = 'scale(1.4)';
+      setTimeout(() => { inner.style.transform = ''; }, 600);
+    }
+  }
+  console.log('[Debug] 调试入口已解锁（移动端：点击小球 / 桌面端：点击 ⚙️）');
 }
 
 // 打开调试面板
 function openDebugPanel() {
   const panel = document.getElementById('debug-panel');
   if (!panel) return;
+  // 关闭小球浮块（如果已展开），避免冲突
+  if (typeof closeDebugBallRadial === 'function') closeDebugBallRadial();
   panel.classList.remove('hidden');
+  // 同步内嵌特效/音效开关状态（显示用户当前设置）
+  const effToggle = document.getElementById('debug-inline-effects');
+  const sndToggle = document.getElementById('debug-inline-sound');
+  if (effToggle) effToggle.checked = getComboEffectsEnabled();
+  if (sndToggle) sndToggle.checked = getComboSoundEnabled();
   // 默认关闭调试总开关
   if (!debugEnabled) {
     const toggle = document.getElementById('debug-enable-toggle');
@@ -2193,7 +2234,6 @@ function openDebugPanel() {
     if (body) body.style.opacity = '0.5';
     body && (body.style.pointerEvents = 'none');
   }
-  // 刷新错题下拉
   refreshDebugWrongSelect();
 }
 
@@ -2211,14 +2251,16 @@ function toggleDebugEnabled(checked) {
     body.style.opacity = checked ? '1' : '0.5';
     body.style.pointerEvents = checked ? 'auto' : 'none';
   }
+  // 同步小球状态
+  syncDebugBall();
   if (!checked) {
-    // 关闭时清空所有 override，恢复用户原设置
+    // 关闭时清空 override，恢复用户原设置
     debugEffectsOverride = null;
     debugSoundOverride = null;
-    const effSel = document.getElementById('debug-effects-override');
-    const sndSel = document.getElementById('debug-sound-override');
-    if (effSel) effSel.value = '';
-    if (sndSel) sndSel.value = '';
+    const effToggle = document.getElementById('debug-inline-effects');
+    const sndToggle = document.getElementById('debug-inline-sound');
+    if (effToggle) effToggle.checked = getComboEffectsEnabled();
+    if (sndToggle) sndToggle.checked = getComboSoundEnabled();
     // 恢复计时
     if (debugTimerPausedByUser) {
       debugTimerPausedByUser = false;
@@ -2230,6 +2272,18 @@ function toggleDebugEnabled(checked) {
     const ansBox = document.getElementById('debug-answer-box');
     if (ansBox) { ansBox.classList.add('hidden'); ansBox.textContent = ''; }
   }
+}
+
+// —— 内嵌连击特效开关 ——
+function debugToggleInlineEffects(checked) {
+  debugEffectsOverride = checked;
+  console.log('[Debug] 连击特效 override →', checked);
+}
+
+// —— 内嵌连击音效开关 ——
+function debugToggleInlineSound(checked) {
+  debugSoundOverride = checked;
+  console.log('[Debug] 连击音效 override →', checked);
 }
 
 // —— 赋予已正确 X 题（同步累积 streak 并触发连击特效） ——
@@ -2273,26 +2327,21 @@ function refreshDebugInfo() {
   if (infoEl) infoEl.textContent = info;
 }
 
-// —— 特效/音效 override ——
-function debugSetEffectsOverride(val) {
-  if (!debugEnabled) return;
-  debugEffectsOverride = val === '' ? null : (val === 'true');
-}
-function debugSetSoundOverride(val) {
-  if (!debugEnabled) return;
-  debugSoundOverride = val === '' ? null : (val === 'true');
-}
-
-// 覆盖原 getComboEffectsEnabled / getComboSoundEnabled（保留原函数引用）
-const _origGetComboEffectsEnabled = getComboEffectsEnabled;
-const _origGetComboSoundEnabled = getComboSoundEnabled;
+// 覆盖 getComboEffectsEnabled / getComboSoundEnabled（在原函数定义之后重写）
+// 注意：原函数已通过 function 声明，可在赋值前引用
 getComboEffectsEnabled = function() {
   if (debugEnabled && debugEffectsOverride !== null) return debugEffectsOverride;
-  return _origGetComboEffectsEnabled();
+  return (function() {
+    const val = localStorage.getItem('comboEffectsEnabled');
+    return val !== 'false';
+  })();
 };
 getComboSoundEnabled = function() {
   if (debugEnabled && debugSoundOverride !== null) return debugSoundOverride;
-  return _origGetComboSoundEnabled();
+  return (function() {
+    const val = localStorage.getItem('comboSoundEnabled');
+    return val !== 'false';
+  })();
 };
 
 // —— 调出错题（下拉来源：byQuestion 中 countWrong>0 的题，与紫光榜单一致） ——
@@ -2354,6 +2403,7 @@ function debugTogglePauseTimer(checked) {
   } else {
     resumeTimersForDebug();
   }
+  syncDebugBall();
 }
 
 function resumeTimersForDebug() {
@@ -2426,45 +2476,826 @@ function debugShowAnswer() {
   console.log('[Debug] 显示答案（未提交）');
 }
 
-// —— 调试面板拖动 ——
+// —— 调试面板拖动（鼠标 + 触屏） ——
 function initDebugPanelDrag() {
   const header = document.getElementById('debug-panel-header');
   const panel = document.getElementById('debug-panel');
   if (!header || !panel) return;
-  header.addEventListener('mousedown', function(e) {
-    // 点击开关或关闭按钮时不触发拖动
-    if (e.target.tagName === 'INPUT' || e.target.classList.contains('debug-panel-close')) return;
+
+  function startDrag(clientX, clientY, target) {
+    if (target.tagName === 'INPUT' || target.classList.contains('debug-panel-close')) return;
     const rect = panel.getBoundingClientRect();
     debugPanelDragState = {
-      startX: e.clientX,
-      startY: e.clientY,
+      startX: clientX,
+      startY: clientY,
       origLeft: rect.left,
       origTop: rect.top
     };
     panel.style.right = 'auto';
     panel.style.left = rect.left + 'px';
     panel.style.top = rect.top + 'px';
-    e.preventDefault();
-  });
-  document.addEventListener('mousemove', function(e) {
+  }
+
+  function moveDrag(clientX, clientY) {
     if (!debugPanelDragState) return;
-    const dx = e.clientX - debugPanelDragState.startX;
-    const dy = e.clientY - debugPanelDragState.startY;
-    const panel = document.getElementById('debug-panel');
-    if (!panel) return;
+    const dx = clientX - debugPanelDragState.startX;
+    const dy = clientY - debugPanelDragState.startY;
     let newLeft = debugPanelDragState.origLeft + dx;
     let newTop = debugPanelDragState.origTop + dy;
-    // 限制在视口内
     const maxLeft = window.innerWidth - panel.offsetWidth;
     const maxTop = window.innerHeight - 40;
     newLeft = Math.max(0, Math.min(maxLeft, newLeft));
     newTop = Math.max(0, Math.min(maxTop, newTop));
     panel.style.left = newLeft + 'px';
     panel.style.top = newTop + 'px';
-  });
-  document.addEventListener('mouseup', function() {
+  }
+
+  function endDrag() {
     debugPanelDragState = null;
+  }
+
+  // 鼠标
+  header.addEventListener('mousedown', function(e) {
+    startDrag(e.clientX, e.clientY, e.target);
+    e.preventDefault();
   });
+  document.addEventListener('mousemove', function(e) { moveDrag(e.clientX, e.clientY); });
+  document.addEventListener('mouseup', endDrag);
+
+  // 触屏
+  header.addEventListener('touchstart', function(e) {
+    const t = e.touches[0];
+    if (!t) return;
+    startDrag(t.clientX, t.clientY, e.target);
+    e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchmove', function(e) {
+    const t = e.touches[0];
+    if (!t) return;
+    moveDrag(t.clientX, t.clientY);
+    e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchend', endDrag);
+  document.addEventListener('touchcancel', endDrag);
+}
+
+// ====== Debug Ball（移动端浮动小球 + 放射菜单） ======
+let debugBallDragState = null;  // 拖动状态
+let debugBallExpanded = false;  // 浮块是否展开
+let debugBallActiveParent = null; // 当前激活次级菜单的一级项 key
+let debugRadialOffsets = [];     // 浮块相对小球的原始偏移量
+let debugRadialOriginalCenter = { x: 0, y: 0 };  // 浮块展开时小球的位置
+let debugSubOffsets = [];        // 次级浮块相对一级浮块的偏移量
+let debugSubOriginalCenter = { x: 0, y: 0 };  // 次级浮块展开时一级浮块的位置
+const DEBUG_RADIAL_ITEMS = [
+  { key: 'correct', icon: '✓', label: '赋予对' },
+  { key: 'wrong',   icon: '✗', label: '赋予错' },
+  { key: 'summon',  icon: '🎯', label: '调出错题' },
+  { key: 'effect',  icon: '✨', label: '调特效' },
+  { key: 'sound',   icon: '🔔', label: '调音效' },
+  { key: 'pause',   icon: '⏸', label: '暂停计时' },
+  { key: 'answer',  icon: '👁', label: '答案' }
+];
+
+// 一级浮块对应的次级选项
+const DEBUG_SUB_ITEMS = {
+  correct: [1, 5, 10, 20, 50],
+  wrong:   [1, 5, 10, 20, 50],
+  summon:  [], // 动态生成：最近错题
+  effect:  [
+    { v: 3,  label: 'GOOD',     fn: () => debugPlayEffect('good') },
+    { v: 10, label: 'PERFECT',  fn: () => debugPlayEffect('perfect') },
+    { v: 20, label: 'AWESOME',  fn: () => debugPlayEffect('awesome') },
+    { v: 30, label: 'UNBELIEV', fn: () => debugPlayEffect('unbelievable') },
+    { v: 40, label: 'FABULOUS', fn: () => debugPlayEffect('fabulous') },
+    { v: 50, label: 'MARVELOUS',fn: () => debugPlayEffect('marvelous') }
+  ],
+  sound:   [
+    { label: 'good',        fn: () => playGood() },
+    { label: 'wrong',       fn: () => playWrong() },
+    { label: 'perfect',     fn: () => playPerfect() },
+    { label: 'awesome',     fn: () => playAwesome() },
+    { label: 'unbelievable',fn: () => playUnbelievable() },
+    { label: 'fabulous',    fn: () => playFabulous() },
+    { label: 'marvelous',   fn: () => playMarvelous() }
+  ],
+  pause:   null,  // 直动
+  answer:  null   // 直动
+};
+
+// 初始化小球（拖动 + 点击展开）
+function initDebugBall() {
+  const ball = document.getElementById('debug-ball');
+  if (!ball) return;
+  let startX = 0, startY = 0, startTime = 0;
+  let moved = false;
+  const ballSize = 48;
+  function clampPos(left, top) {
+    const maxLeft = window.innerWidth - ballSize - 4;
+    const maxTop = window.innerHeight - ballSize - 4;
+    return { left: Math.max(4, Math.min(maxLeft, left)), top: Math.max(4, Math.min(maxTop, top)) };
+  }
+  function start(clientX, clientY) {
+    const rect = ball.getBoundingClientRect();
+    startX = clientX; startY = clientY; startTime = Date.now();
+    moved = false;
+    debugBallDragState = { startX, startY, origLeft: rect.left, origTop: rect.top };
+    ball.style.bottom = 'auto';
+    ball.style.right = 'auto';
+    ball.style.left = rect.left + 'px';
+    ball.style.top = rect.top + 'px';
+    // 开始拖动时收起所有浮块（避免跟随造成的视觉混乱）
+    if (debugBallExpanded) collapseAllDebugRadials();
+  }
+  function move(clientX, clientY) {
+    if (!debugBallDragState) return;
+    if (Math.abs(clientX - startX) + Math.abs(clientY - startY) > 6) moved = true;
+    const dx = clientX - debugBallDragState.startX;
+    const dy = clientY - debugBallDragState.startY;
+    const pos = clampPos(debugBallDragState.origLeft + dx, debugBallDragState.origTop + dy);
+    ball.style.left = pos.left + 'px';
+    ball.style.top = pos.top + 'px';
+  }
+  function end() {
+    if (debugBallDragState) {
+      saveDebugBallPos();
+      debugBallDragState = null;
+    }
+    // 拖动结束后，如果浮块原本是展开的则重新计算布局
+    if (debugBallExpanded) {
+      openDebugBallRadial();
+    }
+  }
+  // 鼠标
+  ball.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    start(e.clientX, e.clientY);
+  });
+  document.addEventListener('mousemove', function(e) { if (debugBallDragState) move(e.clientX, e.clientY); });
+  // 只有当 mouseup 在小球上时才算 end()，避免点击浮块时误触发
+  document.addEventListener('mouseup', function(e) {
+    if (debugBallDragState && (e.target === ball || ball.contains(e.target))) end();
+  });
+  // 触屏
+  ball.addEventListener('touchstart', function(e) {
+    const t = e.touches[0]; if (!t) return;
+    e.preventDefault();
+    start(t.clientX, t.clientY);
+  }, { passive: false });
+  document.addEventListener('touchmove', function(e) {
+    if (!debugBallDragState) return;
+    const t = e.touches[0]; if (!t) return;
+    move(t.clientX, t.clientY);
+    e.preventDefault();
+  }, { passive: false });
+  // 只有 touchend 在小球上时才 end()，避免点击浮块时误触
+  document.addEventListener('touchend', function(e) {
+    if (debugBallDragState && (e.target === ball || ball.contains(e.target))) {
+      end();
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('touchcancel', function(e) {
+    if (debugBallDragState && (e.target === ball || ball.contains(e.target))) end();
+  });
+  // 点击（拖动位移 < 6px 才算点击）—— 使用 pointerup 统一处理
+  ball.addEventListener('pointerup', function(e) {
+    e.stopPropagation();
+    if (moved) { moved = false; return; }
+    if (Date.now() - startTime > 500) return; // 长按不算点击
+    toggleDebugBallRadial();
+  });
+}
+
+function saveDebugBallPos() {
+  const ball = document.getElementById('debug-ball');
+  if (!ball) return;
+  const left = parseFloat(ball.style.left);
+  const top = parseFloat(ball.style.top);
+  if (isFinite(left) && isFinite(top)) {
+    try { localStorage.setItem('debugBallPos', JSON.stringify({ left, top })); } catch (e) {}
+  }
+}
+function restoreDebugBallPos() {
+  try {
+    const raw = localStorage.getItem('debugBallPos');
+    if (!raw) return;
+    const pos = JSON.parse(raw);
+    const ball = document.getElementById('debug-ball');
+    if (!ball || !pos) return;
+    const maxLeft = window.innerWidth - 48 - 4;
+    const maxTop = window.innerHeight - 48 - 4;
+    const left = Math.max(4, Math.min(maxLeft, pos.left || 0));
+    const top = Math.max(4, Math.min(maxTop, pos.top || 0));
+    ball.style.bottom = 'auto';
+    ball.style.right = 'auto';
+    ball.style.left = left + 'px';
+    ball.style.top = top + 'px';
+  } catch (e) {}
+}
+
+// 同步小球状态（启用/暂停）
+function syncDebugBall() {
+  const ball = document.getElementById('debug-ball');
+  if (!ball) return;
+  ball.classList.toggle('is-enabled', debugEnabled);
+  ball.classList.toggle('is-paused', debugTimerPausedByUser);
+}
+
+// 切换放射菜单
+function toggleDebugBallRadial() {
+  // 桌面端（>480px）：点击小球直接打开面板
+  if (window.innerWidth > 480) {
+    if (typeof openDebugPanel === 'function') openDebugPanel();
+    return;
+  }
+  // 移动端：展开/收起放射菜单
+  if (debugBallExpanded) closeDebugBallRadial();
+  else openDebugBallRadial();
+}
+
+function openDebugBallRadial() {
+  // 先关闭次级（避免在次级展开时重开一级）
+  closeDebugSubRadial();
+  const ball = document.getElementById('debug-ball');
+  if (!ball) return;
+  const rect = ball.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const container = document.getElementById('debug-radial');
+  if (!container) return;
+  // 关闭调试面板（避免与小球菜单冲突）
+  const panel = document.getElementById('debug-panel');
+  if (panel && !panel.classList.contains('hidden')) panel.classList.add('hidden');
+  container.innerHTML = '';
+  container.classList.remove('hidden');
+  const itemSize = 56, itemRadius = itemSize / 2;
+  const minDistBetween = itemSize + 6; // 浮块中心间距最小值（防止重叠）
+  const margin = 8;
+  const screenW = window.innerWidth, screenH = window.innerHeight;
+  const n = DEBUG_RADIAL_ITEMS.length;
+  // 1) 评估小球在视口的位置
+  //    - 离最近边的距离
+  //    - 离角落的距离
+  const distToTop = cy;
+  const distToBottom = screenH - cy;
+  const distToLeft = cx;
+  const distToRight = screenW - cx;
+  const minDistToEdge = Math.min(distToTop, distToBottom, distToLeft, distToRight);
+  const isCorner = (distToTop < screenH * 0.3 || distToBottom < screenH * 0.3) &&
+                   (distToLeft < screenW * 0.3 || distToRight < screenW * 0.3);
+  // 2) 决定扇形角度
+  //    - 中央（minDistToEdge 大）→ 360° 全圆
+  //    - 边缘（一边贴着边）→ 180° 半圆（朝开阔侧）
+  //    - 角落 → 90° 扇形（朝对角）
+  let arc, startAngle, baseRadius;
+  if (!isCorner && minDistToEdge > Math.min(screenW, screenH) * 0.35) {
+    // 中央区域 → 360° 全圆
+    arc = Math.PI * 2;
+    startAngle = -Math.PI / 2; // 顶部起
+    baseRadius = Math.min(screenW, screenH) * 0.3;
+  } else if (isCorner) {
+    // 角落 → 90° 扇形，朝对角
+    arc = Math.PI / 2;
+    if (cx > screenW / 2 && cy > screenH / 2) startAngle = -Math.PI;       // 右下 → 扇形指向左上
+    else if (cx < screenW / 2 && cy < screenH / 2) startAngle = 0;         // 左上 → 扇形指向右下
+    else if (cx > screenW / 2 && cy < screenH / 2) startAngle = -Math.PI / 2; // 右上 → 扇形指向左下
+    else startAngle = -Math.PI / 2;                                          // 左下 → 扇形指向右上
+    baseRadius = 80;
+  } else {
+    // 边缘 → 180° 半圆，朝开阔侧
+    arc = Math.PI;
+    if (distToTop < distToBottom) {
+      // 贴上边 → 向下半圆
+      startAngle = 0;
+    } else {
+      // 贴下边 → 向上半圆
+      startAngle = -Math.PI;
+    }
+    if (distToLeft < distToRight) {
+      // 贴左边 → 弧度偏移
+      startAngle += Math.PI / 2;
+    } else {
+      startAngle -= Math.PI / 2;
+    }
+    baseRadius = 80;
+  }
+  // 3) 排斥算法：先按理想位置放置，然后用基于距离的斥力做几次迭代
+  // 初始角度分布
+  let positions = [];
+  if (arc >= Math.PI * 2 - 0.01) {
+    // 360°：按 n 等分
+    for (let i = 0; i < n; i++) {
+      const a = startAngle + (arc / n) * i;
+      positions.push({ x: cx + baseRadius * Math.cos(a), y: cy + baseRadius * Math.sin(a) });
+    }
+  } else {
+    // 扇形/半圆
+    for (let i = 0; i < n; i++) {
+      const a = startAngle + (arc / (n - 1)) * i;
+      positions.push({ x: cx + baseRadius * Math.cos(a), y: cy + baseRadius * Math.sin(a) });
+    }
+  }
+  // 边界修正
+  function clampToScreen(p) {
+    return {
+      x: Math.max(margin + itemRadius, Math.min(screenW - margin - itemRadius, p.x)),
+      y: Math.max(margin + itemRadius, Math.min(screenH - margin - itemRadius, p.y))
+    };
+  }
+  positions = positions.map(clampToScreen);
+  // 排斥迭代：每个浮块相对其他浮块产生斥力
+  const iters = 8;
+  for (let it = 0; it < iters; it++) {
+    for (let i = 0; i < n; i++) {
+      for (let j = i + 1; j < n; j++) {
+        const dx = positions[j].x - positions[i].x;
+        const dy = positions[j].y - positions[i].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < minDistBetween && d > 0.1) {
+          const push = (minDistBetween - d) / 2;
+          const nx = dx / d, ny = dy / d;
+          positions[i].x -= nx * push;
+          positions[i].y -= ny * push;
+          positions[j].x += nx * push;
+          positions[j].y += ny * push;
+        }
+      }
+      // 也让浮块远离小球中心（避免遮住球）
+      const dxc = positions[i].x - cx;
+      const dyc = positions[i].y - cy;
+      const dc = Math.sqrt(dxc * dxc + dyc * dyc);
+      const minDC = 50;
+      if (dc < minDC && dc > 0.1) {
+        const push = (minDC - dc) / 2;
+        positions[i].x += (dxc / dc) * push;
+        positions[i].y += (dyc / dc) * push;
+      }
+      positions[i] = clampToScreen(positions[i]);
+    }
+  }
+  // 4) 创建浮块——保存每个浮块相对小球的"原始相对位置"和"原始小球中心"
+  debugRadialOffsets = positions.map(p => ({ dx: p.x - cx, dy: p.y - cy }));
+  debugRadialOriginalCenter = { x: cx, y: cy };
+  DEBUG_RADIAL_ITEMS.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'debug-radial-item';
+    el.innerHTML = '<div class="ri-icon">' + item.icon + '</div><div class="ri-label">' + item.label + '</div>';
+    el.style.left = positions[i].x + 'px';
+    el.style.top = positions[i].y + 'px';
+    el.style.pointerEvents = 'auto';
+    el.dataset.debugKey = item.key;
+    // pointerup 兼容触屏和鼠标
+    el.addEventListener('pointerup', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      onDebugRadialClick(item.key, el);
+    });
+    // click 阻止冒泡（防止触发 mask 关闭）
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    container.appendChild(el);
+    setTimeout(() => el.classList.add('show'), 30 + i * 25);
+  });
+  showDebugMask();
+  debugBallExpanded = true;
+  debugBallActiveParent = null;
+}
+
+// 浮块跟随小球移动：根据保存的偏移量 + 小球新位置
+function updateDebugRadialPosition() {
+  if (!debugBallExpanded) return;
+  const ball = document.getElementById('debug-ball');
+  const container = document.getElementById('debug-radial');
+  if (!ball || !container) return;
+  const rect = ball.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const screenW = window.innerWidth, screenH = window.innerHeight;
+  const margin = 8, itemRadius = 28;
+  const dx0 = cx - debugRadialOriginalCenter.x;
+  const dy0 = cy - debugRadialOriginalCenter.y;
+  const items = container.querySelectorAll('.debug-radial-item');
+  items.forEach((el, i) => {
+    const off = debugRadialOffsets[i];
+    if (!off) return;
+    let nx = debugRadialOriginalCenter.x + off.dx + dx0;
+    let ny = debugRadialOriginalCenter.y + off.dy + dy0;
+    // 边界修正（保证浮块不越出视口）
+    nx = Math.max(margin + itemRadius, Math.min(screenW - margin - itemRadius, nx));
+    ny = Math.max(margin + itemRadius, Math.min(screenH - margin - itemRadius, ny));
+    el.style.left = nx + 'px';
+    el.style.top = ny + 'px';
+  });
+}
+
+function closeDebugBallRadial() {
+  const container = document.getElementById('debug-radial');
+  if (container) {
+    Array.from(container.children).forEach(el => el.classList.remove('show'));
+    setTimeout(() => { if (container) container.classList.add('hidden'); }, 200);
+  }
+  closeDebugSubRadial();
+  hideDebugMask();
+  debugBallExpanded = false;
+  debugBallActiveParent = null;
+}
+
+// 只清空浮块 DOM（不修改 debugBallExpanded，用于拖动时临时收起）
+function collapseAllDebugRadials() {
+  const container = document.getElementById('debug-radial');
+  if (container) {
+    Array.from(container.children).forEach(el => el.classList.remove('show'));
+    setTimeout(() => {
+      if (container) {
+        container.innerHTML = '';
+        container.classList.add('hidden');
+      }
+    }, 150);
+  }
+  closeDebugSubRadial();
+  hideDebugMask();
+  debugBallActiveParent = null;
+}
+
+function showDebugMask() {
+  let mask = document.getElementById('debug-radial-mask');
+  if (!mask) {
+    mask = document.createElement('div');
+    mask.id = 'debug-radial-mask';
+    mask.className = 'debug-radial-mask';
+    mask.addEventListener('click', closeDebugBallRadial);
+    document.body.appendChild(mask);
+  }
+  mask.classList.add('show');
+}
+function hideDebugMask() {
+  const mask = document.getElementById('debug-radial-mask');
+  if (mask) mask.classList.remove('show');
+}
+
+function onDebugRadialClick(key, parentEl) {
+  if (!debugEnabled) {
+    // 提示：调试未启用
+    const inner = document.getElementById('debug-ball-inner');
+    if (inner) {
+      const old = inner.textContent;
+      inner.textContent = '!';
+      setTimeout(() => { inner.textContent = old; }, 600);
+    }
+    return;
+  }
+  const sub = DEBUG_SUB_ITEMS[key];
+  if (sub === null) {
+    // 直动（pause/answer）：执行后不关闭浮块，让用户继续切换
+    runDebugAction(key, null);
+    return;
+  }
+  if (debugBallActiveParent === key) {
+    closeDebugSubRadial();
+    // 重新显示一级浮块
+    showAllRadialItems();
+    return;
+  }
+  // 隐藏一级浮块，再展开次级浮块（避免重叠）
+  hideAllRadialItems();
+  showDebugSubRadial(key, parentEl);
+}
+
+// 隐藏所有一级浮块（次级浮块展开时使用）
+function hideAllRadialItems() {
+  const container = document.getElementById('debug-radial');
+  if (!container) return;
+  const items = container.querySelectorAll('.debug-radial-item');
+  items.forEach(el => {
+    el.classList.add('hidden-by-sub');
+    el.style.opacity = '0';
+    el.style.pointerEvents = 'none';
+  });
+}
+// 重新显示一级浮块（次级浮块关闭时使用）
+function showAllRadialItems() {
+  const container = document.getElementById('debug-radial');
+  if (!container) return;
+  const items = container.querySelectorAll('.debug-radial-item');
+  items.forEach(el => {
+    el.classList.remove('hidden-by-sub');
+    el.style.opacity = '';
+    el.style.pointerEvents = '';
+  });
+}
+
+function showDebugSubRadial(key, parentEl) {
+  const container = document.getElementById('debug-subradial');
+  if (!container) return;
+  container.innerHTML = '';
+  container.classList.remove('hidden');
+  debugBallActiveParent = key;
+  let items;
+  if (key === 'correct' || key === 'wrong') {
+    items = DEBUG_SUB_ITEMS[key].map(n => ({
+      icon: n >= 50 ? '🏆' : (n >= 20 ? '⭐' : (n >= 10 ? '✨' : '💯')),
+      label: (key === 'correct' ? '+' : '-') + n,
+      fn: () => {
+        if (key === 'correct') { correctCount = Math.max(0, (correctCount || 0) + n); streak = Math.max(0, (streak || 0) + n); refreshDebugInfo(); if (n > 0) handleStreak(); }
+        else { wrongCount = Math.max(0, (wrongCount || 0) + n); streak = 0; refreshDebugInfo(); }
+        syncDebugBall();
+      }
+    }));
+  } else if (key === 'summon') {
+    // 动态生成：最近 5 道错题
+    const byQuestion = (quizAnalysis && quizAnalysis.byQuestion) || {};
+    const entries = Object.entries(byQuestion).filter(([, v]) => v && v.countWrong > 0)
+      .sort((a, b) => b[1].countWrong - a[1].countWrong).slice(0, 5);
+    if (entries.length === 0) {
+      items = [{ icon: '😶', label: '暂无', fn: () => {} }];
+    } else {
+      items = entries.map(([k, v]) => ({
+        icon: '📝',
+        label: (v.question || '').replace(/\s+/g, ' ').slice(0, 4),
+        fn: () => {
+          const targetQ = ALL_QUESTIONS.find(q => qKey(q) === k);
+          if (targetQ) { quizQueue.splice(currentIndex, 0, targetQ); renderQuestion(); }
+        }
+      }));
+    }
+  } else {
+    // effect / sound：把原 label 转为 icon + label
+    items = DEBUG_SUB_ITEMS[key].map(it => {
+      const text = it.label;
+      const isEffect = key === 'effect';
+      // 取前 3-4 个字符作 label（图上 +1, +5, GOOD 等）
+      let short = text;
+      if (isEffect) {
+        const map = { good: '👍', perfect: '🌟', awesome: '💥', unbelievable: '🔥', fabulous: '🎇', marvelous: '🎆' };
+        return { icon: map[text] || '✨', label: text.slice(0, 4).toUpperCase(), fn: it.fn };
+      } else {
+        // sound
+        const map = { good: '🔊', wrong: '🔉', perfect: '🎵', awesome: '🎶', unbelievable: '🎼', fabulous: '🎤', marvelous: '🎸' };
+        return { icon: map[text] || '🔔', label: text.slice(0, 4), fn: it.fn };
+      }
+    });
+  }
+  // 一级浮块中心为锚点
+  const parentRect = parentEl.getBoundingClientRect();
+  const px = parentRect.left + parentRect.width / 2;
+  const py = parentRect.top + parentRect.height / 2;
+  const screenW = window.innerWidth, screenH = window.innerHeight;
+  const margin = 8;
+  const subW = 56, subH = 56, subRadius = subW / 2;
+  const minDistBetween = subW + 6; // 浮块中心间距最小值
+  const n = items.length;
+
+  // 用小球中心作为圆心（次级浮块围着小球）
+  const ball = document.getElementById('debug-ball');
+  const bRect = ball ? ball.getBoundingClientRect() : null;
+  const cx = bRect ? bRect.left + bRect.width / 2 : px;
+  const cy = bRect ? bRect.top + bRect.height / 2 : py;
+
+  // 检测圆心（小球）在视口的位置
+  const distToTop = cy, distToBottom = screenH - cy;
+  const distToLeft = cx, distToRight = screenW - cx;
+  const minDistToEdge = Math.min(distToTop, distToBottom, distToLeft, distToRight);
+  const isCorner = (distToTop < screenH * 0.3 || distToBottom < screenH * 0.3) &&
+                   (distToLeft < screenW * 0.3 || distToRight < screenW * 0.3);
+  // 决定扇形角度
+  let arc, startAngle, baseRadius;
+  if (!isCorner && minDistToEdge > Math.min(screenW, screenH) * 0.35) {
+    arc = Math.PI * 2;
+    startAngle = -Math.PI / 2;
+    baseRadius = Math.min(screenW, screenH) * 0.3;
+  } else if (isCorner) {
+    arc = Math.PI / 2;
+    if (cx > screenW / 2 && cy > screenH / 2) startAngle = -Math.PI;
+    else if (cx < screenW / 2 && cy < screenH / 2) startAngle = 0;
+    else if (cx > screenW / 2 && cy < screenH / 2) startAngle = -Math.PI / 2;
+    else startAngle = -Math.PI / 2;
+    baseRadius = 70;
+  } else {
+    arc = Math.PI;
+    if (distToTop < distToBottom) startAngle = 0;
+    else startAngle = -Math.PI;
+    if (distToLeft < distToRight) startAngle += Math.PI / 2;
+    else startAngle -= Math.PI / 2;
+    baseRadius = 70;
+  }
+  // 初始位置（绕小球中心 cx,cy）
+  let positions = [];
+  if (arc >= Math.PI * 2 - 0.01) {
+    for (let i = 0; i < n; i++) {
+      const a = startAngle + (arc / n) * i;
+      positions.push({ x: cx + baseRadius * Math.cos(a), y: cy + baseRadius * Math.sin(a) });
+    }
+  } else {
+    for (let i = 0; i < n; i++) {
+      const a = startAngle + (arc / (n - 1)) * i;
+      positions.push({ x: cx + baseRadius * Math.cos(a), y: cy + baseRadius * Math.sin(a) });
+    }
+  }
+  // 边界修正
+  function clampToScreen(p) {
+    return {
+      x: Math.max(margin + subRadius, Math.min(screenW - margin - subRadius, p.x)),
+      y: Math.max(margin + subH/2, Math.min(screenH - margin - subH/2, p.y))
+    };
+  }
+  positions = positions.map(clampToScreen);
+  // 排斥迭代
+  const iters = 8;
+  for (let it = 0; it < iters; it++) {
+    for (let i = 0; i < n; i++) {
+      for (let j = i + 1; j < n; j++) {
+        const dx = positions[j].x - positions[i].x;
+        const dy = positions[j].y - positions[i].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < minDistBetween && d > 0.1) {
+          const push = (minDistBetween - d) / 2;
+          const nx = dx / d, ny = dy / d;
+          positions[i].x -= nx * push;
+          positions[i].y -= ny * push;
+          positions[j].x += nx * push;
+          positions[j].y += ny * push;
+        }
+      }
+      // 远离小球中心（不挡住球）
+      const dxc = positions[i].x - cx;
+      const dyc = positions[i].y - cy;
+      const dc = Math.sqrt(dxc * dxc + dyc * dyc);
+      const minDC = 60;
+      if (dc < minDC && dc > 0.1) {
+        const push = (minDC - dc) / 2;
+        positions[i].x += (dxc / dc) * push;
+        positions[i].y += (dyc / dc) * push;
+      }
+      positions[i] = clampToScreen(positions[i]);
+    }
+  }
+  // 创建浮块
+  items.forEach((it, i) => {
+    const el = document.createElement('div');
+    el.className = 'debug-subradial-item';
+    el.innerHTML = '<div class="ri-icon">' + (it.icon || '•') + '</div><div class="ri-label">' + (it.label || '') + '</div>';
+    el.style.left = positions[i].x + 'px';
+    el.style.top = positions[i].y + 'px';
+    el.addEventListener('pointerup', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      try { it.fn(); } catch (err) { console.error(err); }
+      // 只收起次级浮块，保留一级浮块，方便继续操作其他功能
+      closeDebugSubRadial();
+    });
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    container.appendChild(el);
+    setTimeout(() => el.classList.add('show'), 20 + i * 18);
+  });
+  // 保存偏移量供小球拖动时跟随
+  const items2 = container.querySelectorAll('.debug-subradial-item');
+  debugSubOffsets = Array.from(items2).map(el => {
+    const rect = el.getBoundingClientRect();
+    return { dx: rect.left + rect.width/2 - cx, dy: rect.top + rect.height/2 - cy };
+  });
+  debugSubOriginalCenter = { x: cx, y: cy };
+}
+
+// 浮块跟随小球移动：根据保存的偏移量 + 小球新位置
+function updateDebugRadialPosition() {
+  if (!debugBallExpanded) return;
+  const ball = document.getElementById('debug-ball');
+  const container = document.getElementById('debug-radial');
+  if (!ball || !container) return;
+  const rect = ball.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const screenW = window.innerWidth, screenH = window.innerHeight;
+  const margin = 8, itemRadius = 28;
+  const dx0 = cx - debugRadialOriginalCenter.x;
+  const dy0 = cy - debugRadialOriginalCenter.y;
+  const items = container.querySelectorAll('.debug-radial-item');
+  items.forEach((el, i) => {
+    const off = debugRadialOffsets[i];
+    if (!off) return;
+    let nx = debugRadialOriginalCenter.x + off.dx + dx0;
+    let ny = debugRadialOriginalCenter.y + off.dy + dy0;
+    // 边界修正（保证浮块不越出视口）
+    nx = Math.max(margin + itemRadius, Math.min(screenW - margin - itemRadius, nx));
+    ny = Math.max(margin + itemRadius, Math.min(screenH - margin - itemRadius, ny));
+    el.style.left = nx + 'px';
+    el.style.top = ny + 'px';
+  });
+  // 次级浮块跟着小球移动（偏移量已存为相对小球中心）
+  if (debugBallActiveParent && debugSubOffsets.length > 0) {
+    const subContainer = document.getElementById('debug-subradial');
+    if (subContainer) {
+      const subItems = subContainer.querySelectorAll('.debug-subradial-item');
+      subItems.forEach((el, i) => {
+        const off = debugSubOffsets[i];
+        if (!off) return;
+        const subW = 56, subH = 56;
+        const halfW = subW / 2, halfH = subH / 2;
+        // 用小球当前位置 + 原偏移
+        let nx = cx + off.dx;
+        let ny = cy + off.dy;
+        nx = Math.max(margin + halfW, Math.min(screenW - margin - halfW, nx));
+        ny = Math.max(margin + halfH, Math.min(screenH - margin - halfH, ny));
+        el.style.left = nx + 'px';
+        el.style.top = ny + 'px';
+      });
+    }
+  }
+}
+
+function closeDebugSubRadial() {
+  const container = document.getElementById('debug-subradial');
+  if (container) {
+    Array.from(container.children).forEach(el => el.classList.remove('show'));
+    setTimeout(() => { if (container) container.classList.add('hidden'); }, 180);
+  }
+  debugBallActiveParent = null;
+  // 重新显示一级浮块
+  showAllRadialItems();
+}
+
+function runDebugAction(key, val) {
+  if (key === 'pause') {
+    debugTogglePauseTimer(!debugTimerPausedByUser);
+    const pauseChk = document.getElementById('debug-pause-timer');
+    if (pauseChk) pauseChk.checked = debugTimerPausedByUser;
+  } else if (key === 'answer') {
+    debugShowAnswer();
+  }
+}
+
+// 调特效：按指定 streak 渲染对应效果（复用 triggerPerfect 内部逻辑）
+function debugPlayEffect(kind) {
+  if (getComboEffectsEnabled() === false) return;
+  // 暂存并设置 streak
+  const orig = streak;
+  const map = { good: 3, perfect: 10, awesome: 20, unbelievable: 30, fabulous: 40, marvelous: 50 };
+  streak = map[kind] || orig;
+  // 创建文字
+  const text = getComboText(streak);
+  if (text) {
+    const p = document.createElement('div');
+    p.className = 'perfect-text';
+    p.textContent = text;
+    document.body.appendChild(p);
+  }
+  // 金光 / 掉落
+  if (streak >= 30) {
+    const card = document.querySelector('.quiz-card');
+    if (card) {
+      card.classList.remove('gold-glow');
+      void card.offsetWidth;
+      card.classList.add('gold-glow');
+    }
+    setTimeout(() => {
+      if (card) card.classList.remove('gold-glow');
+      const components = document.querySelectorAll('.quiz-header, .quiz-card, #quiz-btns, .answer-feedback.show');
+      components.forEach((el, i) => {
+        el.style.transition = 'none';
+        el.classList.add('falling');
+        el.style.animationDelay = (i * 0.08) + 's';
+      });
+      setTimeout(() => {
+        components.forEach(el => {
+          el.classList.remove('falling');
+          el.style.transition = '';
+          el.style.animationDelay = '';
+        });
+      }, 800);
+    }, 800);
+  } else if (streak >= 10) {
+    const components = document.querySelectorAll('.quiz-header, .quiz-card, #quiz-btns, .answer-feedback.show');
+    components.forEach((el, i) => {
+      el.style.transition = 'none';
+      el.classList.add('falling');
+      el.style.animationDelay = (i * 0.08) + 's';
+    });
+    setTimeout(() => {
+      components.forEach(el => {
+        el.classList.remove('falling');
+        el.style.transition = '';
+        el.style.animationDelay = '';
+      });
+    }, 1500);
+  } else if (streak >= 3) {
+    const card = document.querySelector('.quiz-card');
+    if (card) {
+      card.classList.remove('streak-glow');
+      void card.offsetWidth;
+      card.classList.add('streak-glow');
+      setTimeout(() => card.classList.remove('streak-glow'), 700);
+    }
+  }
+  // 自动移除文字
+  setTimeout(() => {
+    document.querySelectorAll('.perfect-text').forEach(el => el.remove());
+  }, streak >= 30 ? 2000 : 1500);
+  // 恢复原 streak（避免影响正常答题判断）
+  streak = orig;
 }
 
 // 根据连击次数获取显示文字

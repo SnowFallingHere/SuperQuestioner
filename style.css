@@ -1748,22 +1748,6 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
   transform: rotate(30deg);
 }
 
-/* 调试入口按钮（常驻齿轮旁，10次点击后显示） */
-.debug-entry-btn {
-  margin-left: 6px;
-  font-size: 18px;
-  cursor: pointer;
-  opacity: 0.55;
-  transition: opacity .2s, transform .2s;
-  user-select: none;
-  display: inline-block;
-}
-.debug-entry-btn:hover {
-  opacity: 1;
-  transform: scale(1.2);
-}
-.debug-entry-btn.hidden { display: none !important; }
-
 /* Combo Settings Dialog */
 .combo-settings-overlay {
   position: fixed;
@@ -1950,6 +1934,19 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 }
 .debug-answer-box.hidden { display: none; }
 
+/* 连击设置入口按钮 */
+.debug-combo-link { margin-bottom: 4px; }
+
+/* 分隔线 */
+.debug-sep {
+  height: 1px;
+  background: #e0ddf0;
+  margin: 4px 0;
+}
+[data-theme="dark"] .debug-sep {
+  background: #4a4860;
+}
+
 /* 调试面板内的小开关（复用 toggle 样式） */
 .debug-toggle-switch {
   position: relative;
@@ -1998,4 +1995,143 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
   background: #3a3350;
   border-color: #8e44ad;
   color: #ddd;
+}
+
+/* ====== Debug 浮动小球（仅 480px 以下） ====== */
+.debug-ball {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  z-index: 99998;
+  cursor: move;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+.debug-ball.hidden { display: none !important; }
+
+.debug-ball-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5ce7, #8e44ad);
+  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.5), 0 0 12px rgba(108, 92, 231, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #fff;
+  transition: transform .15s, box-shadow .25s;
+}
+.debug-ball:active .debug-ball-inner { transform: scale(0.92); }
+.debug-ball.is-enabled .debug-ball-inner {
+  animation: debugBallBreath 2.2s ease-in-out infinite;
+}
+.debug-ball.is-paused .debug-ball-inner {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  box-shadow: 0 4px 14px rgba(231, 76, 60, 0.5), 0 0 12px rgba(231, 76, 60, 0.3);
+}
+@keyframes debugBallBreath {
+  0%, 100% { box-shadow: 0 4px 14px rgba(108, 92, 231, 0.5), 0 0 8px rgba(108, 92, 231, 0.2); }
+  50% { box-shadow: 0 4px 18px rgba(108, 92, 231, 0.7), 0 0 18px rgba(108, 92, 231, 0.5); }
+}
+
+/* 放射浮块容器（一级） */
+.debug-radial {
+  position: fixed;
+  inset: 0;
+  z-index: 99997;
+  pointer-events: none;
+}
+.debug-radial.hidden { display: none !important; }
+.debug-radial-item {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(108, 92, 231, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #333;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+  -webkit-tap-highlight-color: transparent;
+  text-align: center;
+  line-height: 1.1;
+}
+.debug-radial-item.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.debug-radial-item:active { transform: translate(-50%, -50%) scale(0.92); }
+.debug-radial-item .ri-icon { font-size: 18px; line-height: 1; }
+.debug-radial-item .ri-label { font-size: 10px; margin-top: 2px; }
+[data-theme="dark"] .debug-radial-item {
+  background: rgba(44, 44, 52, 0.95);
+  border-color: rgba(142, 68, 173, 0.6);
+  color: #eee;
+}
+
+/* 二级浮块（次级菜单，与一级同款但用不同容器） */
+.debug-subradial { position: fixed; inset: 0; z-index: 99996; pointer-events: none; }
+.debug-subradial.hidden { display: none !important; }
+.debug-subradial-item {
+  position: absolute;
+  min-width: 52px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(108, 92, 231, 0.4);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #333;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.debug-subradial-item.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.debug-subradial-item:active { transform: translate(-50%, -50%) scale(0.92); }
+[data-theme="dark"] .debug-subradial-item {
+  background: rgba(44, 44, 52, 0.95);
+  border-color: rgba(142, 68, 173, 0.6);
+  color: #eee;
+}
+
+/* 透明遮罩：点空白处收起 */
+.debug-radial-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 99995;
+  background: transparent;
+  display: none;
+}
+.debug-radial-mask.show { display: block; }
+
+/* 所有尺寸：保留小球（移动端 + 桌面端都可用）
+   移动端：使用小球弹出放射菜单
+   桌面端（>480px）：仍可通过齿轮打开调试面板，桌面端小球仅在触屏/想要时使用 */
+@media (max-width: 480px) {
+  .debug-ball { display: block; }
+  .debug-panel { display: none !important; }
+  .debug-ball.hidden { display: none !important; }
+}
+@media (min-width: 481px) {
+  .debug-ball { display: block; }
+  .debug-ball.hidden { display: none !important; }
+  .debug-radial, .debug-subradial { display: none !important; }
 }
