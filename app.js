@@ -1401,6 +1401,22 @@ function qKey(q) {
   return q.source + '::' + q.sequence;
 }
 
+// 判断某题是否在"错题次数最多 Top 15"榜单内（用于紫光提示）
+// 返回 true 表示该题位于全站错题次数前 15 名
+function isTopWrongQuestion(key) {
+  const byQuestion = quizAnalysis && quizAnalysis.byQuestion;
+  if (!byQuestion) return false;
+  const entries = Object.entries(byQuestion)
+    .filter(([, v]) => v && v.countWrong > 0)
+    .sort((a, b) => b[1].countWrong - a[1].countWrong);
+  if (entries.length === 0) return false;
+  const topN = Math.min(15, entries.length);
+  for (let i = 0; i < topN; i++) {
+    if (entries[i][0] === key) return true;
+  }
+  return false;
+}
+
 function getDifficulty(q) {
   const key = qKey(q);
   return customDifficulty[key] || q.difficulty || '';
@@ -2123,6 +2139,334 @@ function saveComboSettings() {
   localStorage.setItem('effectsEnabled', String(effects));
 }
 
+// ====== Debug Panel（调试工具） ======
+// 触发：10 秒内点击 #theme-toggle ≥10 下，齿轮旁常驻显示调试入口按钮 🐛
+let debugThemeClickTimes = [];   // 记录 #theme-toggle 的点击时间戳
+let debugEntryRevealed = false;  // 是否已显示常驻调试入口
+let debugEnabled = false;        // 调试总开关
+let debugEffectsOverride = null; // null | true | false
+let debugSoundOverride = null;   // null | true | false
+let debugTimerPausedByUser = false; // 用户通过调试面板暂停计时
+let debugPanelDragState = null;  // 拖动状态
+
+// 初始化触发监听（在 DOM 加载后绑定）
+function initDebugTrigger() {
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      const now = Date.now();
+      // 清理 10 秒前的记录
+      debugThemeClickTimes = debugThemeClickTimes.filter(t => now - t < 10000);
+      debugThemeClickTimes.push(now);
+      if (debugThemeClickTimes.length >= 10 && !debugEntryRevealed) {
+        revealDebugEntry();
+      }
+    });
+  }
+  initDebugPanelDrag();
+}
+
+// 显示常驻调试入口按钮
+function revealDebugEntry() {
+  debugEntryRevealed = true;
+  const btn = document.getElementById('debug-entry-btn');
+  if (btn) {
+    btn.classList.remove('hidden');
+    // 短暂放大提示
+    btn.style.transition = 'transform .3s';
+    btn.style.transform = 'scale(1.6)';
+    setTimeout(() => { btn.style.transform = ''; }, 600);
+  }
+  console.log('[Debug] 调试入口已常驻，点击 🐛 即可打开调试工具');
+}
+
+// 打开调试面板
+function openDebugPanel() {
+  const panel = document.getElementById('debug-panel');
+  if (!panel) return;
+  panel.classList.remove('hidden');
+  // 默认关闭调试总开关
+  if (!debugEnabled) {
+    const toggle = document.getElementById('debug-enable-toggle');
+    if (toggle) toggle.checked = false;
+    const body = document.getElementById('debug-panel-body');
+    if (body) body.style.opacity = '0.5';
+    body && (body.style.pointerEvents = 'none');
+  }
+  // 刷新错题下拉
+  refreshDebugWrongSelect();
+}
+
+// 关闭调试面板
+function closeDebugPanel() {
+  const panel = document.getElementById('debug-panel');
+  if (panel) panel.classList.add('hidden');
+}
+
+// 调试总开关
+function toggleDebugEnabled(checked) {
+  debugEnabled = checked;
+  const body = document.getElementById('debug-panel-body');
+  if (body) {
+    body.style.opacity = checked ? '1' : '0.5';
+    body.style.pointerEvents = checked ? 'auto' : 'none';
+  }
+  if (!checked) {
+    // 关闭时清空所有 override，恢复用户原设置
+    debugEffectsOverride = null;
+    debugSoundOverride = null;
+    const effSel = document.getElementById('debug-effects-override');
+    const sndSel = document.getElementById('debug-sound-override');
+    if (effSel) effSel.value = '';
+    if (sndSel) sndSel.value = '';
+    // 恢复计时
+    if (debugTimerPausedByUser) {
+      debugTimerPausedByUser = false;
+      const pauseChk = document.getElementById('debug-pause-timer');
+      if (pauseChk) pauseChk.checked = false;
+      resumeTimersForDebug();
+    }
+    // 清空答案框
+    const ansBox = document.getElementById('debug-answer-box');
+    if (ansBox) { ansBox.classList.add('hidden'); ansBox.textContent = ''; }
+  }
+}
+
+// —— 赋予已正确 X 题（同步累积 streak 并触发连击特效） ——
+function debugAddCorrect() {
+  if (!debugEnabled) return;
+  const n = parseInt(document.getElementById('debug-add-correct').value, 10) || 0;
+  correctCount = Math.max(0, (correctCount || 0) + n);
+  // 同步累积连击数，让连击特效/音效生效
+  streak = Math.max(0, (streak || 0) + n);
+  refreshDebugInfo();
+  console.log('[Debug] correctCount +=', n, '→', correctCount, '| streak →', streak);
+  // 触发连击特效（与正常答对一致）
+  if (n > 0) handleStreak();
+}
+
+// —— 赋予已错误 X 题（重置连击） ——
+function debugAddWrong() {
+  if (!debugEnabled) return;
+  const n = parseInt(document.getElementById('debug-add-wrong').value, 10) || 0;
+  wrongCount = Math.max(0, (wrongCount || 0) + n);
+  // 答错重置连击
+  streak = 0;
+  refreshDebugInfo();
+  console.log('[Debug] wrongCount +=', n, '→', wrongCount, '| streak →', streak);
+}
+
+// 刷新 quiz-info 显示（不触发 showResult，由用户继续答题时自然判断）
+function refreshDebugInfo() {
+  if (typeof mode === 'undefined' || !quizQueue) return;
+  const q = quizQueue[currentIndex];
+  if (!q) return;
+  let info = '';
+  if (mode === 'challenge') info = '闯关 | 对' + correctCount + ' 错' + wrongCount;
+  else if (mode === 'infinite') {
+    const mastered = getActiveQuestions().filter(x => infiniteMap[qKey(x)].correctCount >= 3).length;
+    info = '无限 | 已掌握 ' + mastered + '/' + getActiveQuestions().length + ' | 已答题 ' + totalAnswered + '/∞';
+  }
+  else if (mode === 'timed') info = '限时 | ' + (currentIndex + 1) + '/' + quizQueue.length;
+  else if (mode === 'wrongbook') info = '错题本 | ' + (currentIndex + 1) + '/' + quizQueue.length;
+  const infoEl = document.getElementById('quiz-info');
+  if (infoEl) infoEl.textContent = info;
+}
+
+// —— 特效/音效 override ——
+function debugSetEffectsOverride(val) {
+  if (!debugEnabled) return;
+  debugEffectsOverride = val === '' ? null : (val === 'true');
+}
+function debugSetSoundOverride(val) {
+  if (!debugEnabled) return;
+  debugSoundOverride = val === '' ? null : (val === 'true');
+}
+
+// 覆盖原 getComboEffectsEnabled / getComboSoundEnabled（保留原函数引用）
+const _origGetComboEffectsEnabled = getComboEffectsEnabled;
+const _origGetComboSoundEnabled = getComboSoundEnabled;
+getComboEffectsEnabled = function() {
+  if (debugEnabled && debugEffectsOverride !== null) return debugEffectsOverride;
+  return _origGetComboEffectsEnabled();
+};
+getComboSoundEnabled = function() {
+  if (debugEnabled && debugSoundOverride !== null) return debugSoundOverride;
+  return _origGetComboSoundEnabled();
+};
+
+// —— 调出错题（下拉来源：byQuestion 中 countWrong>0 的题，与紫光榜单一致） ——
+function refreshDebugWrongSelect() {
+  const sel = document.getElementById('debug-wrong-select');
+  if (!sel) return;
+  sel.innerHTML = '';
+  const byQuestion = quizAnalysis && quizAnalysis.byQuestion;
+  if (!byQuestion) {
+    sel.innerHTML = '<option value="">（暂无错题记录）</option>';
+    return;
+  }
+  const entries = Object.entries(byQuestion)
+    .filter(([, v]) => v && v.countWrong > 0)
+    .sort((a, b) => b[1].countWrong - a[1].countWrong);
+  if (entries.length === 0) {
+    sel.innerHTML = '<option value="">（暂无错题记录）</option>';
+    return;
+  }
+  entries.forEach(([key, v]) => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    const preview = (v.question || '').replace(/\s+/g, ' ').slice(0, 30);
+    opt.textContent = '[' + v.countWrong + '错] ' + preview;
+    sel.appendChild(opt);
+  });
+}
+
+function debugSummonWrong() {
+  if (!debugEnabled) return;
+  const sel = document.getElementById('debug-wrong-select');
+  if (!sel || !sel.value) return;
+  const key = sel.value;
+  // 在 ALL_QUESTIONS 中查找该题
+  const targetQ = ALL_QUESTIONS.find(q => qKey(q) === key);
+  if (!targetQ) {
+    console.warn('[Debug] 未找到题目:', key);
+    return;
+  }
+  // 插入到当前位置，下一题即为该题
+  quizQueue.splice(currentIndex, 0, targetQ);
+  // 重新渲染当前题（即被调出的错题）
+  renderQuestion();
+  console.log('[Debug] 已调出错题:', key);
+}
+
+// —— 暂停计时 ——
+function debugTogglePauseTimer(checked) {
+  if (!debugEnabled) return;
+  debugTimerPausedByUser = checked;
+  if (checked) {
+    // 暂停所有计时
+    timerPaused = true;
+    if (perQuestionTimerInterval) {
+      clearInterval(perQuestionTimerInterval);
+      perQuestionTimerInterval = null;
+    }
+    console.log('[Debug] 计时已暂停');
+  } else {
+    resumeTimersForDebug();
+  }
+}
+
+function resumeTimersForDebug() {
+  timerPaused = false;
+  // 闯关模式：重新启动每题倒计时（用剩余时间）
+  if (mode === 'challenge' && challengeSettings && challengeSettings.useTimer && perQuestionTimeLeft > 0) {
+    const el = document.getElementById('quiz-timer');
+    if (el) el.classList.remove('hidden');
+    perQuestionTimerActive = true;
+    perQuestionTimerInterval = setInterval(() => {
+      if (timerPaused) return;
+      perQuestionTimeLeft--;
+      updatePerQuestionTimerDisplay();
+      if (perQuestionTimeLeft <= 0) {
+        clearPerQuestionTimer();
+        // 时间到，按答错处理
+        if (typeof onPerQuestionTimeout === 'function') onPerQuestionTimeout();
+      }
+    }, 1000);
+  }
+  console.log('[Debug] 计时已恢复');
+}
+
+// —— 显示该题目的答案（不提交） ——
+function debugShowAnswer() {
+  if (!debugEnabled) return;
+  const q = quizQueue && quizQueue[currentIndex];
+  if (!q) return;
+  const ansBox = document.getElementById('debug-answer-box');
+  if (!ansBox) return;
+  let text = '';
+  if (q.type === 'calculation') {
+    const ans = q.answer || {};
+    text = '【计算题答案】\n';
+    Object.keys(ans).forEach(k => {
+      const a = ans[k];
+      if (a.scope) text += '第' + k + '问: ' + a.scope[0] + ' ~ ' + a.scope[1];
+      else if (a.value !== undefined) text += '第' + k + '问: ' + a.value;
+      else text += '第' + k + '问: ' + JSON.stringify(a);
+      text += '\n';
+    });
+  } else if (q.type === 'subjective') {
+    const ans = q.answer || {};
+    text = '【主观题参考答案】\n' + (ans.reference || JSON.stringify(ans, null, 2));
+  } else if (q.type === 'true_false') {
+    // 判断题无 shuffle，直接显示
+    text = '【答案】' + q.answer;
+  } else {
+    // 单选/多选：选项已被 shuffle，需显示映射后的答案（与当前屏幕选项一致）
+    const fb = document.getElementById('answer-feedback');
+    const mappedAnswer = fb && fb.dataset.mappedAnswer ? fb.dataset.mappedAnswer : q.answer;
+    text = '【答案】' + mappedAnswer;
+    // 附上当前屏幕上对应选项的文字（按 .option 的 data-label 查找）
+    const optEls = document.querySelectorAll('.option');
+    if (optEls.length) {
+      const labels = String(mappedAnswer).split('');
+      const matched = labels.map(l => {
+        const el = Array.from(optEls).find(e => e.dataset.label === l);
+        if (!el) return l;
+        // 取 "A. xxx" 中 ". " 之后的内容
+        const raw = el.textContent || '';
+        const idx = raw.indexOf('. ');
+        return idx >= 0 ? l + '. ' + raw.slice(idx + 2) : l + '. ' + raw;
+      });
+      text += '\n对应：\n' + matched.join('\n');
+    }
+  }
+  ansBox.textContent = text;
+  ansBox.classList.remove('hidden');
+  console.log('[Debug] 显示答案（未提交）');
+}
+
+// —— 调试面板拖动 ——
+function initDebugPanelDrag() {
+  const header = document.getElementById('debug-panel-header');
+  const panel = document.getElementById('debug-panel');
+  if (!header || !panel) return;
+  header.addEventListener('mousedown', function(e) {
+    // 点击开关或关闭按钮时不触发拖动
+    if (e.target.tagName === 'INPUT' || e.target.classList.contains('debug-panel-close')) return;
+    const rect = panel.getBoundingClientRect();
+    debugPanelDragState = {
+      startX: e.clientX,
+      startY: e.clientY,
+      origLeft: rect.left,
+      origTop: rect.top
+    };
+    panel.style.right = 'auto';
+    panel.style.left = rect.left + 'px';
+    panel.style.top = rect.top + 'px';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!debugPanelDragState) return;
+    const dx = e.clientX - debugPanelDragState.startX;
+    const dy = e.clientY - debugPanelDragState.startY;
+    const panel = document.getElementById('debug-panel');
+    if (!panel) return;
+    let newLeft = debugPanelDragState.origLeft + dx;
+    let newTop = debugPanelDragState.origTop + dy;
+    // 限制在视口内
+    const maxLeft = window.innerWidth - panel.offsetWidth;
+    const maxTop = window.innerHeight - 40;
+    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+    newTop = Math.max(0, Math.min(maxTop, newTop));
+    panel.style.left = newLeft + 'px';
+    panel.style.top = newTop + 'px';
+  });
+  document.addEventListener('mouseup', function() {
+    debugPanelDragState = null;
+  });
+}
+
 // 根据连击次数获取显示文字
 function getComboText(streakCount) {
   if (streakCount >= 50) return 'Marvelous!';
@@ -2300,6 +2644,15 @@ function renderQuestion() {
 
   document.getElementById('question-text').innerHTML = formatQuestionQuotes(q.question);
 
+  // === 紫光提示：若该题在"错题次数最多 Top 15"榜单且连击特效开启，则卡片持续发紫光，直到作答完成 ===
+  const cardEl = document.querySelector('.quiz-card');
+  if (cardEl) {
+    cardEl.classList.remove('purple-glow');
+    if (getComboEffectsEnabled() !== false && isTopWrongQuestion(key)) {
+      cardEl.classList.add('purple-glow');
+    }
+  }
+
   const area = document.getElementById('options-area');
   area.innerHTML = '';
 
@@ -2396,6 +2749,10 @@ function answerTF(val) {
 function judge(isCorrect, correctAnswer, selectedAnswer) {
   answered = true;
   const q = quizQueue[currentIndex];
+
+  // 作答完成：移除紫光提示
+  const judgedCard = document.querySelector('.quiz-card');
+  if (judgedCard) judgedCard.classList.remove('purple-glow');
 
   // 停止每题倒计时（闯关模式）
   if (mode === 'challenge') {
@@ -2609,6 +2966,11 @@ function judgeCalculation() {
   answered = true;
   if (mode === 'challenge') clearPerQuestionTimer();
   const q = quizQueue[currentIndex];
+
+  // 作答完成：移除紫光提示
+  const judgedCard = document.querySelector('.quiz-card');
+  if (judgedCard) judgedCard.classList.remove('purple-glow');
+
   const answers = q.answer || {};
   const inputs = document.querySelectorAll('.calc-input');
   let allCorrect = true;
@@ -2738,6 +3100,11 @@ function judgeSubjective() {
   answered = true;
   if (mode === 'challenge') clearPerQuestionTimer();
   const q = quizQueue[currentIndex];
+
+  // 作答完成：移除紫光提示
+  const judgedCard = document.querySelector('.quiz-card');
+  if (judgedCard) judgedCard.classList.remove('purple-glow');
+
   const userAnswer = document.getElementById('subjective-input').value.trim();
   const answerData = q.answer || {};
   const reference = answerData.reference || '';
@@ -5798,4 +6165,11 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
+}
+
+// 初始化调试工具触发监听（独立于 init，确保 DOM 就绪即可）
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initDebugTrigger);
+} else {
+  initDebugTrigger();
 }

@@ -16,6 +16,7 @@
   <div class="home-title">
     题库练习
     <span class="combo-gear-btn" onclick="showComboSettings()" title="连击设置">⚙️</span>
+    <span id="debug-entry-btn" class="debug-entry-btn hidden" onclick="openDebugPanel()" title="调试工具">🐛</span>
   </div>
   <div id="source-area">
     <div class="loading">正在加载题库中...</div>
@@ -409,6 +410,69 @@
       </div>
       <div class="combo-settings-hint">（全局通用）</div>
     </div>
+  </div>
+</div>
+
+<!-- Debug Panel（隐藏触发，默认关闭） -->
+<div id="debug-panel" class="debug-panel hidden">
+  <div class="debug-panel-header" id="debug-panel-header">
+    <span class="debug-panel-title">调试工具</span>
+    <div class="debug-panel-controls">
+      <label class="debug-toggle-switch">
+        <input type="checkbox" id="debug-enable-toggle" onchange="toggleDebugEnabled(this.checked)">
+        <span class="debug-toggle-slider"></span>
+      </label>
+      <span class="debug-panel-close" onclick="closeDebugPanel()">&times;</span>
+    </div>
+  </div>
+  <div class="debug-panel-body" id="debug-panel-body">
+    <!-- 赋予已正确/已错误 -->
+    <div class="debug-row">
+      <div class="debug-row-label">赋予已正确</div>
+      <input type="number" id="debug-add-correct" value="1" min="-99" max="99" class="debug-input-num">
+      <button class="debug-btn" onclick="debugAddCorrect()">应用</button>
+    </div>
+    <div class="debug-row">
+      <div class="debug-row-label">赋予已错误</div>
+      <input type="number" id="debug-add-wrong" value="1" min="-99" max="99" class="debug-input-num">
+      <button class="debug-btn" onclick="debugAddWrong()">应用</button>
+    </div>
+    <!-- 显示特效/音效 -->
+    <div class="debug-row">
+      <div class="debug-row-label">显示特效为</div>
+      <select id="debug-effects-override" class="debug-select" onchange="debugSetEffectsOverride(this.value)">
+        <option value="">（不覆盖）</option>
+        <option value="true">开启</option>
+        <option value="false">关闭</option>
+      </select>
+    </div>
+    <div class="debug-row">
+      <div class="debug-row-label">显示音效为</div>
+      <select id="debug-sound-override" class="debug-select" onchange="debugSetSoundOverride(this.value)">
+        <option value="">（不覆盖）</option>
+        <option value="true">开启</option>
+        <option value="false">关闭</option>
+      </select>
+    </div>
+    <!-- 调出错题 -->
+    <div class="debug-row">
+      <div class="debug-row-label">调出错题为</div>
+      <select id="debug-wrong-select" class="debug-select debug-select-wide"></select>
+      <button class="debug-btn" onclick="debugSummonWrong()">调出</button>
+    </div>
+    <!-- 暂停计时 -->
+    <div class="debug-row">
+      <div class="debug-row-label">暂停计时</div>
+      <label class="debug-toggle-switch">
+        <input type="checkbox" id="debug-pause-timer" onchange="debugTogglePauseTimer(this.checked)">
+        <span class="debug-toggle-slider"></span>
+      </label>
+    </div>
+    <!-- 显示答案 -->
+    <div class="debug-row">
+      <button class="debug-btn debug-btn-wide" onclick="debugShowAnswer()">显示该题目的答案（不提交）</button>
+    </div>
+    <div class="debug-answer-box hidden" id="debug-answer-box"></div>
   </div>
 </div>
 

@@ -159,6 +159,12 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
   100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
 }
 
+/* Purple glow for top-15 most-wrong questions（持续发光，从题目出现到作答完成） */
+.quiz-card.purple-glow {
+  box-shadow: 0 0 12px 3px rgba(138, 43, 226, 0.45), 0 0 24px 6px rgba(138, 43, 226, 0.20);
+  border: 1px solid rgba(138, 43, 226, 0.30);
+}
+
 /* Perfect effect */
 .perfect-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 48px; font-weight: 900; color: #f1c40f; text-shadow: 0 0 20px rgba(241,196,15,.6), 0 2px 8px rgba(0,0,0,.2); z-index: 200; pointer-events: none; animation: perfectIn .8s ease-out; }
 @keyframes perfectIn {
@@ -1742,6 +1748,22 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
   transform: rotate(30deg);
 }
 
+/* 调试入口按钮（常驻齿轮旁，10次点击后显示） */
+.debug-entry-btn {
+  margin-left: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity .2s, transform .2s;
+  user-select: none;
+  display: inline-block;
+}
+.debug-entry-btn:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+.debug-entry-btn.hidden { display: none !important; }
+
 /* Combo Settings Dialog */
 .combo-settings-overlay {
   position: fixed;
@@ -1827,4 +1849,153 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 }
 [data-theme="dark"] .combo-settings-row span {
   color: #ccc;
+}
+
+/* ====== Debug Panel（调试工具，永远在最上层） ====== */
+.debug-panel {
+  position: fixed;
+  top: 80px;
+  right: 16px;
+  width: 320px;
+  max-width: 92vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #fff;
+  border: 2px solid #6c5ce7;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(108, 92, 231, 0.35), 0 0 0 1px rgba(108, 92, 231, 0.15);
+  z-index: 99999;
+  font-size: 13px;
+  color: #333;
+  user-select: none;
+}
+.debug-panel.hidden { display: none !important; }
+
+.debug-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #6c5ce7, #8e44ad);
+  color: #fff;
+  cursor: move;
+  border-radius: 8px 8px 0 0;
+}
+.debug-panel-title { font-weight: 700; font-size: 14px; }
+.debug-panel-controls { display: flex; align-items: center; gap: 8px; }
+.debug-panel-close {
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 4px;
+  opacity: 0.85;
+}
+.debug-panel-close:hover { opacity: 1; }
+
+.debug-panel-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+
+.debug-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.debug-row-label {
+  flex: 0 0 auto;
+  min-width: 72px;
+  color: #555;
+  font-size: 12px;
+}
+.debug-input-num {
+  width: 56px;
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.debug-select {
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #fff;
+  flex: 1 1 80px;
+}
+.debug-select-wide { flex: 1 1 120px; max-width: 160px; }
+.debug-btn {
+  padding: 3px 10px;
+  border: 1px solid #6c5ce7;
+  background: #6c5ce7;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background .15s;
+}
+.debug-btn:hover { background: #5a4bd1; }
+.debug-btn-wide { width: 100%; padding: 6px; margin-top: 2px; }
+
+.debug-answer-box {
+  margin-top: 4px;
+  padding: 8px;
+  background: #f4f1ff;
+  border: 1px dashed #6c5ce7;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #444;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.debug-answer-box.hidden { display: none; }
+
+/* 调试面板内的小开关（复用 toggle 样式） */
+.debug-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+.debug-toggle-switch input { opacity: 0; width: 0; height: 0; }
+.debug-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #ccc;
+  border-radius: 20px;
+  transition: .2s;
+}
+.debug-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: .2s;
+}
+.debug-toggle-switch input:checked + .debug-toggle-slider { background: #6c5ce7; }
+.debug-toggle-switch input:checked + .debug-toggle-slider:before { transform: translateX(16px); }
+
+/* 暗色模式适配 */
+[data-theme="dark"] .debug-panel {
+  background: #2c2c34;
+  border-color: #8e44ad;
+  color: #eee;
+}
+[data-theme="dark"] .debug-row-label { color: #bbb; }
+[data-theme="dark"] .debug-input-num,
+[data-theme="dark"] .debug-select {
+  background: #3c3c44;
+  border-color: #555;
+  color: #eee;
+}
+[data-theme="dark"] .debug-answer-box {
+  background: #3a3350;
+  border-color: #8e44ad;
+  color: #ddd;
 }
