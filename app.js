@@ -695,6 +695,7 @@ function renderWrongBookChips() {
   let html = '';
   Object.keys(wrongBooks).forEach(id => {
     const wb = wrongBooks[id];
+    if (!wb || typeof wb !== 'object' || !wb.temp || !wb.long) return;
     const tempCount = Object.keys(wb.temp).length;
     const longCount = Object.keys(wb.long).length;
     const totalCount = tempCount + longCount;
@@ -1272,6 +1273,24 @@ function deleteCurrentWrongBook() {
   if (currentWrongBookId) {
     deleteWrongBookPrompt(currentWrongBookId);
   }
+}
+
+// 清空当前错题本的所有题目
+function clearCurrentWrongBook() {
+  if (!currentWrongBookId) return;
+  if (!confirm('确认清空当前错题本中的所有题目？此操作不可撤销！')) return;
+  const wb = wrongBooks[currentWrongBookId];
+  if (!wb) return;
+  wb.temp = {};
+  wb.long = {};
+  wb.notes = {};
+  saveWrongBooks();
+  renderWrongBookChips();
+  // 刷新错题本页面
+  const card = document.getElementById('wb-card');
+  if (card) card.innerHTML = '<div style="padding:20px;text-align:center;color:#999">错题本已清空</div>';
+  document.getElementById('wb-counter').textContent = '0 题';
+  alert('已清空当前错题本');
 }
 
 function toggleSource(el) {
@@ -6393,6 +6412,7 @@ function togglePreviewView() {
   previewViewMode = previewViewMode === 'card' ? 'list' : 'card';
   savePreviewViewState();
   renderPreviewView();
+  console.log('[预览] 切换视图模式:', previewViewMode, '| 题目总数:', previewList.length);
 }
 
 function savePreviewViewState() {
@@ -6416,6 +6436,11 @@ function renderPreviewView() {
     toggleEl.textContent = '☰';
     toggleEl.title = '切换为列表视图';
     cylinderRow.classList.add('hidden');
+    // 切回卡片时清除 scroll 监听和样式
+    listEl.removeEventListener('scroll', onVirtualScroll);
+    listEl.style.height = '';
+    listEl.style.overflowY = '';
+    listEl.style.scrollbarWidth = '';
     disableCylinderMode();
     renderPreviewItem();
   } else {
@@ -6467,6 +6492,7 @@ let cylinderAutoScrollId = null;
 function toggleCylinderMode(enabled) {
   cylinderModeEnabled = enabled;
   savePreviewViewState();
+  console.log('[预览] 切换列表模式:', enabled ? '滚轮模式' : '普通列表', '| 题目总数:', previewList.length);
   if (enabled) {
     virtualListState.enabled = false;
     renderPreviewList();
@@ -6782,6 +6808,7 @@ function renderPreviewItem() {
   if (previewIndex < 0) previewIndex = 0;
   if (previewIndex >= previewList.length) previewIndex = previewList.length - 1;
   const q = previewList[previewIndex];
+  console.log('[预览] renderPreviewItem | 索引:', previewIndex + '/' + previewList.length, '| 题目:', q ? (q.question || '').slice(0, 30) + '...' : 'null');
   const typeLabel = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'}[q.type] || '';
   let metaParts = [];
   if (q.chapter) metaParts.push(q.chapter);
@@ -6894,8 +6921,13 @@ let virtualListState = {
 
 function renderPreviewList() {
   const typeLabels = {single_choice:'单选',multiple_choice:'多选',true_false:'判断',calculation:'计算',subjective:'主观'};
+  console.log('[预览] renderPreviewList 启动 | 题目数:', previewList.length, '| 虚拟列表:', virtualListState.enabled ? '开' : '关', '| 滚轮模式:', cylinderModeEnabled ? '开' : '关');
 
-  virtualListState.enabled = previewList.length > 80 && !cylinderModeEnabled;
+  // 重置虚拟列表状态
+  virtualListState.startIndex = 0;
+  virtualListState.endIndex = 0;
+
+  virtualListState.enabled = previewList.length > 500 && !cylinderModeEnabled;
 
   if (!virtualListState.enabled) {
     let html = '';
@@ -6903,17 +6935,31 @@ function renderPreviewList() {
       html += buildPreviewListItemHTML(q, i, typeLabels);
     });
     document.getElementById('preview-list').innerHTML = html;
+    // 清除旧的 scroll 样式
+    const pe = document.getElementById('preview-list');
+    pe.style.height = '';
+    pe.style.overflowY = '';
     return;
   }
 
   const totalHeight = previewList.length * virtualListState.itemHeight;
-  virtualListState.buffer = 8;
+  virtualListState.buffer = 30;
 
-  const wrapperHtml = `<div id="virtual-list-wrapper" style="height:${totalHeight}px;position:relative"></div>`;
+  const wrapperHtml = '<div id="virtual-list-wrapper" style="height:' + totalHeight + 'px;position:relative"></div>';
   document.getElementById('preview-list').innerHTML = wrapperHtml;
 
   const listEl = document.getElementById('preview-list');
+  // 移除旧的 scroll 监听器避免堆积
+  listEl.removeEventListener('scroll', onVirtualScroll);
   listEl.addEventListener('scroll', onVirtualScroll, { passive: true });
+  // 给列表容器固定高度，确保可滚动
+  const headerEl = document.querySelector('.preview-header');
+  if (headerEl) {
+    const headerH = headerEl.offsetHeight || 40;
+    listEl.style.height = 'calc(100vh - ' + (headerH + 40) + 'px)';
+    listEl.style.overflowY = 'scroll';
+    listEl.style.scrollbarWidth = 'none';
+  }
 
   // Force reflow so clientHeight is valid, then populate virtual list
   void listEl.offsetHeight;
@@ -6931,7 +6977,7 @@ function buildPreviewListItemHTML(q, i, typeLabels) {
   const listItemNoteKey = qKey(q);
   const listItemHasNote = !!wrongBookNotes[listItemNoteKey];
 
-  let html = '<div class="pv-list-item' + (listItemHasNote ? ' has-note' : '') + '" data-index="' + i + '" onclick="togglePreviewListItem(this)">';
+  let html = '<div class="pv-list-item' + (listItemHasNote ? ' has-note' : '') + '" data-index="' + i + '" onclick="togglePreviewListItem(this)" onmouseenter="hoverPreviewItem(this)" onmouseleave="unhoverPreviewItem(this)">';
   html += '<div class="pv-list-header">';
   const listTopWrong = isTopNWrongQuestion(q, 40);
   html += '<span class="pv-list-num">' + (i + 1) + (listTopWrong ? ' <span class="top-wrong-badge-list">TOP' + listTopWrong + '</span>' : '') + '</span>';
@@ -7037,9 +7083,32 @@ function updateVirtualList() {
   }
 }
 
+// 预览列表：悬停展开（不覆盖点击展开）
+function hoverPreviewItem(el) {
+  const detail = el.querySelector('.pv-list-detail');
+  const arrow = el.querySelector('.pv-list-arrow');
+  if (!detail || detail.classList.contains('show')) return; // 已展开的不重复操作
+  detail.style.transition = 'none'; // 瞬时展开
+  detail.classList.add('show');
+  if (arrow) arrow.style.transform = 'rotate(180deg)';
+  void detail.offsetHeight; // force reflow
+  detail.style.transition = '';
+  el.dataset.hoverOpen = '1';
+}
+function unhoverPreviewItem(el) {
+  if (el.dataset.hoverOpen !== '1') return; // 点击打开的，不关闭
+  const detail = el.querySelector('.pv-list-detail');
+  const arrow = el.querySelector('.pv-list-arrow');
+  if (!detail) return;
+  detail.classList.remove('show');
+  if (arrow) arrow.style.transform = '';
+  delete el.dataset.hoverOpen;
+}
+
 function togglePreviewListItem(el) {
   if (cylinderModeEnabled) {
     // In cylinder mode: just toggle expand/collapse directly
+    delete el.dataset.hoverOpen;
     const detail = el.querySelector('.pv-list-detail');
     const arrow = el.querySelector('.pv-list-arrow');
     const isOpen = detail.classList.contains('show');
@@ -7052,6 +7121,8 @@ function togglePreviewListItem(el) {
     }
     return;
   }
+  // 点击展开/折叠，清除悬停标记，让鼠标离开时不自动收起
+  delete el.dataset.hoverOpen;
   const detail = el.querySelector('.pv-list-detail');
   const arrow = el.querySelector('.pv-list-arrow');
   const isOpen = detail.classList.contains('show');

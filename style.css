@@ -651,6 +651,7 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 
 /* Preview List View */
 .preview-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+#preview-list::-webkit-scrollbar { display: none; }
 .pv-list-item { border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; transition: border-color .15s, transform .35s cubic-bezier(.25,.46,.45,.94), opacity .35s ease; transform-origin: center center; background: var(--card-bg, #fff); }
 .pv-list-item.has-note .pv-list-header { border-left: 4px solid #f39c12; padding-left: 10px; }
 .pv-list-item:hover { border-color: #4a90d9; }
