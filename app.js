@@ -1419,6 +1419,22 @@ function isTopWrongQuestion(key) {
   return false;
 }
 
+// 判断某题是否在错题次数 Top N 榜单内，返回排名数字（如 3）或 false
+function isTopNWrongQuestion(q, n) {
+  const key = qKey(q);
+  const byQuestion = quizAnalysis && quizAnalysis.byQuestion;
+  if (!byQuestion) return false;
+  const entries = Object.entries(byQuestion)
+    .filter(([, v]) => v && v.countWrong > 0)
+    .sort((a, b) => b[1].countWrong - a[1].countWrong);
+  if (entries.length === 0) return false;
+  const topN = Math.min(n, entries.length);
+  for (let i = 0; i < topN; i++) {
+    if (entries[i][0] === key) return i + 1;
+  }
+  return false;
+}
+
 function getDifficulty(q) {
   const key = qKey(q);
   return customDifficulty[key] || q.difficulty || '';
@@ -5555,23 +5571,24 @@ function renderAllCharts(container, filterTime) {
 
   // 预计算"每章/每题库内错题次数最多的题"，渲染时塞到 data-* 上，tooltip 直接读
   const mostWrongIndex = buildChartMostWrongIndex();
+  const mostCorrectIndex = buildChartMostCorrectIndex();
 
   let html = '';
 
   // 1. 各章节学习次数（堆积百分比柱状图）
-  html += renderChapterStudyChart(history, filterTime, mostWrongIndex);
+  html += renderChapterStudyChart(history, filterTime, mostWrongIndex, mostCorrectIndex);
 
   // 2. 各题型做题次数
-  html += renderTypeCountChart(history);
+  html += renderTypeCountChart(history, mostWrongIndex, mostCorrectIndex);
 
   // 3. 各章节总正确次数
-  html += renderChapterCorrectChart(history, mostWrongIndex);
+  html += renderChapterCorrectChart(history, mostWrongIndex, mostCorrectIndex);
 
   // 4. 各章节总错误次数
   html += renderChapterWrongChart(history, mostWrongIndex);
 
   // 5. 各题库做题次数
-  html += renderSourceCountChart(history, mostWrongIndex);
+  html += renderSourceCountChart(history, mostWrongIndex, mostCorrectIndex);
 
   container.innerHTML = html;
 
@@ -5612,6 +5629,37 @@ function buildChartMostWrongIndex() {
   return result;
 }
 
+// —— 构建"每章/每题库内正确次数最多题"的索引 ——
+function buildChartMostCorrectIndex() {
+  const result = { overall: null, byChapter: {}, bySource: {} };
+  try {
+    const bq = (typeof quizAnalysis !== 'undefined' && quizAnalysis && quizAnalysis.byQuestion) || {};
+    const items = Object.keys(bq).map(k => ({
+      key: k,
+      question: bq[k].question,
+      chapter: bq[k].chapter,
+      source: bq[k].source || (typeof qKey === 'function' && typeof ALL_QUESTIONS !== 'undefined'
+        ? ((ALL_QUESTIONS.find(x => qKey(x) === k) || {}).source)
+        : null) || '未知',
+      countCorrect: bq[k].countCorrect || 0
+    })).filter(x => x.countCorrect > 0);
+
+    if (items.length) {
+      items.sort((a, b) => b.countCorrect - a.countCorrect);
+      result.overall = items[0];
+      items.forEach(it => {
+        if (!result.byChapter[it.chapter] || it.countCorrect > result.byChapter[it.chapter].countCorrect) {
+          result.byChapter[it.chapter] = it;
+        }
+        if (!result.bySource[it.source] || it.countCorrect > result.bySource[it.source].countCorrect) {
+          result.bySource[it.source] = it;
+        }
+      });
+    }
+  } catch (e) { /* 静默 */ }
+  return result;
+}
+
 // 把数据属性写到 <rect> 上：chapter/source/timeKey/wrongCount/worstKey/worstQuestion
 // 顶层 escapeHtmlAttr / escapeXml —— 这两个函数原本定义在 renderAnalysis 内部，统计页 tooltip 也是顶层调用，所以提到顶层
 function escapeHtmlAttr(s) {
@@ -5624,7 +5672,7 @@ function escapeXml(s) {
 }
 // showChartTooltipNear 等旧代码用 escapeAttr 这个名字
 var escapeAttr = escapeHtmlAttr;
-function chartBarAttrs(scope, item, mostWrongIndex) {
+function chartBarAttrs(scope, item, mostWrongIndex, mostCorrectIndex) {
   let attrs = ' class="chart-bar"';
   if (!item) return attrs;
   attrs += ' data-chart-scope="' + escapeHtmlAttr(scope) + '"';
@@ -5644,6 +5692,18 @@ function chartBarAttrs(scope, item, mostWrongIndex) {
     attrs += ' data-chart-worst-key="' + escapeHtmlAttr(worst.key) + '"';
     attrs += ' data-chart-worst-question="' + escapeHtmlAttr(worst.question || '') + '"';
     attrs += ' data-chart-worst-count="' + worst.countWrong + '"';
+  }
+  // 正确率最高的题
+  if (mostCorrectIndex) {
+    let best = null;
+    if (item.chapter && mostCorrectIndex.byChapter[item.chapter]) best = mostCorrectIndex.byChapter[item.chapter];
+    else if (item.source && mostCorrectIndex.bySource[item.source]) best = mostCorrectIndex.bySource[item.source];
+    else if (mostCorrectIndex.overall) best = mostCorrectIndex.overall;
+    if (best) {
+      attrs += ' data-chart-best-key="' + escapeHtmlAttr(best.key) + '"';
+      attrs += ' data-chart-best-question="' + escapeHtmlAttr(best.question || '') + '"';
+      attrs += ' data-chart-best-count="' + best.countCorrect + '"';
+    }
   }
   return attrs;
 }
@@ -5707,14 +5767,50 @@ function showChartTooltipNear(target) {
   }
   if (metaParts.length) html += '<div class="ct-meta">' + metaParts.join(' · ') + '</div>';
 
-  if (worstKey) {
-    const qtext = (worstQ || '').substring(0, 40) + ((worstQ || '').length > 40 ? '…' : '');
-    html += '<a class="ct-wrong-q" data-worst-key="' + escapeAttr(worstKey) + '" href="javascript:void(0)">'
-      + '<div class="ct-q-title">📌 ' + escapeXml(qtext) + '</div>'
-      + '<div class="ct-q-meta">本章/本库内错题最多：' + worstCnt + ' 次 · 点击查看原题</div>'
-      + '</a>';
+  // 题目标签
+  const bestKey = target.dataset.chartBestKey || '';
+  const bestQ   = target.dataset.chartBestQuestion || '';
+  const bestCnt = parseInt(target.dataset.chartBestCount || '0', 10);
+  if (scope === 'chapter-correct') {
+    // 正确图表：只显示绿色正确最多
+    if (bestKey) {
+      const qtext = (bestQ || '').substring(0, 40) + ((bestQ || '').length > 40 ? '…' : '');
+      html += '<a class="ct-right-q" data-best-key="' + escapeAttr(bestKey) + '" href="javascript:void(0)">'
+        + '<div class="ct-q-title">⭐ ' + escapeXml(qtext) + '</div>'
+        + '<div class="ct-q-meta">本章/本库内正确最多：' + bestCnt + ' 次 · 点击查看原题</div>'
+        + '</a>';
+    } else {
+      html += '<div class="ct-empty">该范围内暂无正确记录</div>';
+    }
+  } else if (scope === 'chapter-wrong') {
+    // 错题图表：只显示红色错题最多
+    if (worstKey) {
+      const qtext = (worstQ || '').substring(0, 40) + ((worstQ || '').length > 40 ? '…' : '');
+      html += '<a class="ct-wrong-q" data-worst-key="' + escapeAttr(worstKey) + '" href="javascript:void(0)">'
+        + '<div class="ct-q-title">📌 ' + escapeXml(qtext) + '</div>'
+        + '<div class="ct-q-meta">本章/本库内错题最多：' + worstCnt + ' 次 · 点击查看原题</div>'
+        + '</a>';
+    } else {
+      html += '<div class="ct-empty">该范围内暂无错题记录</div>';
+    }
   } else {
-    html += '<div class="ct-empty">该范围内暂无错题记录</div>';
+    // 通用图表（study/source/type）：同时显示红色错题最多 + 绿色正确最多
+    if (worstKey) {
+      const qtext = (worstQ || '').substring(0, 40) + ((worstQ || '').length > 40 ? '…' : '');
+      html += '<a class="ct-wrong-q" data-worst-key="' + escapeAttr(worstKey) + '" href="javascript:void(0)">'
+        + '<div class="ct-q-title">📌 ' + escapeXml(qtext) + '</div>'
+        + '<div class="ct-q-meta">本章/本库内错题最多：' + worstCnt + ' 次 · 点击查看原题</div>'
+        + '</a>';
+    } else {
+      html += '<div class="ct-empty">该范围内暂无错题记录</div>';
+    }
+    if (bestKey) {
+      const qtext = (bestQ || '').substring(0, 40) + ((bestQ || '').length > 40 ? '…' : '');
+      html += '<a class="ct-right-q" data-best-key="' + escapeAttr(bestKey) + '" href="javascript:void(0)">'
+        + '<div class="ct-q-title">⭐ ' + escapeXml(qtext) + '</div>'
+        + '<div class="ct-q-meta">本章/本库内正确最多：' + bestCnt + ' 次 · 点击查看原题</div>'
+        + '</a>';
+    }
   }
 
   el.innerHTML = html;
@@ -5782,13 +5878,14 @@ function installChartTooltip(container) {
 document.addEventListener('click', function(e) {
   if (!_chartTooltipEl) return;
   if (_chartTooltipEl.classList.contains('hidden')) return;
-  // 点击 tooltip 内部的"错题最多题"链接 → 跳转
+  // 点击 tooltip 内部的"错题最多题 / 正确最多题"链接 → 跳转
   const qLink = e.target.closest && e.target.closest('.ct-wrong-q');
-  if (qLink) {
-    const k = qLink.dataset.worstKey;
+  const bestLink = e.target.closest && e.target.closest('.ct-right-q');
+  const link = qLink || bestLink;
+  if (link) {
+    const k = qLink ? link.dataset.worstKey : link.dataset.bestKey;
     if (k) {
       hideChartTooltip();
-      // 复用你已经验证的跳转路径
       if (typeof jumpToAnalysisQuestion === 'function') jumpToAnalysisQuestion(k);
       e.stopPropagation();
       e.preventDefault();
@@ -5805,7 +5902,7 @@ const STATS_COLORS = ['#4a90d9','#27ae60','#e74c3c','#f39c12','#8e44ad','#1abc9c
 function getColor(idx) { return STATS_COLORS[idx % STATS_COLORS.length]; }
 
 // —— 1. 堆积百分比柱状图：各章节学习次数 ——
-function renderChapterStudyChart(history, filterTime, mostWrongIndex) {
+function renderChapterStudyChart(history, filterTime, mostWrongIndex, mostCorrectIndex) {
   // 按时间键 + 章节分组
   const timeKeys = [...new Set(history.map(h => h.timeKey))].sort();
   const chapters = getChapterOrder(history);
@@ -5865,7 +5962,7 @@ function renderChapterStudyChart(history, filterTime, mostWrongIndex) {
       const y = chartH - stackBottom - barH;
       const wrongCount = wrongByChapter[ch] || 0;
       const item = { chapter: ch, timeKey: tk, cnt: wrongCount, total: total };
-      const extraAttrs = chartBarAttrs('chapter-study', item, mostWrongIndex);
+      const extraAttrs = chartBarAttrs('chapter-study', item, mostWrongIndex, mostCorrectIndex);
       svg += `<rect x="${cx - barW/2}" y="${y}" width="${barW}" height="${Math.max(barH, 0.5)}" fill="${getColor(chapters.indexOf(ch))}" opacity=".85" rx="1"${extraAttrs}/>`;
       // 只有当柱内剩余高度 > 18 时，才把百分比写进柱内；否则省略，避免小屏拥挤
       if (pct > 0.08 && barH > 18) {
@@ -5896,7 +5993,7 @@ function renderChapterStudyChart(history, filterTime, mostWrongIndex) {
 }
 
 // —— 2. 各题型做题次数 ——
-function renderTypeCountChart(history, mostWrongIndex) {
+function renderTypeCountChart(history, mostWrongIndex, mostCorrectIndex) {
   const typeMap = {};
   history.forEach(h => {
     typeMap[h.type] = (typeMap[h.type] || 0) + 1;
@@ -5932,7 +6029,7 @@ function renderTypeCountChart(history, mostWrongIndex) {
     const bw = Math.max(18, Math.min(60, gap * 0.6));
     const item = { cnt: cnt, total: cnt };
     // 题型不绑定 chapter/source，额外用 chartTypeLabel 让 tooltip 标题显示"单选/多选/..."
-    let extraAttrs = chartBarAttrs('type', item, mostWrongIndex);
+    let extraAttrs = chartBarAttrs('type', item, mostWrongIndex, mostCorrectIndex);
     extraAttrs = extraAttrs.replace('class="chart-bar"', 'class="chart-bar" data-chart-type-label="' + escapeHtmlAttr(TYPE_LABELS[t] || t) + '"');
     svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"${extraAttrs}/>`;
     // 数值标在柱顶
@@ -5946,7 +6043,7 @@ function renderTypeCountChart(history, mostWrongIndex) {
 }
 
 // —— 3. 各章节总正确次数 ——
-function renderChapterCorrectChart(history, mostWrongIndex) {
+function renderChapterCorrectChart(history, mostWrongIndex, mostCorrectIndex) {
   const chMap = {};
   history.forEach(h => {
     if (h.correct) chMap[h.chapter] = (chMap[h.chapter] || 0) + 1;
@@ -5979,7 +6076,7 @@ function renderChapterCorrectChart(history, mostWrongIndex) {
     const cx = i * gap + gap / 2;
     const bw = Math.max(14, Math.min(60, gap * 0.6));
     const item = { chapter: ch, cnt: cnt };
-    const extraAttrs = chartBarAttrs('chapter-correct', item, mostWrongIndex);
+    const extraAttrs = chartBarAttrs('chapter-correct', item, mostWrongIndex, mostCorrectIndex);
     svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="#27ae60" opacity=".8" rx="2"${extraAttrs}/>`;
     svg += `<text x="${cx}" y="${chartH - barH - 8}" text-anchor="middle" font-size="14" fill="#27ae60" font-weight="600">${cnt}</text>`;
     svg += `<text x="${cx}" y="${chartH + 42}" text-anchor="end" font-size="12" fill="#333" transform="rotate(-22,${cx},${chartH + 42})">${ch}</text>`;
@@ -6034,7 +6131,7 @@ function renderChapterWrongChart(history, mostWrongIndex) {
 }
 
 // —— 5. 各题库做题次数 ——
-function renderSourceCountChart(history, mostWrongIndex) {
+function renderSourceCountChart(history, mostWrongIndex, mostCorrectIndex) {
   const srcMap = {};
   history.forEach(h => {
     srcMap[h.source] = (srcMap[h.source] || 0) + 1;
@@ -6067,7 +6164,7 @@ function renderSourceCountChart(history, mostWrongIndex) {
     const cx = i * gap + gap / 2;
     const bw = Math.max(18, Math.min(100, gap * 0.6));
     const item = { source: s, cnt: cnt, total: cnt };
-    const extraAttrs = chartBarAttrs('source', item, mostWrongIndex);
+    const extraAttrs = chartBarAttrs('source', item, mostWrongIndex, mostCorrectIndex);
     svg += `<rect x="${cx - bw/2}" y="${chartH - barH}" width="${bw}" height="${Math.max(barH, 1)}" fill="${getColor(i)}" opacity=".8" rx="2"${extraAttrs}/>`;
     svg += `<text x="${cx}" y="${chartH - barH - 8}" text-anchor="middle" font-size="14" fill="${getColor(i)}" font-weight="600">${cnt}</text>`;
     // 题库名称较长，用旋转 - 位置下移
@@ -6693,7 +6790,18 @@ function renderPreviewItem() {
 
   updatePreviewCounter();
 
-  let html = '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
+  let html = '';
+  // 错题 TOP40 角标
+  const topWrong = isTopNWrongQuestion(q, 40);
+  if (topWrong) html += '<div class="top-wrong-badge">错题TOP' + topWrong + '</div>';
+  // 正确次数角标
+  const ck = qKey(q);
+  const qa = quizAnalysis && quizAnalysis.byQuestion && quizAnalysis.byQuestion[ck];
+  if (qa && qa.countCorrect > 0) {
+    html += '<div class="top-correct-badge">正确' + qa.countCorrect + '次</div>';
+  }
+
+  html += '<div class="question-meta">' + metaParts.join(' · ') + '</div>';
   // 题干末尾加答案字母（选择/判断题）
   let answerTag = '';
   if (q.type === 'single_choice' || q.type === 'multiple_choice') {
@@ -6825,7 +6933,8 @@ function buildPreviewListItemHTML(q, i, typeLabels) {
 
   let html = '<div class="pv-list-item' + (listItemHasNote ? ' has-note' : '') + '" data-index="' + i + '" onclick="togglePreviewListItem(this)">';
   html += '<div class="pv-list-header">';
-  html += '<span class="pv-list-num">' + (i + 1) + '</span>';
+  const listTopWrong = isTopNWrongQuestion(q, 40);
+  html += '<span class="pv-list-num">' + (i + 1) + (listTopWrong ? ' <span class="top-wrong-badge-list">TOP' + listTopWrong + '</span>' : '') + '</span>';
   html += '<span class="pv-list-meta">' + escHtml(metaParts.join(' · ')) + '</span>';
   html += '<span class="pv-list-brief">' + escHtml(brief) + '</span>';
   html += '<span class="pv-list-arrow">&#9662;</span>';
