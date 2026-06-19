@@ -22,6 +22,11 @@ function injectToggle(){
   r.innerHTML='<label class="toggle-switch"><input type="checkbox" id="camera-toggle"'+(enabled?' checked':'')+'><span class="toggle-slider"></span></label><span>启用摄像头手势</span>';
   var h=b.querySelector('.combo-settings-hint');
   if(h)b.insertBefore(r,h);else b.appendChild(r);
+  // 使用提示
+  var note=document.createElement('div');
+  note.style.cssText='font-size:11px;color:#a6adc8;padding:2px 0 4px;line-height:1.4';
+  note.textContent='摄像头手势仅适合本地使用（需开启 node server.js）';
+  if(h)b.insertBefore(note,h);else b.appendChild(note);
   document.getElementById('camera-toggle').onchange=function(){
     enabled=this.checked;
     try{localStorage.setItem('cameraEnabled',enabled)}catch(e){}
@@ -308,5 +313,7 @@ document.addEventListener('visibilitychange',function(){
   else if(!document.hidden&&enabled&&!stream)startCam();
 });
 
-setStatus('v5'+(enabled?' (启用)':' (关闭)'));
+setStatus('v5'+(enabled?' (启用)':''));
+// 默认关闭时不显示任何状态
+if(!enabled&&statusEl){statusEl.style.display='none'}
 })();

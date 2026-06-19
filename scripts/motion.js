@@ -202,6 +202,10 @@ function injectToggle(){
   var hint=body.querySelector('.combo-settings-hint');
   if(hint)body.insertBefore(row,hint);
   else body.appendChild(row);
+  var note=document.createElement('div');
+  note.style.cssText='font-size:11px;color:#a6adc8;padding:2px 0 4px;line-height:1.4';
+  note.textContent='体感与手势仅适合本地使用（需开启 node server.js）';
+  if(hint)body.insertBefore(note,hint);else body.appendChild(note);
   document.getElementById('motion-toggle').onchange=function(){
     motionOn=this.checked;
     try{localStorage.setItem('motionEnabled',motionOn)}catch(e){}
