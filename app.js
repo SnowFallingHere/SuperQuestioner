@@ -1,7 +1,7 @@
 // ====== 题库配置：新增题库只需在此添加一行 ======
 const QUIZ_SOURCES = [
-  { file: 'Marxism.json', name: '马克思主义基本原理' },
-  { file: 'Statistic.json', name: '统计学' },
+  { file: 'data/Marxism.json', name: '马克思主义基本原理' },
+  { file: 'data/Statistic.json', name: '统计学' },
   // { file: 'math.json', name: '高等数学' },
   // { file: 'history.json', name: '历史' },
   // { file: 'geography.json', name: '地理' },
@@ -14,13 +14,13 @@ const DIFF_LABELS = {easy:'易',medium:'中',hard:'难',unknown:'未知'};
 let AUDIO_GOOD, AUDIO_PERFECT, AUDIO_AWESOME, AUDIO_UNBELIEVABLE, AUDIO_FABULOUS, AUDIO_MARVELOUS, AUDIO_WRONG;
 function initAudio() {
   try {
-    AUDIO_GOOD = new Audio('good.ogg');
-    AUDIO_PERFECT = new Audio('perfect.ogg');
-    AUDIO_AWESOME = new Audio('awesome.ogg');
-    AUDIO_UNBELIEVABLE = new Audio('unbelievable.ogg');
-    AUDIO_FABULOUS = new Audio('fabulous.ogg');
-    AUDIO_MARVELOUS = new Audio('marvelous.ogg');
-    AUDIO_WRONG = new Audio('wrong.ogg');
+    AUDIO_GOOD = new Audio('assets/sounds/good.ogg');
+    AUDIO_PERFECT = new Audio('assets/sounds/perfect.ogg');
+    AUDIO_AWESOME = new Audio('assets/sounds/awesome.ogg');
+    AUDIO_UNBELIEVABLE = new Audio('assets/sounds/unbelievable.ogg');
+    AUDIO_FABULOUS = new Audio('assets/sounds/fabulous.ogg');
+    AUDIO_MARVELOUS = new Audio('assets/sounds/marvelous.ogg');
+    AUDIO_WRONG = new Audio('assets/sounds/wrong.ogg');
     AUDIO_GOOD.volume = 0.6;
     AUDIO_PERFECT.volume = 0.7;
     AUDIO_AWESOME.volume = 0.75;
@@ -404,7 +404,7 @@ function loadSegmentitAsync() {
     const bar = showSegmentitBar();
 
     const script = document.createElement('script');
-    script.src = 'segmentit.js';
+    script.src = 'scripts/segmentit.js';
     script.async = true; // 确保异步加载
     script.onload = function() {
       ensureSegmenter().then(ready => {

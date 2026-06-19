@@ -199,6 +199,10 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .tf-btn { flex: 1; padding: 14px; border-radius: 8px; border: 1px solid #e0e0e0; cursor: pointer; font-size: 16px; text-align: center; transition: all .15s; user-select: none; }
 .tf-btn:hover { background: #f8f8f8; }
 .tf-btn.correct { border-color: #27ae60; background: #eafaf1; color: #1e8449; }
+/* 陀螺仪手势轮选高亮 */
+.option.motion-hover { border-color: #4a90d9; background: rgba(74,144,217,0.12); box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
+/* 摄像头手势高亮 */
+.option.camera-hover { border-color: #a6e3a1; background: rgba(166,227,161,0.15); box-shadow: 0 0 0 2px rgba(166,227,161,0.3); }
 .tf-btn.wrong { border-color: #e74c3c; background: #fdf0ef; color: #c0392b; }
 .tf-btn.disabled { pointer-events: none; }
 .answer-feedback { margin-top: 16px; padding: 12px 16px; border-radius: 8px; font-size: 14px; display: none; }
