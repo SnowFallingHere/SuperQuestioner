@@ -6248,6 +6248,8 @@ let previewList = [];
 let previewIndex = 0;
 let previewViewMode = 'card'; // 'card' or 'list'
 let previewSavedSelection = null; // { chapters: [...], types: [...] }
+let previewTopWrongEnabled = false; // 错题TOP筛选开关
+let previewFullList = []; // 筛选前的完整列表（用于切换筛选时恢复）
 
 function loadPreviewSelection() {
   try {
@@ -6393,19 +6395,58 @@ function startPreview() {
       const s = JSON.parse(saved);
       previewViewMode = s.viewMode || 'card';
       cylinderModeEnabled = !!s.cylinder;
+      previewTopWrongEnabled = !!s.topWrong;
     } catch (e) {
       previewViewMode = 'card';
       cylinderModeEnabled = false;
+      previewTopWrongEnabled = false;
     }
   } else {
     previewViewMode = 'card';
     cylinderModeEnabled = false;
+    previewTopWrongEnabled = false;
   }
   show('page-preview');
-  // Sync checkbox state
+  // Sync checkbox states
   const cb = document.getElementById('cylinder-toggle');
   if (cb) cb.checked = cylinderModeEnabled;
+  const twCb = document.getElementById('topwrong-toggle');
+  if (twCb) twCb.checked = previewTopWrongEnabled;
+  // 保存完整列表，应用筛选
+  previewFullList = pool.slice();
+  applyTopWrongFilter();
   renderPreviewView();
+}
+
+function toggleTopWrongFilter(enabled) {
+  previewTopWrongEnabled = enabled;
+  savePreviewViewState();
+  applyTopWrongFilter();
+  renderPreviewView();
+  console.log('[预览] 错题TOP筛选:', enabled ? '开启' : '关闭', '| 筛选后:', previewList.length, '题');
+}
+
+function applyTopWrongFilter() {
+  if (!previewFullList.length) return;
+  if (previewTopWrongEnabled) {
+    // 只保留有错题记录的题目，按错题次数降序
+    const byQuestion = quizAnalysis && quizAnalysis.byQuestion;
+    if (byQuestion) {
+      previewList = previewFullList.filter(q => {
+        const key = qKey(q);
+        const qa = byQuestion[key];
+        return qa && qa.countWrong > 0;
+      }).sort((a, b) => {
+        const ka = qKey(a), kb = qKey(b);
+        return (byQuestion[kb] && byQuestion[kb].countWrong || 0) - (byQuestion[ka] && byQuestion[ka].countWrong || 0);
+      });
+    } else {
+      previewList = [];
+    }
+  } else {
+    previewList = previewFullList.slice();
+  }
+  previewIndex = 0;
 }
 
 function togglePreviewView() {
@@ -6418,7 +6459,8 @@ function togglePreviewView() {
 function savePreviewViewState() {
   localStorage.setItem('previewViewState', JSON.stringify({
     viewMode: previewViewMode,
-    cylinder: cylinderModeEnabled
+    cylinder: cylinderModeEnabled,
+    topWrong: previewTopWrongEnabled
   }));
 }
 
@@ -6457,7 +6499,7 @@ function renderPreviewView() {
       requestAnimationFrame(() => enableCylinderMode());
     }
   }
-  document.getElementById('preview-info').textContent = '预览模式';
+  document.getElementById('preview-info').textContent = previewTopWrongEnabled ? '错题TOP' : '预览模式';
   updatePreviewCounter();
 }
 

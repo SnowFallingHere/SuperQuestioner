@@ -696,6 +696,8 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 /* Cylinder mode */
 .cylinder-toggle-row { display: flex; align-items: center; gap: 4px; }
 .cylinder-label { font-size: 12px; color: #888; }
+.topwrong-toggle-row { display: flex; align-items: center; gap: 4px; }
+.topwrong-label { font-size: 12px; color: #e74c3c; font-weight: 600; }
 .preview-list.cylinder-mode {
   gap: 20px !important;
   padding-top: 50vh;
