@@ -1,0 +1,1310 @@
+[
+    {
+        "sequence": 1,
+        "chapter": "Excel单元格基础操作",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "Excel中选中单个单元格的操作方式是？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "鼠标左键单击目标单元格"},
+            {"label": "B", "text": "鼠标左键双击目标单元格"},
+            {"label": "C", "text": "鼠标右键单击目标单元格"},
+            {"label": "D", "text": "鼠标拖拽单元格边框"}
+        ]
+    },
+    {
+        "sequence": 2,
+        "chapter": "Excel单元格基础操作",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "Excel中编辑单元格内容需要执行的操作是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "单击单元格"},
+            {"label": "B", "text": "双击单元格"},
+            {"label": "C", "text": "右键单元格"},
+            {"label": "D", "text": "选中整行"}
+        ]
+    },
+    {
+        "sequence": 3,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "Excel中按下Delete键可以清除单元格中的内容，但不会删除单元格格式",
+        "answer": "正确"
+    },
+    {
+        "sequence": 4,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "Excel中Ctrl+C为粘贴快捷键",
+        "answer": "错误"
+    },
+    {
+        "sequence": 5,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "下列哪个函数用于对一组单元格数据求和？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "SUM"},
+            {"label": "B", "text": "AVERAGE"},
+            {"label": "C", "text": "MIN"},
+            {"label": "D", "text": "MAX"}
+        ]
+    },
+    {
+        "sequence": 6,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "AVERAGE函数的作用是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "求最大值"},
+            {"label": "B", "text": "计算算术平均值"},
+            {"label": "C", "text": "统计非空单元格数量"},
+            {"label": "D", "text": "计算最小值"}
+        ]
+    },
+    {
+        "sequence": 7,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "MIN函数用于返回一组数据的？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "平均值"},
+            {"label": "B", "text": "总和"},
+            {"label": "C", "text": "最小值"},
+            {"label": "D", "text": "最大值"}
+        ]
+    },
+    {
+        "sequence": 8,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "MAX函数的功能是？",
+        "answer": "D",
+        "options": [
+            {"label": "A", "text": "求和"},
+            {"label": "B", "text": "求均值"},
+            {"label": "C", "text": "求最小值"},
+            {"label": "D", "text": "求最大值"}
+        ]
+    },
+    {
+        "sequence": 9,
+        "chapter": "Excel单元格基础操作",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "Excel中快速填充选中单元格的格式快捷键是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "Ctrl+S"},
+            {"label": "B", "text": "格式刷"},
+            {"label": "C", "text": "Ctrl+V"},
+            {"label": "D", "text": "Ctrl+Z"}
+        ]
+    },
+    {
+        "sequence": 10,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "Excel行号用数字标识，列标用英文字母标识",
+        "answer": "正确"
+    },
+    {
+        "sequence": 11,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "单元格地址B3代表第2列第3行的单元格",
+        "answer": "正确"
+    },
+    {
+        "sequence": 12,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "拖拽单元格右下角填充柄可以批量填充序列或复制公式",
+        "answer": "正确"
+    },
+    {
+        "sequence": 13,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "SUM(A1:A10)函数的含义是？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "对A1到A10连续单元格求和"},
+            {"label": "B", "text": "对A1和A10两个单元格求和"},
+            {"label": "C", "text": "统计A1:A10单元格个数"},
+            {"label": "D", "text": "计算A1:A10平均值"}
+        ]
+    },
+    {
+        "sequence": 14,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "COUNT函数主要用来统计？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "文本单元格数量"},
+            {"label": "B", "text": "包含数字的单元格数量"},
+            {"label": "C", "text": "空单元格数量"},
+            {"label": "D", "text": "单元格总和"}
+        ]
+    },
+    {
+        "sequence": 15,
+        "chapter": "Excel单元格基础操作",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "撤销上一步Excel操作的快捷键是？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "Ctrl+C"},
+            {"label": "B", "text": "Ctrl+V"},
+            {"label": "C", "text": "Ctrl+Z"},
+            {"label": "D", "text": "Ctrl+A"}
+        ]
+    },
+    {
+        "sequence": 16,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "Ctrl+A可以选中当前工作表所有单元格",
+        "answer": "正确"
+    },
+    {
+        "sequence": 17,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "Excel中只能横向合并单元格，不能纵向合并单元格",
+        "answer": "错误"
+    },
+    {
+        "sequence": 18,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "统计非空任意类型内容单元格数量使用哪个函数？",
+        "answer": "D",
+        "options": [
+            {"label": "A", "text": "COUNT"},
+            {"label": "B", "text": "SUM"},
+            {"label": "C", "text": "AVERAGE"},
+            {"label": "D", "text": "COUNTA"}
+        ]
+    },
+    {
+        "sequence": 19,
+        "chapter": "Excel单元格基础操作",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "复制选中单元格的快捷键为？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "Ctrl+C"},
+            {"label": "B", "text": "Ctrl+X"},
+            {"label": "C", "text": "Ctrl+V"},
+            {"label": "D", "text": "Ctrl+F"}
+        ]
+    },
+    {
+        "sequence": 20,
+        "chapter": "Excel单元格基础操作",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "剪切单元格快捷键是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "Ctrl+C"},
+            {"label": "B", "text": "Ctrl+X"},
+            {"label": "C", "text": "Ctrl+S"},
+            {"label": "D", "text": "Ctrl+H"}
+        ]
+    },
+    {
+        "sequence": 21,
+        "chapter": "描述统计基础概念",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "一组数据中出现频次最高的数值称为？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "众数"},
+            {"label": "B", "text": "平均数"},
+            {"label": "C", "text": "中位数"},
+            {"label": "D", "text": "极差"}
+        ]
+    },
+    {
+        "sequence": 22,
+        "chapter": "描述统计基础概念",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "极差的计算方式是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "最大值+最小值"},
+            {"label": "B", "text": "最大值-最小值"},
+            {"label": "C", "text": "最大值÷最小值"},
+            {"label": "D", "text": "最大值×最小值"}
+        ]
+    },
+    {
+        "sequence": 23,
+        "chapter": "描述统计基础概念",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "中位数是将数据从小到大排序后位于中间位置的数值",
+        "answer": "正确"
+    },
+    {
+        "sequence": 24,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "Excel中计算中位数的函数是？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "MODE"},
+            {"label": "B", "text": "AVERAGE"},
+            {"label": "C", "text": "MEDIAN"},
+            {"label": "D", "text": "QUARTILE"}
+        ]
+    },
+    {
+        "sequence": 25,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "Excel中求取一组数据众数的基础函数是？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "MODE.SNGL"},
+            {"label": "B", "text": "VAR.P"},
+            {"label": "C", "text": "STDEV"},
+            {"label": "D", "text": "SUMIF"}
+        ]
+    },
+    {
+        "sequence": 26,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "Excel中冻结窗格可以固定表头行或首列，滚动表格时不隐藏",
+        "answer": "正确"
+    },
+    {
+        "sequence": 27,
+        "chapter": "Excel单元格基础操作",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "筛选功能可以隐藏不符合条件的数据行，不会删除原始数据",
+        "answer": "正确"
+    },
+    {
+        "sequence": 28,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "Excel中用于查找替换内容的快捷键是？",
+        "answer": "D",
+        "options": [
+            {"label": "A", "text": "Ctrl+F"},
+            {"label": "B", "text": "Ctrl+G"},
+            {"label": "C", "text": "Ctrl+S"},
+            {"label": "D", "text": "Ctrl+H"}
+        ]
+    },
+    {
+        "sequence": 29,
+        "chapter": "Excel常用基础函数",
+        "type": "single_choice",
+        "difficulty": "easy",
+        "question": "快速打开查找对话框的快捷键是？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "Ctrl+F"},
+            {"label": "B", "text": "Ctrl+H"},
+            {"label": "C", "text": "Ctrl+L"},
+            {"label": "D", "text": "Ctrl+M"}
+        ]
+    },
+    {
+        "sequence": 30,
+        "chapter": "描述统计基础概念",
+        "type": "true_false",
+        "difficulty": "easy",
+        "question": "四分位数可以将排序后的数据平均划分为4个区间",
+        "answer": "正确"
+    },
+    {
+        "sequence": 31,
+        "chapter": "Excel条件统计函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "需要对满足单一条件的单元格数据求和，应选用哪个函数？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "SUMIF"},
+            {"label": "B", "text": "SUM"},
+            {"label": "C", "text": "SUMIFS"},
+            {"label": "D", "text": "SUMPRODUCT"}
+        ]
+    },
+    {
+        "sequence": 32,
+        "chapter": "Excel条件统计函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "多条件求和需要使用的函数是？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "SUMIF"},
+            {"label": "B", "text": "COUNTIF"},
+            {"label": "C", "text": "SUMIFS"},
+            {"label": "D", "text": "AVERAGEIF"}
+        ]
+    },
+    {
+        "sequence": 33,
+        "chapter": "Excel条件统计函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "单条件计数函数为？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "SUMIF"},
+            {"label": "B", "text": "COUNTIF"},
+            {"label": "C", "text": "COUNTIFS"},
+            {"label": "D", "text": "COUNTA"}
+        ]
+    },
+    {
+        "sequence": 34,
+        "chapter": "Excel条件统计函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "多条件计数函数是？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "COUNTIF"},
+            {"label": "B", "text": "SUMIFS"},
+            {"label": "C", "text": "COUNTIFS"},
+            {"label": "D", "text": "AVERAGEIFS"}
+        ]
+    },
+    {
+        "sequence": 35,
+        "chapter": "Excel条件统计函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "单一条件下计算平均值使用函数？",
+        "answer": "D",
+        "options": [
+            {"label": "A", "text": "AVERAGE"},
+            {"label": "B", "text": "SUMIF"},
+            {"label": "C", "text": "AVERAGEIFS"},
+            {"label": "D", "text": "AVERAGEIF"}
+        ]
+    },
+    {
+        "sequence": 36,
+        "chapter": "Excel条件统计函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "多条件求算术平均值的函数是？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "AVERAGEIF"},
+            {"label": "B", "text": "AVERAGE"},
+            {"label": "C", "text": "AVERAGEIFS"},
+            {"label": "D", "text": "MEDIAN"}
+        ]
+    },
+    {
+        "sequence": 37,
+        "chapter": "描述统计Excel函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "Excel中计算总体方差的函数是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "VAR.S"},
+            {"label": "B", "text": "VAR.P"},
+            {"label": "C", "text": "STDEV.P"},
+            {"label": "D", "text": "STDEV.S"}
+        ]
+    },
+    {
+        "sequence": 38,
+        "chapter": "描述统计Excel函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "样本方差对应的Excel函数为？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "VAR.S"},
+            {"label": "B", "text": "VAR.P"},
+            {"label": "C", "text": "VARA"},
+            {"label": "D", "text": "VARPA"}
+        ]
+    },
+    {
+        "sequence": 39,
+        "chapter": "描述统计Excel函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "总体标准差的Excel函数是？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "STDEV.S"},
+            {"label": "B", "text": "STDEVA"},
+            {"label": "C", "text": "STDEV.P"},
+            {"label": "D", "text": "STDEVPA"}
+        ]
+    },
+    {
+        "sequence": 40,
+        "chapter": "描述统计Excel函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "样本标准差使用哪个Excel函数计算？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "STDEV.S"},
+            {"label": "B", "text": "STDEV.P"},
+            {"label": "C", "text": "VAR.S"},
+            {"label": "D", "text": "VAR.P"}
+        ]
+    },
+    {
+        "sequence": 41,
+        "chapter": "描述统计Excel函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "Excel中计算四分位数的函数是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "MEDIAN"},
+            {"label": "B", "text": "QUARTILE.EXC/QUARTILE.INC"},
+            {"label": "C", "text": "PERCENTRANK"},
+            {"label": "D", "text": "MODE"}
+        ]
+    },
+    {
+        "sequence": 42,
+        "chapter": "假设检验选型基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "比较两组独立样本均值是否存在显著差异，小样本、总体方差未知时优先选用？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "独立样本T检验"},
+            {"label": "B", "text": "配对样本T检验"},
+            {"label": "C", "text": "F检验"},
+            {"label": "D", "text": "卡方检验"}
+        ]
+    },
+    {
+        "sequence": 43,
+        "chapter": "假设检验选型基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "同一组样本处理前后均值差异显著性检验，选用？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "独立样本T检验"},
+            {"label": "B", "text": "配对样本T检验"},
+            {"label": "C", "text": "卡方检验"},
+            {"label": "D", "text": "F检验"}
+        ]
+    },
+    {
+        "sequence": 44,
+        "chapter": "假设检验选型基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "检验两组数据总体方差是否相等，需要采用？",
+        "answer": "D",
+        "options": [
+            {"label": "A", "text": "T检验"},
+            {"label": "B", "text": "卡方检验"},
+            {"label": "C", "text": "Z检验"},
+            {"label": "D", "text": "F检验"}
+        ]
+    },
+    {
+        "sequence": 45,
+        "chapter": "假设检验选型基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "检验分类变量的频数分布、独立性拟合优度，采用？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "T检验"},
+            {"label": "B", "text": "卡方检验"},
+            {"label": "C", "text": "F检验"},
+            {"label": "D", "text": "Z检验"}
+        ]
+    },
+    {
+        "sequence": 46,
+        "chapter": "假设检验基本概念",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "原假设的英文缩写为？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "H0"},
+            {"label": "B", "text": "H1"},
+            {"label": "C", "text": "Hα"},
+            {"label": "D", "text": "Hβ"}
+        ]
+    },
+    {
+        "sequence": 47,
+        "chapter": "假设检验基本概念",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "备择假设的缩写是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "H0"},
+            {"label": "B", "text": "H1"},
+            {"label": "C", "text": "H2"},
+            {"label": "D", "text": "H3"}
+        ]
+    },
+    {
+        "sequence": 48,
+        "chapter": "Excel单元格数据处理",
+        "type": "multiple_choice",
+        "difficulty": "medium",
+        "question": "下列属于Excel单元格数据清洗常用操作的有？",
+        "answer": "ABCD",
+        "options": [
+            {"label": "A", "text": "删除重复值"},
+            {"label": "B", "text": "分列拆分文本数据"},
+            {"label": "C", "text": "查找替换异常字符"},
+            {"label": "D", "text": "定位填充空单元格"}
+        ]
+    },
+    {
+        "sequence": 49,
+        "chapter": "Excel单元格数据处理",
+        "type": "multiple_choice",
+        "difficulty": "medium",
+        "question": "Excel中可用于批量调整单元格格式的功能包含？",
+        "answer": "ABC",
+        "options": [
+            {"label": "A", "text": "格式刷"},
+            {"label": "B", "text": "条件格式"},
+            {"label": "C", "text": "单元格格式设置"},
+            {"label": "D", "text": "数据筛选"}
+        ]
+    },
+    {
+        "sequence": 50,
+        "chapter": "Excel函数参数基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "SUM函数第一个核心参数是？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "需要求和的数值区域"},
+            {"label": "B", "text": "条件区域"},
+            {"label": "C", "text": "判断条件"},
+            {"label": "D", "text": "统计类型"}
+        ]
+    },
+    {
+        "sequence": 51,
+        "chapter": "Excel函数参数基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "SUMIF函数三个参数依次为？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "求和区域、条件、条件区域"},
+            {"label": "B", "text": "条件区域、条件、求和区域"},
+            {"label": "C", "text": "条件、条件区域、求和区域"},
+            {"label": "D", "text": "求和区域、条件区域、条件"}
+        ]
+    },
+    {
+        "sequence": 52,
+        "chapter": "Excel函数参数基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "QUARTILE.INC函数第二个参数代表？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "数据区域行数"},
+            {"label": "B", "text": "统计精度"},
+            {"label": "C", "text": "四分位数类型（0~4）"},
+            {"label": "D", "text": "分组数量"}
+        ]
+    },
+    {
+        "sequence": 53,
+        "chapter": "Excel函数参数基础",
+        "type": "true_false",
+        "difficulty": "medium",
+        "question": "Excel函数参数中连续单元格区域使用冒号分隔，不连续区域使用逗号分隔",
+        "answer": "正确"
+    },
+    {
+        "sequence": 54,
+        "chapter": "Excel函数参数基础",
+        "type": "true_false",
+        "difficulty": "medium",
+        "question": "绝对引用单元格地址使用$符号锁定行或列，填充公式时引用位置不会偏移",
+        "answer": "正确"
+    },
+    {
+        "sequence": 55,
+        "chapter": "Excel函数参数基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "$A$1属于哪种单元格引用方式？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "绝对引用"},
+            {"label": "B", "text": "相对引用"},
+            {"label": "C", "text": "混合引用"},
+            {"label": "D", "text": "间接引用"}
+        ]
+    },
+    {
+        "sequence": 56,
+        "chapter": "Excel函数参数基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "A1属于？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "绝对引用"},
+            {"label": "B", "text": "相对引用"},
+            {"label": "C", "text": "混合引用"},
+            {"label": "D", "text": "三维引用"}
+        ]
+    },
+    {
+        "sequence": 57,
+        "chapter": "Excel函数参数基础",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "$A1属于？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "绝对引用"},
+            {"label": "B", "text": "相对引用"},
+            {"label": "C", "text": "混合引用"},
+            {"label": "D", "text": "外部引用"}
+        ]
+    },
+    {
+        "sequence": 58,
+        "chapter": "描述统计基础概念",
+        "type": "multiple_choice",
+        "difficulty": "medium",
+        "question": "下列属于离散程度描述统计量的有？",
+        "answer": "ABCD",
+        "options": [
+            {"label": "A", "text": "极差"},
+            {"label": "B", "text": "方差"},
+            {"label": "C", "text": "标准差"},
+            {"label": "D", "text": "四分位距"}
+        ]
+    },
+    {
+        "sequence": 59,
+        "chapter": "描述统计基础概念",
+        "type": "multiple_choice",
+        "difficulty": "medium",
+        "question": "属于集中趋势统计量的是？",
+        "answer": "ABC",
+        "options": [
+            {"label": "A", "text": "算术平均数"},
+            {"label": "B", "text": "中位数"},
+            {"label": "C", "text": "众数"},
+            {"label": "D", "text": "标准差"}
+        ]
+    },
+    {
+        "sequence": 60,
+        "chapter": "假设检验基本规则",
+        "type": "true_false",
+        "difficulty": "medium",
+        "question": "原假设H0一般设置为包含等号的假设（=、≥、≤）",
+        "answer": "正确"
+    },
+    {
+        "sequence": 61,
+        "chapter": "假设检验基本规则",
+        "type": "true_false",
+        "difficulty": "medium",
+        "question": "备择假设H1不能包含等号，只能是≠、>、<三种形式",
+        "answer": "正确"
+    },
+    {
+        "sequence": 62,
+        "chapter": "Excel数据透视表",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "Excel中快速对多维数据分组汇总、交叉统计的工具是？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "筛选"},
+            {"label": "B", "text": "数据透视表"},
+            {"label": "C", "text": "分类汇总"},
+            {"label": "D", "text": "条件格式"}
+        ]
+    },
+    {
+        "sequence": 63,
+        "chapter": "Excel分类汇总",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "使用分类汇总前必须先对分类字段执行什么操作？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "排序"},
+            {"label": "B", "text": "筛选"},
+            {"label": "C", "text": "去重"},
+            {"label": "D", "text": "分列"}
+        ]
+    },
+    {
+        "sequence": 64,
+        "chapter": "Excel文本处理函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "截取单元格左侧指定长度字符的函数是？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "LEFT"},
+            {"label": "B", "text": "RIGHT"},
+            {"label": "C", "text": "MID"},
+            {"label": "D", "text": "LEN"}
+        ]
+    },
+    {
+        "sequence": 65,
+        "chapter": "Excel文本处理函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "LEN函数的作用是？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "截取文本"},
+            {"label": "B", "text": "替换字符"},
+            {"label": "C", "text": "统计文本字符总长度"},
+            {"label": "D", "text": "查找指定字符位置"}
+        ]
+    },
+    {
+        "sequence": 66,
+        "chapter": "Excel查找引用函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "纵向精确匹配查找数据最常用函数为？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "INDEX"},
+            {"label": "B", "text": "VLOOKUP"},
+            {"label": "C", "text": "MATCH"},
+            {"label": "D", "text": "HLOOKUP"}
+        ]
+    },
+    {
+        "sequence": 67,
+        "chapter": "Excel查找引用函数",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "VLOOKUP第四个参数取值FALSE代表？",
+        "answer": "A",
+        "options": [
+            {"label": "A", "text": "精确匹配查找"},
+            {"label": "B", "text": "模糊匹配查找"},
+            {"label": "C", "text": "升序查找"},
+            {"label": "D", "text": "降序查找"}
+        ]
+    },
+    {
+        "sequence": 68,
+        "chapter": "Excel数据格式处理",
+        "type": "true_false",
+        "difficulty": "medium",
+        "question": "将单元格设置为文本格式可以避免长数字（身份证号、银行卡号）科学计数失真",
+        "answer": "正确"
+    },
+    {
+        "sequence": 69,
+        "chapter": "Excel数据格式处理",
+        "type": "true_false",
+        "difficulty": "medium",
+        "question": "常规格式下输入超过11位纯数字，Excel会自动转为科学计数法显示",
+        "answer": "正确"
+    },
+    {
+        "sequence": 70,
+        "chapter": "假设检验显著性水平",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "统计学最常用的显著性检验水平α取值为？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "0.01"},
+            {"label": "B", "text": "0.05"},
+            {"label": "C", "text": "0.10"},
+            {"label": "D", "text": "0.50"}
+        ]
+    },
+    {
+        "sequence": 71,
+        "chapter": "描述统计计算",
+        "type": "calculation",
+        "difficulty": "medium",
+        "question": "现有一组数据：12,15,18,20,25，使用Excel描述统计方法计算以下指标",
+        "table": {
+            "headers": ["序号", "数值"],
+            "rows": [
+                ["1", "12"],
+                ["2", "15"],
+                ["3", "18"],
+                ["4", "20"],
+                ["5", "25"]
+            ]
+        },
+        "sub_questions": [
+            {"id": 1, "text": "计算该组数据算术平均值"},
+            {"id": 2, "text": "计算极差"},
+            {"id": 3, "text": "计算中位数"}
+        ],
+        "answer": {
+            "1": {"value": 18},
+            "2": {"value": 13},
+            "3": {"value": 18}
+        }
+    },
+    {
+        "sequence": 72,
+        "chapter": "Excel函数参数填空",
+        "type": "calculation",
+        "difficulty": "medium",
+        "question": "若A列有N个数据条件，B列有N个对应数据，补全SUMIF函数公式：=SUMIF(A2:A10,\"优秀\",B2:____)",
+        "sub_questions": [
+            {"id": 1, "text": "填写第三个参数单元格区域"}
+        ],
+        "answer": {
+            "1": {"value": "B10"}
+        }
+    },
+    {
+        "sequence": 73,
+        "chapter": "Excel函数参数填空",
+        "type": "calculation",
+        "difficulty": "medium",
+        "question": "补全VLOOKUP函数精确匹配参数：=VLOOKUP(D2,A1:B10,2,____)",
+        "sub_questions": [
+            {"id": 1, "text": "填写第四个参数值"}
+        ],
+        "answer": {
+            "1": {"value": "FALSE"}
+        }
+    },
+    {
+        "sequence": 74,
+        "chapter": "四分位数计算",
+        "type": "calculation",
+        "difficulty": "medium",
+        "question": "数据：2,4,6,8,10,12,14，使用QUARTILE.INC计算下四分位数（Q1）",
+        "sub_questions": [
+            {"id": 1, "text": "求Q1数值"}
+        ],
+        "answer": {
+            "1": {"value": 5}
+        }
+    },
+    {
+        "sequence": 75,
+        "chapter": "众数计算",
+        "type": "calculation",
+        "difficulty": "medium",
+        "question": "数据集：3,5,7,5,9,5,11，计算该组数据众数",
+        "sub_questions": [
+            {"id": 1, "text": "写出众数结果"}
+        ],
+        "answer": {
+            "1": {"value": 5}
+        }
+    },
+    {
+        "sequence": 76,
+        "chapter": "Excel绝对引用应用",
+        "type": "true_false",
+        "difficulty": "medium",
+        "question": "公式=$B2*C2向右填充时，B列不会发生列偏移",
+        "answer": "正确"
+    },
+    {
+        "sequence": 77,
+        "chapter": "Excel条件格式",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "需要将成绩大于90的单元格自动标绿，使用Excel哪个功能？",
+        "answer": "C",
+        "options": [
+            {"label": "A", "text": "筛选"},
+            {"label": "B", "text": "数据验证"},
+            {"label": "C", "text": "条件格式"},
+            {"label": "D", "text": "分类汇总"}
+        ]
+    },
+    {
+        "sequence": 78,
+        "chapter": "Excel数据验证",
+        "type": "single_choice",
+        "difficulty": "medium",
+        "question": "限制单元格只能输入1-100之间的数字，使用哪个功能？",
+        "answer": "B",
+        "options": [
+            {"label": "A", "text": "条件格式"},
+            {"label": "B", "text": "数据验证"},
+            {"label": "C", "text": "分列"},
+            {"label": "D", "text": "删除重复值"}
+        ]
+    },
+    {
+        "sequence": 79,
+        "chapter": "假设检验应用场景",
+        "type": "multiple_choice",
+        "difficulty": "medium",
+        "question": "下列场景适合使用卡方检验的有？",
+        "answer": "ABC",
+        "options": [
+            {"label": "A", "text": "检验性别与购买偏好是否独立"},
+            {"label": "B", "text": "检验样本频数是否符合理论分布"},
+            {"label": "C", "text": "多组分类变量频数差异对比"},
+            {"label": "D", "text": "两组样本均值差异检验"}
+        ]
+    },
+    {
+        "sequence": 80,
+        "chapter": "假设检验应用场景",
+        "type": "multiple_choice",
+        "difficulty": "medium",
+        "question": "T检验适用的场景包含？",
+        "answer": "ABD",
+        "options": [
+            {"label": "A", "text": "单样本均值与总体均值对比"},
+            {"label": "B", "text": "配对样本前后均值对比"},
+            {"label": "C", "text": "多分类变量独立性检验"},
+            {"label": "D", "text": "两组独立小样本均值差异检验"}
+        ]
+    },
+    {
+        "sequence": 81,
+        "chapter": "假设检验——原假设与备择假设设定",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "某研究检验某班级学生平均成绩是否不等于80分，请写出对应的原假设H0与备择假设H1，并简要说明双侧检验的适用场景。",
+        "answer": {
+            "reference": "原假设H0：总体均值μ=80；备择假设H1：总体均值μ≠80。双侧检验适用于只关心参数是否存在显著差异，不关注差异方向（偏高或偏低）的假设检验场景，拒绝域分布在统计量分布的左右两侧。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 82,
+        "chapter": "假设检验——原假设与备择假设设定",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "检验新营销方案下的平均销售额是否高于旧方案平均销售额，写出H0、H1，并说明属于单侧还是双侧检验。",
+        "answer": {
+            "reference": "H0：新方案总体平均销售额≤旧方案总体平均销售额；H1：新方案总体平均销售额＞旧方案总体平均销售额；该检验属于右侧单侧检验，研究者只关注销售额向上的差异方向。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 83,
+        "chapter": "Excel多维条件统计",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "下表为学生成绩数据，统计性别为男、班级1班的学生总成绩之和，使用SUMIFS函数计算结果",
+        "table": {
+            "headers": ["姓名", "班级", "性别", "总成绩"],
+            "rows": [
+                ["张三", "1班", "男", "86"],
+                ["李四", "1班", "女", "92"],
+                ["王五", "1班", "男", "78"],
+                ["赵六", "2班", "男", "81"]
+            ]
+        },
+        "sub_questions": [
+            {"id": 1, "text": "计算满足双条件的总成绩合计"}
+        ],
+        "answer": {
+            "1": {"value": 164}
+        }
+    },
+    {
+        "sequence": 84,
+        "chapter": "方差与标准差计算",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "数据集：5,10,15，以该组为总体，计算总体方差与总体标准差（保留2位小数）",
+        "sub_questions": [
+            {"id": 1, "text": "总体方差"},
+            {"id": 2, "text": "总体标准差"}
+        ],
+        "answer": {
+            "1": {"scope": [16.66,16.67]},
+            "2": {"scope": [4.07,4.09]}
+        }
+    },
+    {
+        "sequence": 85,
+        "chapter": "Excel函数综合参数设计",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "简述VLOOKUP函数四个参数的含义，同时说明该函数在大数据表格查找场景下的局限性，并给出两种替代的查找函数方案。",
+        "answer": {
+            "reference": "VLOOKUP参数：1.查找值；2.查找区域（查找值必须位于区域第一列）；3.返回结果在区域中的列序号；4.匹配模式（FALSE精确、TRUE模糊）。局限性：只能从左向右查找、多条件查找实现复杂、海量数据下查询效率偏低。替代方案：INDEX+MATCH组合函数、XLOOKUP函数。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 86,
+        "chapter": "F检验应用逻辑",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "简述F检验的核心用途，说明为何在两组独立样本T检验前需要先行进行F检验。",
+        "answer": {
+            "reference": "F检验用于检验两个总体的方差是否齐性（方差是否相等）。独立样本T检验分为方差齐性与方差不齐两种校正算法，只有通过F检验判断方差齐性后，才能选择对应的T检验统计量与自由度，避免均值检验结果出现系统偏差。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 87,
+        "chapter": "四分位距异常值判定",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "数据：10,12,14,16,18,20,50，计算Q1、Q3、四分位距IQR，并根据1.5×IQR规则判断异常值",
+        "sub_questions": [
+            {"id": 1, "text": "下四分位数Q1"},
+            {"id": 2, "text": "上四分位数Q3"},
+            {"id": 3, "text": "四分位距IQR"},
+            {"id": 4, "text": "判定的异常值"}
+        ],
+        "answer": {
+            "1": {"value": 13},
+            "2": {"value": 19},
+            "3": {"value": 6},
+            "4": {"value": 50}
+        }
+    },
+    {
+        "sequence": 88,
+        "chapter": "Excel数据清洗综合场景",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "一份销售原始Excel表存在重复订单、缺失销量、文本型数字、不规则空格四类数据问题，请依次写出每类问题对应的Excel处理方法及所用功能/函数。",
+        "answer": {
+            "reference": "1.重复订单：数据选项卡删除重复值；2.缺失销量：定位空值批量填充0或均值；3.文本型数字：选择性粘贴乘1、VALUE函数转换；4.不规则空格：查找替换清除空格、TRIM函数去除首尾多余空格。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 89,
+        "chapter": "卡方检验适用条件",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "简述卡方独立性检验的三大适用前提条件，若单元格期望频数小于5时应当如何处理？",
+        "answer": {
+            "reference": "前提：样本随机独立、观测频数互斥分类、总样本量充分大；多数单元格期望频数≥5。处理方式：合并相邻类别提升单元格频数、增大样本量、选用Fisher精确检验替代卡方检验。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 90,
+        "chapter": "配对T检验场景辨析",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "区分独立样本T检验与配对样本T检验的适用场景，各列举2个典型业务案例。",
+        "answer": {
+            "reference": "独立样本T：两组无关联样本，如实验组vs对照组不同人群薪资对比、男生女生成绩均值对比；配对样本T：同一受试对象前后观测、配对匹配样本，如员工培训前后绩效、同一商品两种包装销量对比。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 91,
+        "chapter": "Excel动态引用与绝对引用综合应用",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "公式=B$2*$A3向右、向下填充各一次，写出两次填充后的单元格公式",
+        "sub_questions": [
+            {"id": 1, "text": "向右填充一格公式"},
+            {"id": 2, "text": "向下填充一格公式"}
+        ],
+        "answer": {
+            "1": {"value": "=C$2*$A3"},
+            "2": {"value": "=B$2*$A4"}
+        }
+    },
+    {
+        "sequence": 92,
+        "chapter": "Excel多函数嵌套计算",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "数据集：22,18,25,30,15，先使用AVERAGE计算均值，再用STDEV.S计算样本标准差，结果保留2位小数",
+        "table": {
+            "headers": ["序号", "数值"],
+            "rows": [
+                ["1", "22"],
+                ["2", "18"],
+                ["3", "25"],
+                ["4", "30"],
+                ["5", "15"]
+            ]
+        },
+        "sub_questions": [
+            {"id": 1, "text": "该组数据算术平均值"},
+            {"id": 2, "text": "样本标准差（保留2位小数）"}
+        ],
+        "answer": {
+            "1": {"value": 22},
+            "2": {"scope": [5.70, 5.72]}
+        }
+    },
+    {
+        "sequence": 93,
+        "chapter": "假设检验假设设定与两类错误",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "某工厂检验生产线零件尺寸均值是否大于标准值50mm，写出原假设H0与备择假设H1，并简述第一类错误、第二类错误的含义。",
+        "answer": {
+            "reference": "原假设H0：总体均值μ≤50mm；备择假设H1：总体均值μ＞50mm。第一类错误（弃真错误）：原假设H0实际成立，却错误拒绝了H0；第二类错误（取伪错误）：原假设H0实际不成立，却错误接受了H0。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 94,
+        "chapter": "Excel数据透视表统计分析",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "简述数据透视表行、列、值、筛选器四个字段区域的作用，说明使用数据透视表进行多维统计相比分类汇总的优势。",
+        "answer": {
+            "reference": "行字段：设置纵向分组维度；列字段：设置横向分组维度；值字段：设置求和、计数、均值等聚合统计方式；筛选器字段：实现全局数据筛选。优势：支持多维度交叉分析、可灵活拖拽切换统计维度、无需提前排序、可快速切换聚合方式、支持切片器可视化筛选。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 95,
+        "chapter": "四分位数与异常值综合判定",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "数据集：6,9,11,13,15,17,20,4，排序后计算Q1、Q3、四分位距IQR，根据1.5倍IQR规则计算上下临界值并找出异常值。",
+        "sub_questions": [
+            {"id": 1, "text": "下四分位数Q1"},
+            {"id": 2, "text": "上四分位数Q3"},
+            {"id": 3, "text": "四分位距IQR"},
+            {"id": 4, "text": "异常值"}
+        ],
+        "answer": {
+            "1": {"value": 8.25},
+            "2": {"value": 16.5},
+            "3": {"value": 8.25},
+            "4": {"value": 4}
+        }
+    },
+    {
+        "sequence": 96,
+        "chapter": "多条件匹配函数综合应用",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "现有销售数据表包含地区、产品、销售额三列，需要同时根据地区和产品两个条件匹配对应销售额，分析VLOOKUP直接实现多条件查找的局限性，并写出INDEX+MATCH多条件查找的实现思路。",
+        "answer": {
+            "reference": "局限性：VLOOKUP仅支持单一查找值，无法直接设置双条件，需要辅助列拼接条件才能实现。实现思路：利用MATCH函数对两个条件同时做数组匹配，定位同时满足两个条件的行号，再通过INDEX函数根据行号返回对应销售额单元格数值。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 97,
+        "chapter": "F检验方差齐性实操分析",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "两组样本执行独立样本T检验前进行F检验，若P值小于显著性水平0.05，说明什么？此时应选择独立样本T检验的哪一种检验结果？",
+        "answer": {
+            "reference": "P＜0.05说明两组总体方差不齐，拒绝方差相等的原假设；需要选择独立样本T检验中假定方差不齐校正后的检验统计量、自由度与P值作为最终检验结果，不能使用方差齐性下的检验结果。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 98,
+        "chapter": "Excel嵌套条件统计计算",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "下表为员工绩效得分，统计部门为销售部、绩效得分大于80分的员工平均绩效分数。",
+        "table": {
+            "headers": ["姓名", "部门", "绩效得分"],
+            "rows": [
+                ["员工1", "销售部", "85"],
+                ["员工2", "技术部", "76"],
+                ["员工3", "销售部", "92"],
+                ["员工4", "销售部", "75"],
+                ["员工5", "技术部", "88"]
+            ]
+        },
+        "sub_questions": [
+            {"id": 1, "text": "满足双条件的绩效平均分"}
+        ],
+        "answer": {
+            "1": {"scope": [88.49, 88.51]}
+        }
+    },
+    {
+        "sequence": 99,
+        "chapter": "卡方拟合优度检验场景辨析",
+        "type": "subjective",
+        "difficulty": "hard",
+        "question": "分别说明卡方拟合优度检验、卡方独立性检验的研究目的，各列举一个业务应用场景。",
+        "answer": {
+            "reference": "拟合优度检验：检验观测频数分布是否符合预设的理论分布，例如检验用户消费频次是否服从泊松分布；独立性检验：检验两个分类变量之间是否相互独立，例如检验用户性别与商品购买类别是否存在关联关系。",
+            "min_match": 0.25
+        }
+    },
+    {
+        "sequence": 100,
+        "chapter": "Excel描述统计综合计算",
+        "type": "calculation",
+        "difficulty": "hard",
+        "question": "数据集：14,16,19,21,16,24，计算该组数据的众数、总体方差、四分位距IQR三项指标，总体方差保留2位小数。",
+        "sub_questions": [
+            {"id": 1, "text": "众数"},
+            {"id": 2, "text": "总体方差"},
+            {"id": 3, "text": "四分位距IQR"}
+        ],
+        "answer": {
+            "1": {"value": 16},
+            "2": {"scope": [11.21, 11.23]},
+            "3": {"scope": [4.5, 4.5]}
+        }
+    }
+]

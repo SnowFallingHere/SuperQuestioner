@@ -2,6 +2,7 @@
 const QUIZ_SOURCES = [
   { file: 'data/Marxism.json', name: '马克思主义基本原理' },
   { file: 'data/Statistic.json', name: '统计学' },
+  {file: 'data/Excel.json', name: 'Excel' },
   // { file: 'math.json', name: '高等数学' },
   // { file: 'history.json', name: '历史' },
   // { file: 'geography.json', name: '地理' },
