@@ -59,7 +59,11 @@
           <h2>无限模式</h2>
           <button class="btn btn-secondary btn-inline" onclick="event.stopPropagation(); startInfinite(true)">新一轮</button>
         </div>
-        <p>答对3次的题不再出现，错题会反复出现直到掌握</p>
+        <div class="toggle-row" onclick="event.stopPropagation()">
+          <span class="toggle-label">启用主观题</span>
+          <label class="toggle-switch"><input type="checkbox" id="infinite-include-subjective" onchange="updateInfiniteCardText()"><span class="toggle-slider"></span></label>
+        </div>
+        <p id="infinite-card-desc">答对3次的题不再出现，错题会反复出现直到掌握</p>
       </div>
       <div class="mode-card" onclick="showTimedConfig()">
         <h2>限时模式</h2>
@@ -173,6 +177,7 @@
     <span id="gear-btn" class="gear-icon hidden" onclick="toggleSettings()">&#9881;</span>
   </div>
   <div class="quiz-card">
+    <div class="infinite-dots" id="infinite-dots"></div>
     <div class="question-meta" id="question-meta"></div>
     <div class="question-text" id="question-text"></div>
     <div id="options-area"></div>

@@ -104,6 +104,7 @@ let infiniteSession; // {key: {is_correct: bool, corrects: int}} —— 本轮�
 let timedQuestions;
 let customDifficulty = {};
 let wrongList = [];
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 // 多错题本结构: wrongBooks = { [id]: { name, temp: {}, long: {}, notes: {} } }
 let wrongBooks = {};
 let currentWrongBookId = null; // 当前打开的错题本ID
@@ -630,6 +631,12 @@ async function init() {
     if (savedChallengeSubjective !== null) {
       const checkbox = document.getElementById('challenge-include-subjective');
       if (checkbox) checkbox.checked = savedChallengeSubjective === 'true';
+    }
+    // 初始化无限模式开关
+    const savedInfiniteSubjective = localStorage.getItem('infiniteIncludeSubjective');
+    if (savedInfiniteSubjective !== null) {
+      const checkbox = document.getElementById('infinite-include-subjective');
+      if (checkbox) checkbox.checked = savedInfiniteSubjective === 'true';
     }
 
     // 异步加载题库数据（不阻塞UI）
@@ -1326,6 +1333,8 @@ function updateActiveQuestions() {
   updateWrongBookCardText();
   // 更新闯关模式卡片
   updateChallengeCardText();
+  // 更新无限模式卡片
+  updateInfiniteCardText();
 }
 function updateWrongBookCardText() {
   // 获取选择的错题本
@@ -1377,6 +1386,15 @@ function updateWrongBookCardText() {
 }
 
 // 更新闯关模式卡片显示
+function updateInfiniteCardText() {
+  const cb = document.getElementById('infinite-include-subjective');
+  const includeSubj = cb?.checked ?? false;
+  const desc = document.getElementById('infinite-card-desc');
+  if (desc) desc.textContent = includeSubj ? '含主观题 · 答对3次的题不再出现，错题会反复出现直到掌握' : '答对3次的题不再出现，错题会反复出现直到掌握';
+  // 保存设置
+  localStorage.setItem('infiniteIncludeSubjective', String(includeSubj));
+}
+
 function updateChallengeCardText() {
   const includeSubjective = document.getElementById('challenge-include-subjective')?.checked ?? false;
   const descEl = document.getElementById('challenge-card-desc');
@@ -1688,11 +1706,14 @@ function startInfinite(freshStart) {
   wrongList = [];
   infiniteMap = {};
   infiniteSession = {};
+  // 根据"启用主观题"开关过滤题目
+  const includeSubj = document.getElementById('infinite-include-subjective')?.checked ?? false;
+  const questions = includeSubj ? getActiveQuestions() : getActiveQuestions().filter(q => q.type !== 'subjective');
   if (freshStart) {
     localStorage.removeItem('infiniteProgress');
     localStorage.removeItem('infiniteStats');
     localStorage.removeItem('infiniteSession');
-    getActiveQuestions().forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+    questions.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
   } else {
     const savedProgress = localStorage.getItem('infiniteProgress');
     const savedStats = localStorage.getItem('infiniteStats');
@@ -1703,15 +1724,15 @@ function startInfinite(freshStart) {
     if (savedProgress) {
       try {
         const parsed = JSON.parse(savedProgress);
-        ALL_QUESTIONS.forEach(q => {
+        questions.forEach(q => {
           const k = qKey(q);
           infiniteMap[k] = parsed[k] ? parsed[k] : {correctCount: 0};
         });
       } catch(e) {
-        getActiveQuestions().forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+        questions.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
       }
     } else {
-      getActiveQuestions().forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
+      questions.forEach(q => infiniteMap[qKey(q)] = {correctCount: 0});
     }
     if (loadedStats && typeof loadedStats === 'object') {
       if (typeof loadedStats.totalAnswered === 'number' && isFinite(loadedStats.totalAnswered)) {
@@ -1733,7 +1754,7 @@ function startInfinite(freshStart) {
       mastered: Object.values(infiniteMap).filter(v => v && v.correctCount >= 3).length,
     });
   }
-  quizQueue = shuffle(ALL_QUESTIONS);
+  quizQueue = shuffle(questions);
   currentIndex = 0;
   show('page-quiz');
   document.getElementById('gear-btn').classList.remove('hidden');
@@ -1761,6 +1782,33 @@ function infiniteNextIndex() {
   return currentIndex;
 }
 
+// 在无限模式中就近插入题目，确保错题10题内、正确题15~20题内重现
+function infiniteRequeue(q, isWrong) {
+  const offset = isWrong ? Math.floor(Math.random() * 4) + 5 : Math.floor(Math.random() * 4) + 15; // wrong:5~8, correct:15~18
+  const pos = Math.min(currentIndex + offset, quizQueue.length);
+  // 避免插入重复（如果该题已经在这个范围内）
+  for (let i = currentIndex + 1; i < pos && i < quizQueue.length; i++) {
+    if (qKey(quizQueue[i]) === qKey(q)) return; // 已经在队列中，不重复插入
+  }
+  quizQueue.splice(pos, 0, q);
+}
+
+function renderInfiniteDots(dots, wrongStreak) {
+  const el = document.getElementById('infinite-dots');
+  if (!el) return;
+  if (mode !== 'infinite') { el.innerHTML = ''; el.classList.remove('mastered'); return; }
+  let html = '';
+  for (let i = 0; i < 3; i++) {
+    const filled = i < dots;
+    const isWrong = wrongStreak > 0 && i < wrongStreak;
+    let cls = 'inf-dot';
+    if (isWrong) cls += ' wrong';
+    else if (filled) cls += ' filled';
+    html += '<span class="' + cls + '"></span>';
+  }
+  el.innerHTML = html;
+}
+
 // ====== Wrong Book Mode ======
 function startWrongBook() {
   // 获取选择的错题本
@@ -1774,6 +1822,17 @@ function startWrongBook() {
   const longQ = includeLong ? Object.values(wb.long) : [];
   const all = tempQ.concat(longQ);
   if (all.length === 0) return;
+  
+  // 同步：用当前 ALL_QUESTIONS 中的最新数据纠正错题本的题目（答案/选项可能已改）
+  const qMap = {};
+  ALL_QUESTIONS.forEach(q => { qMap[qKey(q)] = q; });
+  all.forEach((item, idx) => {
+    const key = qKey(item);
+    const fresh = qMap[key];
+    if (fresh) {
+      all[idx] = fresh;
+    }
+  });
   
   // 设置当前错题本为选择的那个
   currentWrongBookId = selectedId;
@@ -1835,12 +1894,41 @@ function showTimedConfig() {
   }
   updateTypeChips();
   checkTimedReady();
+  restoreTimedSelections();
 }
 
 function toggleChip(el) {
   el.classList.toggle('active');
   // 章节切换时联动更新题型筛选
   if (el.closest('#chapter-chips')) { updateTypeChips(); updateSelectAllLabels('#chapter-chips'); }
+  checkTimedReady();
+  saveTimedSelections();
+}
+
+function saveTimedSelections() {
+  const chapters = [...document.querySelectorAll('#chapter-chips .chip.active')].map(e => e.dataset.val);
+  const difficulties = [...document.querySelectorAll('#difficulty-chips .chip.active')].map(e => e.dataset.val);
+  const types = [...document.querySelectorAll('#type-chips .chip.active')].map(e => e.dataset.val);
+  localStorage.setItem('timedSelections', JSON.stringify({ chapters, difficulties, types }));
+}
+
+function restoreTimedSelections() {
+  const saved = localStorage.getItem('timedSelections');
+  if (!saved) return;
+  try {
+    const { chapters, difficulties, types } = JSON.parse(saved);
+    document.querySelectorAll('#chapter-chips .chip').forEach(el => {
+      if (chapters.includes(el.dataset.val)) el.classList.add('active');
+    });
+    document.querySelectorAll('#difficulty-chips .chip').forEach(el => {
+      if (difficulties.includes(el.dataset.val)) el.classList.add('active');
+    });
+    document.querySelectorAll('#type-chips .chip').forEach(el => {
+      if (types.includes(el.dataset.val)) el.classList.add('active');
+    });
+  } catch(e) {}
+  updateTypeChips();
+  updateSelectAllLabels('#chapter-chips');
   checkTimedReady();
 }
 
@@ -2356,8 +2444,11 @@ function refreshDebugInfo() {
   let info = '';
   if (mode === 'challenge') info = '闯关 | 对' + correctCount + ' 错' + wrongCount;
   else if (mode === 'infinite') {
-    const mastered = getActiveQuestions().filter(x => infiniteMap[qKey(x)].correctCount >= 3).length;
-    info = '无限 | 已掌握 ' + mastered + '/' + getActiveQuestions().length + ' | 已答题 ' + totalAnswered + '/∞';
+    const mastered = getActiveQuestions().filter(x => {
+      const entry = infiniteMap[qKey(x)];
+      return entry && entry.correctCount >= 3;
+    }).length;
+    info = '无限 | 已掌握 ' + mastered + '/' + Object.keys(infiniteMap).length + ' | 已答题 ' + totalAnswered + '/∞';
   }
   else if (mode === 'timed') info = '限时 | ' + (currentIndex + 1) + '/' + quizQueue.length;
   else if (mode === 'wrongbook') info = '错题本 | ' + (currentIndex + 1) + '/' + quizQueue.length;
@@ -3493,6 +3584,7 @@ let autoNextTimeout;
 function renderQuestion() {
   answered = false;
   clearTimeout(autoNextTimeout);
+  autoNextTimeout = null;
   questionStartTime = Date.now();
   // 重置答题后的只读备注显示
   const noteEl = document.getElementById('readonly-note');
@@ -3535,8 +3627,11 @@ function renderQuestion() {
   let info = '';
   if (mode === 'challenge') info = '闯关 | 对' + correctCount + ' 错' + wrongCount;
   else if (mode === 'infinite') {
-    const mastered = getActiveQuestions().filter(x => infiniteMap[qKey(x)].correctCount >= 3).length;
-    info = '无限 | 已掌握 ' + mastered + '/' + getActiveQuestions().length + ' | 已答题 ' + totalAnswered + '/∞';
+    const mastered = getActiveQuestions().filter(x => {
+      const entry = infiniteMap[qKey(x)];
+      return entry && entry.correctCount >= 3;
+    }).length;
+    info = '无限 | 已掌握 ' + mastered + '/' + Object.keys(infiniteMap).length + ' | 已答题 ' + totalAnswered + '/∞';
   }
   else if (mode === 'timed') info = '限时 | ' + (currentIndex + 1) + '/' + quizQueue.length;
   else if (mode === 'wrongbook') info = '错题本 | ' + (currentIndex + 1) + '/' + quizQueue.length;
@@ -3554,15 +3649,29 @@ function renderQuestion() {
   if (wrongBookTemp[key]) metaParts.push('暂时错题');
   if (wrongBookLong[key]) metaParts.push('长期记忆');
   document.getElementById('question-meta').textContent = metaParts.join(' · ');
+  // 无限模式：显示三点进度
+  if (mode === 'infinite') {
+    const session = infiniteSession[qKey(q)];
+    const sessionDots = session ? (session.dots || 0) : 0;
+    const sessionWrong = session ? (session.wrongStreak || 0) : 0;
+    renderInfiniteDots(sessionDots, sessionWrong);
+  } else {
+    renderInfiniteDots(0, 0);
+  }
 
   document.getElementById('question-text').innerHTML = formatQuestionQuotes(q.question);
 
   // === 紫光提示：若该题在"错题次数最多 Top 15"榜单且连击特效开启，则卡片持续发紫光，直到作答完成 ===
   const cardEl = document.querySelector('.quiz-card');
   if (cardEl) {
-    cardEl.classList.remove('purple-glow');
-    if (getComboEffectsEnabled() !== false && isTopWrongQuestion(key)) {
-      cardEl.classList.add('purple-glow');
+    cardEl.classList.remove('purple-glow', 'long-memory-glow');
+    if (getComboEffectsEnabled() !== false) {
+      if (wrongBookLong[key]) {
+        // 长期记忆的错题：紫红光交替闪烁
+        cardEl.classList.add('long-memory-glow');
+      } else if (isTopWrongQuestion(key)) {
+        cardEl.classList.add('purple-glow');
+      }
     }
   }
 
@@ -3757,14 +3866,29 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
     }
     if (mode === 'infinite') {
       infiniteMap[key].correctCount++;
-      // 更新 session：连续答对 3 次就移除此题（不再记在会话里）
-      const cur = infiniteSession[key] || {is_correct: false, corrects: 0};
-      cur.is_correct = true;
-      cur.corrects = (cur.corrects || 0) + 1;
-      if (cur.corrects >= 3) {
+      // 更新 session dots，重置连错
+      const cur = infiniteSession[key] || {dots: 0, wrongStreak: 0};
+      cur.wrongStreak = 0; // 答对清零连错
+      cur.dots = (cur.dots || 0) + 1;
+      if (cur.dots >= 3) {
+        // 已掌握：先全部变绿再播放动画
+        renderInfiniteDots(3, 0);
         delete infiniteSession[key];
+        // 延迟切换，播放动画
+        document.getElementById('infinite-dots')?.classList.add('mastered');
+        clearTimeout(autoNextTimeout);
+        setTimeout(() => {
+          const de = document.getElementById('infinite-dots');
+          if (de) { de.classList.remove('mastered'); de.innerHTML = ''; }
+          renderQuestion();
+        }, 800);
+        autoNextTimeout = -1; // 标记已处理
       } else {
         infiniteSession[key] = cur;
+        // 立即更新三点显示
+        renderInfiniteDots(cur.dots, 0);
+        // 15~20 题内重现
+        infiniteRequeue(q, false);
       }
     }
     // In wrongbook mode, only remove from temp, NOT from long
@@ -3783,9 +3907,26 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
     streak = 0;
     if (mode === 'infinite') {
       infiniteMap[key].correctCount = 0;
-      quizQueue.push(q);
-      // 答错：保留在 session 里，下次还要问
-      infiniteSession[key] = {is_correct: false, corrects: 0};
+      // 跟踪连错次数
+      const cur = infiniteSession[key] || {dots: 0, wrongStreak: 0};
+      cur.dots = 0;
+      cur.wrongStreak = (cur.wrongStreak || 0) + 1;
+      // 连错三次 → 加入长期记忆
+      if (cur.wrongStreak >= 3) {
+        cur.wrongStreak = 3;
+        const curWb = wrongBooks[currentWrongBookId] || wrongBooks[getDefaultWrongBookId()];
+        const wbId = currentWrongBookId || getDefaultWrongBookId();
+        if (!wrongBooks[wbId]) wrongBooks[wbId] = { name: '默认错题本', temp: {}, long: {}, notes: {} };
+        if (!wrongBooks[wbId].long[key]) {
+          wrongBooks[wbId].long[key] = qObj(q);
+          saveWrongBooks();
+        }
+      }
+      infiniteSession[key] = cur;
+      // 5~10 题内重现
+      infiniteRequeue(q, true);
+      // 立即更新三点显示
+      renderInfiniteDots(0, cur.wrongStreak);
     }
     wrongList.push({question: q, selectedAnswer: selectedAnswer});
     // Auto add to temp (if not already in long)
@@ -3821,6 +3962,11 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
     }
   }
 
+  // 已掌握动画用独立延迟，跳过默认 autoNext
+  if (autoNextTimeout === -1) {
+    autoNextTimeout = null;
+    return;
+  }
   autoNextTimeout = setTimeout(() => {
     if (mode === 'timed') timerPaused = false;
     renderQuestion();
@@ -4186,8 +4332,11 @@ function showResult() {
     else if (correctCount >= ct) title.textContent = '闯关胜利 🎉';
     else title.textContent = '已退出';
   } else if (mode === 'infinite') {
-    const mastered = getActiveQuestions().filter(q => infiniteMap[qKey(q)].correctCount >= 3).length;
-    title.textContent = mastered === getActiveQuestions().length ? '全部掌握！' : '已退出';
+    const mastered = getActiveQuestions().filter(q => {
+      const entry = infiniteMap[qKey(q)];
+      return entry && entry.correctCount >= 3;
+    }).length;
+    title.textContent = mastered === Object.keys(infiniteMap).length ? '全部掌握！' : '已退出';
     stats.innerHTML =
       '<div class="stat"><div class="stat-num green">' + mastered + '</div><div class="stat-label">已掌握</div></div>' +
       '<div class="stat"><div class="stat-num red">' + (getActiveQuestions().length - mastered) + '</div><div class="stat-label">未掌握</div></div>' +
@@ -6430,20 +6579,12 @@ function toggleTopWrongFilter(enabled) {
 function applyTopWrongFilter() {
   if (!previewFullList.length) return;
   if (previewTopWrongEnabled) {
-    // 只保留有错题记录的题目，按错题次数降序
-    const byQuestion = quizAnalysis && quizAnalysis.byQuestion;
-    if (byQuestion) {
-      previewList = previewFullList.filter(q => {
-        const key = qKey(q);
-        const qa = byQuestion[key];
-        return qa && qa.countWrong > 0;
-      }).sort((a, b) => {
-        const ka = qKey(a), kb = qKey(b);
-        return (byQuestion[kb] && byQuestion[kb].countWrong || 0) - (byQuestion[ka] && byQuestion[ka].countWrong || 0);
-      });
-    } else {
-      previewList = [];
-    }
+    // 按错题TOP排名（1~40）排序，无排名的排在后面
+    previewList = previewFullList.slice().sort((a, b) => {
+      const rankA = isTopNWrongQuestion(a, 40);
+      const rankB = isTopNWrongQuestion(b, 40);
+      return (rankA || 999) - (rankB || 999);
+    });
   } else {
     previewList = previewFullList.slice();
   }
@@ -7128,6 +7269,7 @@ function updateVirtualList() {
 
 // 预览列表：悬停展开（不覆盖点击展开）
 function hoverPreviewItem(el) {
+  if (isTouchDevice) return;
   const detail = el.querySelector('.pv-list-detail');
   const arrow = el.querySelector('.pv-list-arrow');
   if (!detail || detail.classList.contains('show')) return; // 已展开的不重复操作
@@ -7139,6 +7281,7 @@ function hoverPreviewItem(el) {
   el.dataset.hoverOpen = '1';
 }
 function unhoverPreviewItem(el) {
+  if (isTouchDevice) return;
   if (el.dataset.hoverOpen !== '1') return; // 点击打开的，不关闭
   const detail = el.querySelector('.pv-list-detail');
   const arrow = el.querySelector('.pv-list-arrow');
@@ -7150,18 +7293,7 @@ function unhoverPreviewItem(el) {
 
 function togglePreviewListItem(el) {
   if (cylinderModeEnabled) {
-    // In cylinder mode: just toggle expand/collapse directly
-    delete el.dataset.hoverOpen;
-    const detail = el.querySelector('.pv-list-detail');
-    const arrow = el.querySelector('.pv-list-arrow');
-    const isOpen = detail.classList.contains('show');
-    if (isOpen) {
-      detail.classList.remove('show');
-      if (arrow) arrow.style.transform = '';
-    } else {
-      detail.classList.add('show');
-      if (arrow) arrow.style.transform = 'rotate(180deg)';
-    }
+    // 滚轮模式下只滚动，不展开/收起
     return;
   }
   // 点击展开/折叠，清除悬停标记，让鼠标离开时不自动收起

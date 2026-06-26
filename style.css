@@ -169,6 +169,55 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
   50%      { box-shadow: 0 0 16px 5px rgba(138, 43, 226, 0.55), 0 0 32px 10px rgba(138, 43, 226, 0.30); }
 }
 
+/* 无限模式三点进度指示器 */
+.infinite-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  min-height: 12px;
+}
+.inf-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ddd;
+  transition: background 0.3s, transform 0.3s;
+}
+.inf-dot.filled {
+  background: #2ecc71;
+}
+.infinite-dots.mastered .inf-dot {
+  animation: dotMastered 0.6s ease forwards;
+}
+.infinite-dots.mastered .inf-dot:nth-child(1) { animation-delay: 0s; }
+.infinite-dots.mastered .inf-dot:nth-child(2) { animation-delay: 0.15s; }
+.infinite-dots.mastered .inf-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dotMastered {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); background: #2ecc71; }
+  100% { transform: scale(0); opacity: 0; }
+}
+[data-theme="dark"] .inf-dot { background: #555; }
+[data-theme="dark"] .inf-dot.filled { background: #fff; }
+[data-theme="dark"] .inf-dot.wrong { background: #ff6b6b; }
+[data-theme="dark"] .infinite-dots.mastered .inf-dot { background: #fff; }
+
+/* 红点：连错指示 */
+.inf-dot.wrong {
+  background: #e74c3c;
+}
+/* 长期记忆：紫红光交替闪烁 */
+.quiz-card.long-memory-glow {
+  animation: longMemoryBlink 1s ease-in-out infinite;
+}
+@keyframes longMemoryBlink {
+  0%, 100% { box-shadow: 0 0 6px 1px rgba(138, 43, 226, 0.20), 0 0 12px 3px rgba(138, 43, 226, 0.10); border-color: rgba(138, 43, 226, 0.30); }
+  25%      { box-shadow: 0 0 16px 5px rgba(138, 43, 226, 0.55), 0 0 32px 10px rgba(138, 43, 226, 0.30); }
+  50%      { box-shadow: 0 0 6px 1px rgba(231, 76, 60, 0.20), 0 0 12px 3px rgba(231, 76, 60, 0.10); border-color: rgba(231, 76, 60, 0.30); }
+  75%      { box-shadow: 0 0 16px 5px rgba(231, 76, 60, 0.55), 0 0 32px 10px rgba(231, 76, 60, 0.30); }
+}
+
 /* Perfect effect */
 .perfect-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 48px; font-weight: 900; color: #f1c40f; text-shadow: 0 0 20px rgba(241,196,15,.6), 0 2px 8px rgba(0,0,0,.2); z-index: 200; pointer-events: none; animation: perfectIn .8s ease-out; }
 @keyframes perfectIn {
