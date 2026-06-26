@@ -18,10 +18,17 @@ var SVG_ICONS = {
 };
 
 var MILESTONES = [
-  {v:3, label:'GOOD'},{v:10,label:'Perfect!'},{v:20,label:'Awesome!'},
-  {v:30,label:'Unbelievable!'},{v:40,label:'Fabulous!'},{v:50,label:'Marvelous!'},
-  {v:80,label:'Legendary!'},{v:110,label:'Unstoppable!'},{v:140,label:'Godlike!'},
-  {v:170,label:'Transcendent!'},{v:200,label:'Omnipotent!'}
+  {v:3, label:'GOOD', desc:'连续答对 3 题'},
+  {v:10,label:'Perfect!', desc:'连续答对 10 题'},
+  {v:20,label:'Awesome!', desc:'连续答对 20 题'},
+  {v:30,label:'Unbelievable!', desc:'连续答对 30 题'},
+  {v:40,label:'Fabulous!', desc:'连续答对 40 题'},
+  {v:50,label:'Marvelous!', desc:'连续答对 50 题'},
+  {v:80,label:'Legendary!', desc:'连续答对 80 题'},
+  {v:110,label:'Unstoppable!', desc:'连续答对 110 题'},
+  {v:140,label:'Godlike!', desc:'连续答对 140 题'},
+  {v:170,label:'Transcendent!', desc:'连续答对 170 题'},
+  {v:200,label:'Omnipotent!', desc:'连续答对 200 题'}
 ];
 var STREAK_LABEL = {}; MILESTONES.forEach(function(m){STREAK_LABEL[m.v]=m.label});
 
@@ -62,11 +69,13 @@ function getAchievements(){
 
 // ===== 创建 SVG 徽章 HTML =====
 function badgeHTML(v,unlocked){
+  var m=MILESTONES.find(function(x){return x.v===v});
   var svg=SVG_ICONS[v]||'<circle cx="24" cy="24" r="20" fill="#ddd"/>';
   var cls='honor-badge'+(unlocked?' unlocked':'');
-  return '<div class="'+cls+'">'+
+  var title=(m?m.label:'')+' · '+(unlocked?'✅ 已解锁':(m?m.desc:'❌ 未解锁'));
+  return '<div class="'+cls+'" title="'+title+'">'+
     '<svg viewBox="0 0 48 48" width="48" height="48">'+svg+'</svg>'+
-    '<div class="honor-badge-label">'+STREAK_LABEL[v]+'</div>'+
+    '<div class="honor-badge-label">'+(m?m.label:'')+'</div>'+
   '</div>';
 }
 
@@ -83,10 +92,10 @@ function renderPanel(){
   // 上栏：成就
   html+='<div class="honor-section"><h3>成就</h3><div class="honor-badges">';
   ach.milestones.forEach(function(m){html+=badgeHTML(m.value,m.unlocked)});
-  html+='<div class="honor-badge'+(ach.completedInfinite?' unlocked':'')+'">'+
+  html+='<div class="honor-badge'+(ach.completedInfinite?' unlocked':'')+'" title="无限模式 · '+(ach.completedInfinite?'✅ 已解锁':'全部题目掌握后解锁')+'">'+
     '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#6c5ce7" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="10" fill="#6c5ce7">∞</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#6c5ce7">无限</text></svg>'+
     '<div class="honor-badge-label caption-complete">无限模式</div></div>';
-  html+='<div class="honor-badge'+(ach.completedTimed?' unlocked':'')+'">'+
+  html+='<div class="honor-badge'+(ach.completedTimed?' unlocked':'')+'" title="限时模式 · '+(ach.completedTimed?'✅ 已解锁':'完成一次限时模式后解锁')+'">'+
     '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#f5c211" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="14" fill="#f5c211">⏱</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#f5c211">限时</text></svg>'+
     '<div class="honor-badge-label caption-complete">限时模式</div></div>';
   html+='</div></div>';
