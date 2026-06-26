@@ -13,6 +13,7 @@ const DIFF_LABELS = {easy:'易',medium:'中',hard:'难',unknown:'未知'};
 
 // 音效
 let AUDIO_GOOD, AUDIO_PERFECT, AUDIO_AWESOME, AUDIO_UNBELIEVABLE, AUDIO_FABULOUS, AUDIO_MARVELOUS, AUDIO_WRONG;
+let AUDIO_LEGENDARY, AUDIO_UNSTOPPABLE, AUDIO_GODLIKE, AUDIO_TRANSCENDENT, AUDIO_OMNIPOTENT;
 function initAudio() {
   try {
     AUDIO_GOOD = new Audio('assets/sounds/good.ogg');
@@ -21,6 +22,11 @@ function initAudio() {
     AUDIO_UNBELIEVABLE = new Audio('assets/sounds/unbelievable.ogg');
     AUDIO_FABULOUS = new Audio('assets/sounds/fabulous.ogg');
     AUDIO_MARVELOUS = new Audio('assets/sounds/marvelous.ogg');
+    AUDIO_LEGENDARY = new Audio('assets/sounds/legendary.ogg');
+    AUDIO_UNSTOPPABLE = new Audio('assets/sounds/unstoppable.ogg');
+    AUDIO_GODLIKE = new Audio('assets/sounds/godlike.ogg');
+    AUDIO_TRANSCENDENT = new Audio('assets/sounds/transcendent.ogg');
+    AUDIO_OMNIPOTENT = new Audio('assets/sounds/omnipotent.ogg');
     AUDIO_WRONG = new Audio('assets/sounds/wrong.ogg');
     AUDIO_GOOD.volume = 0.6;
     AUDIO_PERFECT.volume = 0.7;
@@ -28,6 +34,11 @@ function initAudio() {
     AUDIO_UNBELIEVABLE.volume = 0.8;
     AUDIO_FABULOUS.volume = 0.85;
     AUDIO_MARVELOUS.volume = 0.9;
+    AUDIO_LEGENDARY.volume = 0.9;
+    AUDIO_UNSTOPPABLE.volume = 0.9;
+    AUDIO_GODLIKE.volume = 0.9;
+    AUDIO_TRANSCENDENT.volume = 0.9;
+    AUDIO_OMNIPOTENT.volume = 0.9;
     AUDIO_WRONG.volume = 0.7;
   } catch (e) { /* noop */ }
 }
@@ -71,6 +82,44 @@ function playMarvelous() {
     if (!AUDIO_MARVELOUS) initAudio();
     AUDIO_MARVELOUS.currentTime = 0;
     AUDIO_MARVELOUS.play().catch(() => {});
+  } catch (e) {}
+}
+function playOmnipotent() {
+  try {
+    if (!AUDIO_OMNIPOTENT) {
+      AUDIO_OMNIPOTENT = new Audio('assets/sounds/omnipotent.ogg');
+      AUDIO_OMNIPOTENT.volume = 0.9;
+    }
+    AUDIO_OMNIPOTENT.currentTime = 0;
+    AUDIO_OMNIPOTENT.play().catch(() => {});
+  } catch (e) {}
+}
+function playLegendary() {
+  try {
+    if (!AUDIO_LEGENDARY) initAudio();
+    AUDIO_LEGENDARY.currentTime = 0;
+    AUDIO_LEGENDARY.play().catch(() => {});
+  } catch (e) {}
+}
+function playUnstoppable() {
+  try {
+    if (!AUDIO_UNSTOPPABLE) initAudio();
+    AUDIO_UNSTOPPABLE.currentTime = 0;
+    AUDIO_UNSTOPPABLE.play().catch(() => {});
+  } catch (e) {}
+}
+function playGodlike() {
+  try {
+    if (!AUDIO_GODLIKE) initAudio();
+    AUDIO_GODLIKE.currentTime = 0;
+    AUDIO_GODLIKE.play().catch(() => {});
+  } catch (e) {}
+}
+function playTranscendent() {
+  try {
+    if (!AUDIO_TRANSCENDENT) initAudio();
+    AUDIO_TRANSCENDENT.currentTime = 0;
+    AUDIO_TRANSCENDENT.play().catch(() => {});
   } catch (e) {}
 }
 function playWrong() {
@@ -2436,6 +2485,35 @@ function debugAddWrong() {
   console.log('[Debug] wrongCount +=', n, '→', wrongCount, '| streak →', streak);
 }
 
+// —— 授予荣誉（调试用） ——
+function debugAwardHonor() {
+  if (!debugEnabled) return;
+  const sel = document.getElementById('debug-honor-select');
+  if (!sel) return;
+  const val = sel.value;
+  if (val === 'mode_infinite') {
+    if (typeof window.recordModeComplete === 'function') {
+      window.recordModeComplete('完成无限模式');
+      console.log('[Debug] 授予荣誉: 完成无限模式');
+    }
+  } else if (val === 'mode_timed') {
+    if (typeof window.recordModeComplete === 'function') {
+      window.recordModeComplete('完成限时模式');
+      console.log('[Debug] 授予荣誉: 完成限时模式');
+    }
+  } else {
+      const n = parseInt(val, 10);
+      if (n > 0 && typeof window.recordHonor === 'function') {
+        window.recordHonor(n);
+        console.log('[Debug] 授予荣誉: +' + n);
+      }
+    }
+    // 刷新荣誉面板（如果已打开）
+    if (typeof window.refreshHonorPanel === 'function') {
+      window.refreshHonorPanel();
+    }
+}
+
 // 刷新 quiz-info 显示（不触发 showResult，由用户继续答题时自然判断）
 function refreshDebugInfo() {
   if (typeof mode === 'undefined' || !quizQueue) return;
@@ -2724,7 +2802,12 @@ const DEBUG_SUB_ITEMS = {
     { v: 20, label: 'AWESOME',  fn: () => debugPlayEffect('awesome') },
     { v: 30, label: 'UNBELIEV', fn: () => debugPlayEffect('unbelievable') },
     { v: 40, label: 'FABULOUS', fn: () => debugPlayEffect('fabulous') },
-    { v: 50, label: 'MARVELOUS',fn: () => debugPlayEffect('marvelous') }
+    { v: 50, label: 'MARVELOUS',  fn: () => debugPlayEffect('marvelous') },
+    { v: 80, label: 'LEGENDARY',  fn: () => debugPlayEffect('legendary') },
+    { v: 110,label: 'UNSTOPPABLE',fn: () => debugPlayEffect('unstoppable') },
+    { v: 140,label: 'GODLIKE',   fn: () => debugPlayEffect('godlike') },
+    { v: 170,label: 'TRANSCEND', fn: () => debugPlayEffect('transcendent') },
+    { v: 200,label: 'OMNIPOTENT',fn: () => debugPlayEffect('omnipotent') }
   ],
   sound:   [
     { label: 'good',        fn: () => playGood() },
@@ -2733,7 +2816,12 @@ const DEBUG_SUB_ITEMS = {
     { label: 'awesome',     fn: () => playAwesome() },
     { label: 'unbelievable',fn: () => playUnbelievable() },
     { label: 'fabulous',    fn: () => playFabulous() },
-    { label: 'marvelous',   fn: () => playMarvelous() }
+    { label: 'marvelous',   fn: () => playMarvelous() },
+    { label: 'legendary',   fn: () => playLegendary() },
+    { label: 'unstoppable', fn: () => playUnstoppable() },
+    { label: 'godlike',     fn: () => playGodlike() },
+    { label: 'transcendent',fn: () => playTranscendent() },
+    { label: 'omnipotent',  fn: () => playOmnipotent() }
   ],
   pause:   null,  // 直动
   answer:  null   // 直动
@@ -3406,7 +3494,7 @@ function debugPlayEffect(kind) {
   if (getComboEffectsEnabled() === false) return;
   // 暂存并设置 streak
   const orig = streak;
-  const map = { good: 3, perfect: 10, awesome: 20, unbelievable: 30, fabulous: 40, marvelous: 50 };
+  const map = { good: 3, perfect: 10, awesome: 20, unbelievable: 30, fabulous: 40, marvelous: 50, legendary: 80, unstoppable: 110, godlike: 140, transcendent: 170, omnipotent: 200 };
   streak = map[kind] || orig;
   // 创建文字
   const text = getComboText(streak);
@@ -3473,7 +3561,12 @@ function debugPlayEffect(kind) {
 
 // 根据连击次数获取显示文字
 function getComboText(streakCount) {
-  if (streakCount >= 50) return 'Marvelous!';
+  if (streakCount >= 200) return 'Omnipotent!';
+  if (streakCount >= 170) return 'Transcendent!';
+  if (streakCount >= 140) return 'Godlike!';
+  if (streakCount >= 110) return 'Unstoppable!';
+  if (streakCount >= 80)  return 'Legendary!';
+  if (streakCount >= 50)  return 'Marvelous!';
   if (streakCount >= 40) return 'Fabulous!';
   if (streakCount >= 30) return 'Unbelievable!';
   if (streakCount >= 20) return 'Awesome!';
@@ -3483,8 +3576,8 @@ function getComboText(streakCount) {
 }
 
 function triggerPerfect() {
-  // 只有在节点值才触发：3,10,20,30,40,50
-  const triggers = [3, 10, 20, 30, 40, 50];
+  // 只有在节点值才触发：3,10,20,30,40,50,80,110,140,170,200
+  const triggers = [3, 10, 20, 30, 40, 50, 80, 110, 140, 170, 200];
   if (!triggers.includes(streak)) return;
 
   const text = getComboText(streak);
@@ -3503,7 +3596,12 @@ function triggerPerfect() {
       card.classList.add('gold-glow');
     }
     if (getComboSoundEnabled()) {
-      if (streak >= 50) setTimeout(playMarvelous, 200);
+      if (streak >= 200) setTimeout(playOmnipotent, 200);
+      else if (streak >= 170) setTimeout(playTranscendent, 200);
+      else if (streak >= 140) setTimeout(playGodlike, 200);
+      else if (streak >= 110) setTimeout(playUnstoppable, 200);
+      else if (streak >= 80) setTimeout(playLegendary, 200);
+      else if (streak >= 50) setTimeout(playMarvelous, 200);
       else if (streak >= 40) setTimeout(playFabulous, 200);
       else if (streak >= 30) setTimeout(playUnbelievable, 200);
     }
@@ -3813,7 +3911,6 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   if (isCorrect) {
     fb.className = 'answer-feedback show correct-fb';
     fb.textContent = '回答正确！答案：' + correctAnswer;
-    if (getComboSoundEnabled()) playGood();
   } else {
     fb.className = 'answer-feedback show wrong-fb';
     fb.textContent = '回答错误！正确答案：' + correctAnswer;
@@ -3903,6 +4000,8 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
     // Streak effects
     handleStreak();
   } else {
+    // 记录荣誉（答错前 streak 为本次连击数）
+    if (typeof window.recordHonor === 'function') { try { window.recordHonor(streak); } catch(e) {} }
     wrongCount++;
     streak = 0;
     if (mode === 'infinite') {
@@ -4063,7 +4162,6 @@ function judgeCalculation() {
   if (allCorrect) {
     fb.className = 'answer-feedback show correct-fb';
     fb.textContent = '全部正确！';
-    if (getComboSoundEnabled()) playGood();
   } else {
     fb.className = 'answer-feedback show wrong-fb';
     fb.textContent = '部分或全部错误，请查看各问反馈';
@@ -4212,7 +4310,6 @@ function judgeSubjective() {
   if (isCorrect) {
     fb.className = 'answer-feedback show correct-fb';
     fb.textContent = '优秀！匹配度 ' + pct + '%';
-    if (getComboSoundEnabled()) playGood();
   } else {
     fb.className = 'answer-feedback show wrong-fb';
     fb.textContent = '匹配度 ' + pct + '%';
@@ -4337,6 +4434,9 @@ function showResult() {
       return entry && entry.correctCount >= 3;
     }).length;
     title.textContent = mastered === Object.keys(infiniteMap).length ? '全部掌握！' : '已退出';
+    if (mastered === Object.keys(infiniteMap).length && typeof window.recordModeComplete === 'function') {
+      try { window.recordModeComplete('完成无限模式'); } catch(e) {}
+    }
     stats.innerHTML =
       '<div class="stat"><div class="stat-num green">' + mastered + '</div><div class="stat-label">已掌握</div></div>' +
       '<div class="stat"><div class="stat-num red">' + (getActiveQuestions().length - mastered) + '</div><div class="stat-label">未掌握</div></div>' +
@@ -4345,6 +4445,9 @@ function showResult() {
     title.textContent = '错题重做完成';
   } else if (mode === 'timed') {
     title.textContent = '限时结束';
+    if (typeof window.recordModeComplete === 'function') {
+      try { window.recordModeComplete('完成限时模式'); } catch(e) {}
+    }
   }
 
   if (mode !== 'infinite') {

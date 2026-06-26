@@ -120,6 +120,119 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .gear-icon { font-size: 20px; cursor: pointer; color: #bbb; transition: color .2s; user-select: none; }
 .gear-icon:hover { color: #888; }
 .quiz-card { background: #fff; border-radius: 12px; padding: 24px; position: relative; transition: box-shadow .15s; }
+
+/* 🎖 荣誉按钮 */
+.honor-btn { font-size: 0; cursor: pointer; margin-left: 6px; opacity: .75; transition: opacity .2s, transform .2s; display: inline-flex; align-items: center; vertical-align: middle; }
+.honor-btn:hover { opacity: 1; transform: scale(1.15); }
+
+/* 荣誉面板 */
+.honor-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:flex;align-items:center;justify-content:center}
+.honor-panel{background:#fff;border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px #0004}
+.honor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.honor-header h2{margin:0;font-size:20px}
+.honor-close{font-size:28px;cursor:pointer;color:#999;line-height:1}
+.honor-section{margin-bottom:16px}
+.honor-section h3{font-size:15px;margin:0 0 8px;color:#555}
+.honor-count{color:#999;font-size:13px}
+.honor-badges{display:flex;flex-wrap:wrap;gap:8px}
+.honor-badge{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;border-radius:10px;background:#f5f5f5;opacity:.45;transition:.2s;width:70px}
+.honor-badge.unlocked{opacity:1;background:#f0f9ff}
+.honor-badge-label{font-size:10px;color:#666;text-align:center;line-height:1.2;font-weight:600}
+.honor-badge.unlocked .honor-badge-label{color:#1a1a2e}
+.honor-empty{color:#999;font-size:13px;padding:12px;text-align:center;background:#fafafa;border-radius:8px}
+.honor-list{max-height:260px;overflow-y:auto}
+.honor-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eee;font-size:13px}
+.honor-item:last-child{border-bottom:none}
+.honor-time{color:#999;font-size:11px;min-width:120px}
+.honor-label{font-weight:600;color:#333}
+[data-theme="dark"] .honor-panel{background:#1e1e2e;color:#cdd6f4}
+[data-theme="dark"] .honor-section h3{color:#a6adc8}
+[data-theme="dark"] .honor-badge{background:#313244;opacity:.4}
+[data-theme="dark"] .honor-badge.unlocked{opacity:1;background:#181825}
+[data-theme="dark"] .honor-badge-label{color:#6c7086}
+[data-theme="dark"] .honor-badge.unlocked .honor-badge-label{color:#cdd6f4}
+[data-theme="dark"] .honor-empty{background:#181825;color:#6c7086}
+[data-theme="dark"] .honor-item{border-color:#313244}
+[data-theme="dark"] .honor-time{color:#6c7086}
+[data-theme="dark"] .honor-label{color:#cdd6f4}
+[data-theme="dark"] .honor-close{color:#6c7086}
+
+/* Combo 连击显示 — 与三点进度条同高，靠右 */
+.combo-display {
+  display: none;
+  position: absolute;
+  right: 16px;
+  top: 0;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif;
+  font-weight: 900;
+  font-size: 36px;
+  pointer-events: none;
+  z-index: 10;
+  line-height: 1;
+  white-space: nowrap;
+  animation: comboPopIn .35s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes comboPopIn {
+  0%   { transform: scale(0) translateY(16px); opacity: 0; }
+  100% { transform: scale(1) translateY(0);    opacity: 1; }
+}
+/* 30-49 */
+.combo-30 {
+  color: #f1c40f;
+  font-size: 36px;
+  text-shadow:
+    -1px -1px 0 #fff, 1px -1px 0 #fff,
+    -1px  1px 0 #fff, 1px  1px 0 #fff,
+    0 0 4px rgba(0,0,0,.15);
+}
+/* 50-99：上半红下半黄 — 字体渐变 */
+.combo-50 {
+  background: linear-gradient(to bottom, #e74c3c 50%, #f1c40f 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #e74c3c; /* fallback */
+  font-size: 40px;
+  -webkit-text-stroke: 1px rgba(0,0,0,.35);
+}
+/* 100-199：动态搅动液体 — 字体渐变动画 */
+.combo-100 {
+  background: linear-gradient(135deg, #e74c3c, #f39c12, #f1c40f, #e74c3c, #f39c12);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #e74c3c; /* fallback */
+  font-size: 44px;
+  -webkit-text-stroke: 1px rgba(0,0,0,.35);
+  animation: comboChurn 1.2s ease-in-out infinite;
+}
+@keyframes comboChurn {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 100% 0%; }
+  50%  { background-position: 50% 100%; }
+  75%  { background-position: 0% 0%; }
+  100% { background-position: 0% 50%; }
+}
+/* 200+：加大 + 黄色辉光 */
+.combo-200 {
+  background: linear-gradient(135deg, #e74c3c, #f39c12, #f1c40f, #e74c3c, #f39c12);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #e74c3c; /* fallback */
+  font-size: 54px;
+  -webkit-text-stroke: 1px rgba(0,0,0,.35);
+  animation: comboChurn 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px #f1c40f) drop-shadow(0 0 24px #f39c12);
+}
+[data-theme="dark"] .combo-30 { text-shadow:
+    -1px -1px 0 #222, 1px -1px 0 #222,
+    -1px  1px 0 #222, 1px  1px 0 #222,
+    0 0 4px rgba(255,255,255,.08); }
+[data-theme="dark"] .combo-200 { filter: drop-shadow(0 0 12px #f1c40f) drop-shadow(0 0 24px #f39c12) drop-shadow(0 0 40px #f1c40f88); }
+
 .flash-red { box-shadow: 0 0 0 4px #e74c3c, 0 0 20px rgba(231,76,60,.4); }
 
 /* 倒计时全屏变红（图层方式） */

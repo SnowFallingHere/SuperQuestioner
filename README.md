@@ -37,6 +37,8 @@ node scripts/server.js
 ├── scripts/
 │   ├── server.js            — 本地开发服务器
 │   ├── camera.js            — 摄像头手势识别
+│   ├── combo.js             — 连击显示
+│   ├── honor.js             — 荣誉系统
 │   ├── motion.js            — 陀螺仪体感作答（移动端）
 │   ├── build.py             — 题库构建工具
 │   ├── check_questions.py   — 题库质量检查
@@ -57,9 +59,10 @@ node scripts/server.js
 | 🎯 闯关模式 | 累计错N题失败                              |
 | ♾ 无限模式  | 答对3次后不再出现，三点进度指示，连错3次自动加入长期记忆，可启用主观题 |
 | ⏱ 限时模式  | 自定义时间 + 章节/难度/题型筛选                   |
-| 📖 预览模式 | 浏览全部题目，支持列表/卡片/滚轮视图                  |
+| 📖 预览模式  | 浏览全部题目，支持列表/卡片/滚轮视图                  |
+| 🎖 荣誉殿堂  | 标题旁的奖牌按钮，查看连击成就与历史记录               |
 
-顶部右上角按钮：日月图标为\*\*日夜模式切换。
+顶部右上角按钮：日月图标为日夜模式切换，齿轮图标为连击设置与调试工具，奖牌图标为荣誉殿堂。
 
 ## 添加题库
 
@@ -243,20 +246,59 @@ const QUIZ_SOURCES = [
 - 单选/判断：点击即判定，1.5秒自动下一题
 - 多选：点击切换选中，确认按钮提交
 - 计算/主观：填写后点提交，手动点下一题
-- 连击特效：连续3题答对闪绿光，10题掉落+Perfect，可在答题页 `+` 号开关
+- 连击特效：连续答对触发掉落文字+金光，可在答题页 `+` 号开关
+- 连击里程碑（精确值触发）：
+
+  | 连击 | 掉落文字 | 音效文件 |
+  |------|----------|----------|
+  | 3 | GOOD | `good.ogg` |
+  | 10 | Perfect! | `perfect.ogg` |
+  | 20 | Awesome! | `awesome.ogg` |
+  | 30 | Unbelievable! | `unbelievable.ogg` |
+  | 40 | Fabulous! | `fabulous.ogg` |
+  | 50 | Marvelous! | `marvelous.ogg` |
+  | 80 | Legendary! | `legendary.ogg` |
+  | 110 | Unstoppable! | `unstoppable.ogg` |
+  | 140 | Godlike! | `godlike.ogg` |
+  | 170 | Transcendent! | `transcendent.ogg` |
+  | 200 | Omnipotent! | `omnipotent.ogg` |
+
+- 连击显示：`+xx` 弹出动画，2秒消失；30+黄色、50+上红下黄渐变、100+搅动渐变动画、200+加大+辉光
 - 答题点 `+` 号可切换分类、写备注
 - 触屏设备列表视图自动禁用悬停展开，避免点两下问题
 - 限时模式的章节/难度/题型选择自动记忆上次状态
 
 ## 音效
 
-同目录放置以下 `.ogg` 文件即可启用音效（缺失时静默跳过）：
+`assets/sounds/` 目录放置以下 `.ogg` 文件即可启用音效（缺失时静默跳过）：
 
-| 文件            | 触发时机             |
-| ------------- | ---------------- |
-| `orb.ogg`     | 每次答对             |
-| `break.ogg`   | 每次答错（同时答题卡四周闪红光） |
-| `levelup.ogg` | 累计答对次数达到 10 的倍数时 |
+| 文件 | 对应连击 | 触发时机 |
+|------|----------|----------|
+| `good.ogg` | 3 | 基础连击 |
+| `perfect.ogg` | 10 | 连击特效 |
+| `awesome.ogg` | 20 | 连击特效 |
+| `unbelievable.ogg` | 30 | 连击特效（30+掉落+金光） |
+| `fabulous.ogg` | 40 | 连击特效 |
+| `marvelous.ogg` | 50 | 连击特效 |
+| `legendary.ogg` | 80 | 连击特效 |
+| `unstoppable.ogg` | 110 | 连击特效 |
+| `godlike.ogg` | 140 | 连击特效 |
+| `transcendent.ogg` | 170 | 连击特效 |
+| `omnipotent.ogg` | 200 | 连击特效 |
+| `wrong.ogg` | — | 答错 |
+
+## 荣誉系统
+
+首页标题旁的 🎖 奖牌按钮可打开荣誉殿堂，分为两栏：
+
+**上栏·成就** — 11 个连击里程碑徽章（3~200），达成后高亮点亮：
+- GOOD / Perfect! / Awesome! / Unbelievable! / Fabulous! / Marvelous! / Legendary! / Unstoppable! / Godlike! / Transcendent! / Omnipotent!
+- 完成无限模式（全部掌握）
+- 完成限时模式
+
+**下栏·历史记录** — 每次答错时记录当时连击数，按时间倒序排列。记录格式为 `{称号}+{连击数}`，如 `Marvelous! +50`。
+
+调试工具（齿轮 → 调试面板）可手动授予或清空荣誉。
 
 ## 备注
 

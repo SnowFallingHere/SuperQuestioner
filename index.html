@@ -16,6 +16,16 @@
   <div class="home-title">
     超级题库练习器
     <span class="combo-gear-btn" id="combo-gear-btn" onclick="onComboGearClick()" title="连击设置">⚙️</span>
+    <span class="honor-btn" onclick="onHonorClick()" title="荣誉殿堂">
+      <svg viewBox="0 0 28 28" width="24" height="24">
+        <!-- 外圈 -->
+        <circle cx="14" cy="14" r="10" fill="#ffd700" stroke="#f9a825" stroke-width="1"/>
+        <!-- 内圈 -->
+        <circle cx="14" cy="14" r="7.5" fill="#ffeb3b" stroke="#fdd835" stroke-width=".5"/>
+        <!-- 五角星 -->
+        <path d="M14 7l2.2 4.4 4.8.7-3.5 3.4.8 4.8L14 17.5l-4.3 2.8.8-4.8L7 12.1l4.8-.7z" fill="#f9a825" stroke="#f57f17" stroke-width=".3"/>
+      </svg>
+    </span>
   </div>
   <div id="source-area">
     <div class="loading">正在加载题库中...</div>
@@ -462,6 +472,27 @@
       <input type="number" id="debug-add-wrong" value="1" min="-99" max="99" class="debug-input-num">
       <button class="debug-btn" onclick="debugAddWrong()">应用</button>
     </div>
+    <!-- 授予成就 -->
+    <div class="debug-row">
+      <div class="debug-row-label">授予荣誉</div>
+      <select id="debug-honor-select" class="debug-select debug-select-wide" style="font-size:11px">
+        <option value="3">GOOD +3</option>
+        <option value="10">Perfect! +10</option>
+        <option value="20">Awesome! +20</option>
+        <option value="30">Unbelievable! +30</option>
+        <option value="40">Fabulous! +40</option>
+        <option value="50">Marvelous! +50</option>
+        <option value="80">Legendary! +80</option>
+        <option value="110">Unstoppable! +110</option>
+        <option value="140">Godlike! +140</option>
+        <option value="170">Transcendent! +170</option>
+        <option value="200">Omnipotent! +200</option>
+        <option value="mode_infinite">完成无限模式</option>
+        <option value="mode_timed">完成限时模式</option>
+      </select>
+      <button class="debug-btn" onclick="debugAwardHonor()">授予</button>
+      <button class="debug-btn" onclick="window.clearAllHonors()" style="margin-left:4px;background:#e74c3c;color:#fff">清空</button>
+    </div>
     <!-- 调出错题 -->
     <div class="debug-row">
       <div class="debug-row-label">调出错题为</div>
@@ -494,5 +525,7 @@
 <script src="app.js"></script>
 <script src="scripts/motion.js"></script>
 <script src="scripts/camera.js"></script>
+<script src="scripts/combo.js"></script>
+<script src="scripts/honor.js"></script>
 </body>
 </html>
