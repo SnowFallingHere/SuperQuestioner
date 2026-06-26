@@ -73,8 +73,8 @@ function badgeHTML(v,unlocked){
 // ===== 渲染面板 =====
 function renderPanel(){
   var ach=getAchievements();
-  var html='<div class="honor-overlay" onclick="closeHonorPanel()"><div class="honor-panel" onclick="event.stopPropagation()">'+
-    '<div class="honor-header"><h2>🎖 荣誉殿堂</h2><span class="honor-close" onclick="closeHonorPanel()">×</span></div>';
+  var html='<div class="honor-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:flex;align-items:center;justify-content:center" onclick="closeHonorPanel()"><div class="honor-panel" style="background:#fff;border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.25)" onclick="event.stopPropagation()">'+
+    '<div class="honor-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="margin:0;font-size:20px">🎖 荣誉殿堂</h2><span class="honor-close" style="font-size:28px;cursor:pointer;color:#999;line-height:1" onclick="closeHonorPanel()">×</span></div>';
 
   // 上栏：成就
   html+='<div class="honor-section"><h3>成就</h3><div class="honor-badges">';
