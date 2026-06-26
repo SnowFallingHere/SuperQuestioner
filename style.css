@@ -127,18 +127,26 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 
 /* 荣誉面板 */
 .honor-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:flex;align-items:center;justify-content:center}
-.honor-panel{background:#fff;border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px #0004}
+.honor-panel{background:#fff;border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px #0004;scrollbar-width:none;-ms-overflow-style:none}
+.honor-panel::-webkit-scrollbar{display:none}
 .honor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .honor-header h2{margin:0;font-size:20px}
 .honor-close{font-size:28px;cursor:pointer;color:#999;line-height:1}
 .honor-section{margin-bottom:16px}
 .honor-section h3{font-size:15px;margin:0 0 8px;color:#555}
 .honor-count{color:#999;font-size:13px}
-.honor-badges{display:flex;flex-wrap:wrap;gap:8px}
-.honor-badge{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;border-radius:10px;background:#f5f5f5;opacity:.45;transition:.2s;width:70px}
+.honor-badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.honor-badge{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:10px;background:#f5f5f5;opacity:.45;transition:transform .35s cubic-bezier(.34,1.56,.64,1), filter .35s, opacity .35s;width:80px;min-width:0;overflow:hidden;cursor:default}
 .honor-badge.unlocked{opacity:1;background:#f0f9ff}
-.honor-badge-label{font-size:10px;color:#666;text-align:center;line-height:1.2;font-weight:600}
+/* 悬浮缩放：其他缩小，目标放大居中 */
+.honor-badges:hover .honor-badge{filter:brightness(.8);transform:scale(.88)}
+.honor-badges:hover .honor-badge:hover{filter:brightness(1);transform:scale(1.3);opacity:1;z-index:2;position:relative;overflow:visible}
+.honor-badges:hover .honor-badge:hover .honor-badge-label{overflow:visible;white-space:normal;word-break:normal}
+/* 未解锁：让整个 SVG 灰掉 */
+.honor-badge:not(.unlocked) svg{filter:grayscale(1) opacity(.6)}
+.honor-badge-label{font-size:10px;color:#999;text-align:center;line-height:1.15;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;word-break:keep-all}
 .honor-badge.unlocked .honor-badge-label{color:#1a1a2e}
+.honor-badge.unlocked .honor-badge-label.caption-complete{color:#6c5ce7}
 .honor-empty{color:#999;font-size:13px;padding:12px;text-align:center;background:#fafafa;border-radius:8px}
 .honor-list{max-height:260px;overflow-y:auto}
 .honor-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eee;font-size:13px}
@@ -147,8 +155,9 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .honor-label{font-weight:600;color:#333}
 [data-theme="dark"] .honor-panel{background:#1e1e2e;color:#cdd6f4}
 [data-theme="dark"] .honor-section h3{color:#a6adc8}
-[data-theme="dark"] .honor-badge{background:#313244;opacity:.4}
+[data-theme="dark"] .honor-badge{background:#313244;opacity:.3}
 [data-theme="dark"] .honor-badge.unlocked{opacity:1;background:#181825}
+[data-theme="dark"] .honor-badge:not(.unlocked) svg{filter:grayscale(1) opacity(.4)}
 [data-theme="dark"] .honor-badge-label{color:#6c7086}
 [data-theme="dark"] .honor-badge.unlocked .honor-badge-label{color:#cdd6f4}
 [data-theme="dark"] .honor-empty{background:#181825;color:#6c7086}

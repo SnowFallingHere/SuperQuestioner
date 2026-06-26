@@ -73,18 +73,22 @@ function badgeHTML(v,unlocked){
 // ===== 渲染面板 =====
 function renderPanel(){
   var ach=getAchievements();
-  var html='<div class="honor-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:flex;align-items:center;justify-content:center" onclick="closeHonorPanel()"><div class="honor-panel" style="background:#fff;border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.25)" onclick="event.stopPropagation()">'+
-    '<div class="honor-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="margin:0;font-size:20px">🎖 荣誉殿堂</h2><span class="honor-close" style="font-size:28px;cursor:pointer;color:#999;line-height:1" onclick="closeHonorPanel()">×</span></div>';
+  var isDark=document.body.getAttribute('data-theme')==='dark';
+  var bg=isDark?'#1e1e2e':'#fff';
+  var fg=isDark?'#cdd6f4':'#333';
+  var close=isDark?'#6c7086':'#999';
+  var html='<div class="honor-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:flex;align-items:center;justify-content:center" onclick="closeHonorPanel()"><div class="honor-panel" style="background:'+bg+';border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.25);color:'+fg+'" onclick="event.stopPropagation()">'+
+    '<div class="honor-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="margin:0;font-size:20px;color:'+fg+'">🎖 荣誉殿堂</h2><span class="honor-close" style="font-size:28px;cursor:pointer;color:'+close+';line-height:1" onclick="closeHonorPanel()">×</span></div>';
 
   // 上栏：成就
   html+='<div class="honor-section"><h3>成就</h3><div class="honor-badges">';
   ach.milestones.forEach(function(m){html+=badgeHTML(m.value,m.unlocked)});
   html+='<div class="honor-badge'+(ach.completedInfinite?' unlocked':'')+'">'+
     '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#6c5ce7" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="10" fill="#6c5ce7">∞</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#6c5ce7">无限</text></svg>'+
-    '<div class="honor-badge-label">完成无限模式</div></div>';
+    '<div class="honor-badge-label caption-complete">无限模式</div></div>';
   html+='<div class="honor-badge'+(ach.completedTimed?' unlocked':'')+'">'+
     '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#f5c211" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="14" fill="#f5c211">⏱</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#f5c211">限时</text></svg>'+
-    '<div class="honor-badge-label">完成限时模式</div></div>';
+    '<div class="honor-badge-label caption-complete">限时模式</div></div>';
   html+='</div></div>';
 
   // 下栏：历史记录
