@@ -107,22 +107,22 @@ function renderPanel(){
 // ===== 开关面板 =====
 window.openHonorPanel=function(){
   var el=document.getElementById('honor-panel-container');
-  if(!el){el=document.createElement('div');el.id='honor-panel-container';document.body.appendChild(el)}
+  if(!el)return;
+  el.style.display='';
   el.innerHTML=renderPanel();
 };
 window.closeHonorPanel=function(){
   var el=document.getElementById('honor-panel-container');
-  if(el)el.innerHTML='';
+  if(el){el.style.display='none';el.innerHTML=''}
 };
 window.refreshHonorPanel=function(){
   var el=document.getElementById('honor-panel-container');
-  if(el&&el.innerHTML){try{el.innerHTML=renderPanel()}catch(e){}}
+  if(el&&el.style.display!=='none'){try{el.innerHTML=renderPanel()}catch(e){}}
 };
 window.clearAllHonors=function(){
   try{localStorage.removeItem('honorRecords')}catch(e){}
-  // 关闭并重新打开面板以刷新
   var el=document.getElementById('honor-panel-container');
-  if(el){el.innerHTML='';setTimeout(function(){el.innerHTML=renderPanel()},50)}
+  if(el&&el.style.display!=='none'){el.innerHTML='';setTimeout(function(){el.innerHTML=renderPanel()},50)}
 };
 
 // 🎖 按钮点击
