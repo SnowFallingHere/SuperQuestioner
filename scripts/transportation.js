@@ -187,15 +187,16 @@ function collectSyncData(){
     }
   }catch(e){}
 
-  // s: 开关掩码 — 6位
+  // s: 开关掩码 — 7位（bit 5=无限主观题, bit 6=挑战主观题）
   var s=0;
-  if(localStorage.getItem('comboEffectsEnabled')!=='false')s|=32;
-  if(localStorage.getItem('comboSoundEnabled')!=='false')s|=16;
-  if(localStorage.getItem('motionEnabled')==='true')s|=8;
-  if(localStorage.getItem('motionCal')!==null)s|=4;
-  if(localStorage.getItem('cameraEnabled')==='true')s|=2;
-  if(localStorage.getItem('infiniteIncludeSubjective')==='true'||localStorage.getItem('challengeIncludeSubjective')==='true')s|=1;
-  parts.push('s='+s.toString(2).padStart(6,'0'));
+  if(localStorage.getItem('comboEffectsEnabled')!=='false')s|=64;
+  if(localStorage.getItem('comboSoundEnabled')!=='false')s|=32;
+  if(localStorage.getItem('motionEnabled')==='true')s|=16;
+  if(localStorage.getItem('motionCal')!==null)s|=8;
+  if(localStorage.getItem('cameraEnabled')==='true')s|=4;
+  if(localStorage.getItem('infiniteIncludeSubjective')==='true')s|=2;
+  if(localStorage.getItem('challengeIncludeSubjective')==='true')s|=1;
+  parts.push('s='+s.toString(2).padStart(7,'0'));
 
   // src: 题库源
   try{
@@ -443,15 +444,22 @@ function applyData(s){
     try{localStorage.setItem('honorRecords',JSON.stringify(hs))}catch(e){}
   }
 
-  // s: 开关
-  if(obj.s&&obj.s.length===6){
+  // s: 开关（支持 6 位旧格式和 7 位新格式）
+  if(obj.s&&obj.s.length>=6){
     var b=obj.s;
     try{localStorage.setItem('comboEffectsEnabled',b[0]==='1'?'true':'false')}catch(e){}
     try{localStorage.setItem('comboSoundEnabled',b[1]==='1'?'true':'false')}catch(e){}
     try{localStorage.setItem('motionEnabled',b[2]==='1'?'true':'false')}catch(e){}
     try{localStorage.setItem('cameraEnabled',b[4]==='1'?'true':'false')}catch(e){}
-    try{localStorage.setItem('infiniteIncludeSubjective',b[5]==='1'?'true':'false')}catch(e){}
-    try{localStorage.setItem('challengeIncludeSubjective',b[5]==='1'?'true':'false')}catch(e){}
+    if(b.length>=7){
+      // 7 位新格式：bit5=无限主观题, bit6=挑战主观题
+      try{localStorage.setItem('infiniteIncludeSubjective',b[5]==='1'?'true':'false')}catch(e){}
+      try{localStorage.setItem('challengeIncludeSubjective',b[6]==='1'?'true':'false')}catch(e){}
+    }else{
+      // 6 位旧格式：bit5=两者共用
+      try{localStorage.setItem('infiniteIncludeSubjective',b[5]==='1'?'true':'false')}catch(e){}
+      try{localStorage.setItem('challengeIncludeSubjective',b[5]==='1'?'true':'false')}catch(e){}
+    }
   }
 
   if(obj.src){

@@ -2,6 +2,9 @@
 (function(){
 'use strict';
 
+// GitHub Pages 静态托管，无后端，跳过所有 POST 请求
+if(location.hostname==='snowfallinghere.github.io'){return}
+
 // ===== 工具 =====
 var relayUrl='/log', stateUrl='/state';
 function log(){
