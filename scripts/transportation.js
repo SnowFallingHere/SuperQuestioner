@@ -237,7 +237,7 @@ function drawQR(canvas,text){
       qr.make();
       var mod=qr.getModuleCount();
       var size=Math.min(canvas.width,canvas.height);
-      var margin=Math.round(size*0.04);
+      var margin=Math.round(size*0.01);
       var area=size-margin*2;
       var cell=Math.floor(area/mod);
       var totalModules=cell*mod;
