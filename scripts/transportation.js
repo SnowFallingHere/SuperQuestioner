@@ -108,8 +108,8 @@ function collectSyncData(){
       var sid2=srcNameToId(wk.slice(0,p2));
       var qidx2=parseInt(wk.slice(p2+2),10);
       if(!bySrc[sid2])bySrc[sid2]={};
-      if(!bySrc[sid2][qidx2])bySrc[sid2][qidx2]={c:0,w:wrong[wk].countWrong||0};
-      else bySrc[sid2][qidx2].w=wrong[wk].countWrong||0;
+      if(!bySrc[sid2][qidx2])bySrc[sid2][qidx2]={c:0,w:wrong[wk]||0};
+      else bySrc[sid2][qidx2].w=wrong[wk]||0;
     }
     // 生成 grasp 字符串（RLE 压缩）
     for(var sid3 in bySrc){
