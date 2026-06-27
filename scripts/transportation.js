@@ -371,7 +371,7 @@ function applyData(s){
         var n=parseInt(tok.slice(0,us),10),d=tok.slice(us+1);
         if(!isNaN(n))for(var ri=0;ri<n;ri++)digits.push(d);
       }else{
-        digits.push(tok);
+        for(var ti=0;ti<tok.length;ti++)digits.push(tok[ti]);
       }
     });
     var prog={},wrongEntries={};
