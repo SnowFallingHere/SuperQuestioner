@@ -28,13 +28,19 @@ function collectSyncData(){
       var hasData=false;for(var _k in imap){if(imap[_k]&&imap[_k].correctCount>0){hasData=true;break}}
       if(hasData){
         localStorage.setItem('infiniteProgress',JSON.stringify(imap));
-        // 同步保存 stats
-        var st=typeof window.__getStatsForSync==='function'?window.__getStatsForSync():{};
-        localStorage.setItem('infiniteStats',JSON.stringify({
-          totalAnswered:st.totalAnswered||0,correctCount:st.correctCount||0
-        }));
       }
     }
+    // 不论 infiniteMap 是否有数据，都同步保存 stats
+    var st=typeof window.__getStatsForSync==='function'?window.__getStatsForSync():{};
+    var ta=st.totalAnswered||0;
+    // 如果内存里没有（没进过模式），从 localStorage 读累计答题目
+    if(!ta){
+      var taLS=localStorage.getItem('_totalAnswered');
+      if(taLS)ta=parseInt(taLS,10)||0;
+    }
+    localStorage.setItem('infiniteStats',JSON.stringify({
+      totalAnswered:ta,correctCount:st.correctCount||0
+    }));
   }catch(e){}
   // 兜底：如果 infiniteProgress 全零，从 quizAnalysis 补
    try{
@@ -127,15 +133,21 @@ function collectSyncData(){
           arr.push(9);
         }
       }
-      // RLE 编码：连续相同 ≥5 用 _N_D
-      var rle=[],prev=-1,run=0;
+      // RLE 编码：连续相同 ≥5 用 %N_D，短连续直接拼文字（减少 % 数量）
+      var rle=[],prev=-1,run=0,lit='';
+      function flushLit(){
+        if(lit){rle.push(lit);lit=''}
+      }
       for(var di=0;di<arr.length;di++){
         var cur=arr[di];
         if(cur===prev){run++;continue}
-        if(run>=5){rle.push(run+'_'+prev)}else{for(var ri=0;ri<run;ri++)rle.push(''+prev)}
+        if(run>=5){flushLit();rle.push(run+'_'+prev)}
+        else{lit+=(''+prev).repeat(run)}
         prev=cur;run=1;
       }
-      if(run>=5){rle.push(run+'_'+prev)}else{for(var ri=0;ri<run;ri++)rle.push(''+prev)}
+      if(run>=5){flushLit();rle.push(run+'_'+prev)}
+      else{lit+=(''+prev).repeat(run)}
+      flushLit();
       parts.push('g'+sid3+'='+rle.join('%'));
     }
   }catch(e){}
