@@ -1,0 +1,2707 @@
+[
+  {
+    "sequence": 1,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'The onboarding process is designed to integrate new hires smoothly.'",
+    "answer": {
+      "reference": "入职流程旨在帮助新员工顺利融入。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 2,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'EVP (Employee Value Proposition) reflects what an organization offers to its employees.'",
+    "answer": {
+      "reference": "员工价值主张反映了组织向员工提供的价值。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 3,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'We need to leverage our core competencies to gain a competitive edge.'",
+    "answer": {
+      "reference": "我们需要利用核心竞争力来获得竞争优势。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 4,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'The synergy between departments boosted overall productivity.'",
+    "answer": {
+      "reference": "部门之间的协同效应提升了整体生产力。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 5,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Benchmarking against industry leaders helps identify areas for improvement.'",
+    "answer": {
+      "reference": "与行业标杆对比有助于发现改进领域。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 6,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'ROI is a key metric for evaluating project success.'",
+    "answer": {
+      "reference": "投资回报率是评估项目成功的关键指标。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 7,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Agile methodology enables rapid iteration and continuous delivery.'",
+    "answer": {
+      "reference": "敏捷方法论支持快速迭代和持续交付。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 8,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Scalable solutions are essential for growing businesses.'",
+    "answer": {
+      "reference": "可扩展的解决方案对成长型企业至关重要。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 9,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Employee turnover can be reduced through effective retention strategies.'",
+    "answer": {
+      "reference": "通过有效的留才策略可以降低员工流失率。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 10,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'We must align our goals with the company's vision and mission.'",
+    "answer": {
+      "reference": "我们必须使目标与公司的愿景和使命保持一致。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 11,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'The balance sheet provides a snapshot of financial health.'",
+    "answer": {
+      "reference": "资产负债表提供了财务状况的快照。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 12,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Cash flow management is critical for operational stability.'",
+    "answer": {
+      "reference": "现金流管理对运营稳定性至关重要。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 13,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Outsourcing non-core activities can reduce costs.'",
+    "answer": {
+      "reference": "外包非核心活动可以降低成本。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 14,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Customer satisfaction is a leading indicator of business performance.'",
+    "answer": {
+      "reference": "客户满意度是业务表现的领先指标。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 15,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'We should conduct a SWOT analysis to identify strategic opportunities.'",
+    "answer": {
+      "reference": "我们应该进行SWOT分析以识别战略机会。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 16,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'The supply chain has been disrupted due to global events.'",
+    "answer": {
+      "reference": "由于全球事件，供应链受到了干扰。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 17,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Digital transformation is reshaping traditional business models.'",
+    "answer": {
+      "reference": "数字化转型正在重塑传统商业模式。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 18,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'A diversified portfolio reduces investment risk.'",
+    "answer": {
+      "reference": "多元化投资组合降低了投资风险。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 19,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'Employee engagement directly affects productivity and retention.'",
+    "answer": {
+      "reference": "员工敬业度直接影响生产力和留任率。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 20,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into Chinese: 'We need to set SMART goals for each department.'",
+    "answer": {
+      "reference": "我们需要为每个部门设定SMART目标。",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 21,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '公司必须遵守所有法律法规。'",
+    "answer": {
+      "reference": "The company must comply with all laws and regulations.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 22,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '有效的领导力能够激励团队实现卓越。'",
+    "answer": {
+      "reference": "Effective leadership can inspire the team to achieve excellence.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 23,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '我们需要评估市场趋势以制定策略。'",
+    "answer": {
+      "reference": "We need to evaluate market trends to formulate strategies.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 24,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '谈判技巧在商业合作中非常重要。'",
+    "answer": {
+      "reference": "Negotiation skills are very important in business cooperation.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 25,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '公司致力于可持续发展和社会责任。'",
+    "answer": {
+      "reference": "The company is committed to sustainable development and social responsibility.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 26,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '良好的企业文化能够吸引并留住人才。'",
+    "answer": {
+      "reference": "A good corporate culture can attract and retain talent.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 27,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '我们必须在预算内完成这个项目。'",
+    "answer": {
+      "reference": "We must complete this project within budget.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 28,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '客户反馈对产品改进至关重要。'",
+    "answer": {
+      "reference": "Customer feedback is crucial for product improvement.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 29,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '全球化带来了新的挑战和机遇。'",
+    "answer": {
+      "reference": "Globalization brings new challenges and opportunities.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 30,
+    "chapter": "长句翻译",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Translate into English: '创新是保持竞争优势的核心动力。'",
+    "answer": {
+      "reference": "Innovation is the core driver for maintaining competitive advantage.",
+      "min_match": 0.3
+    }
+  },
+  {
+    "sequence": 31,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "We need to ______ our marketing efforts to reach younger audiences.",
+    "options": [
+      {
+        "label": "A",
+        "text": "leverage"
+      },
+      {
+        "label": "B",
+        "text": "adjust"
+      },
+      {
+        "label": "C",
+        "text": "ignore"
+      },
+      {
+        "label": "D",
+        "text": "eliminate"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 32,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "The company's ______ proposition includes competitive salary and flexible hours.",
+    "options": [
+      {
+        "label": "A",
+        "text": "value"
+      },
+      {
+        "label": "B",
+        "text": "cost"
+      },
+      {
+        "label": "C",
+        "text": "risk"
+      },
+      {
+        "label": "D",
+        "text": "loss"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 33,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "Effective ______ can reduce employee turnover.",
+    "options": [
+      {
+        "label": "A",
+        "text": "onboarding"
+      },
+      {
+        "label": "B",
+        "text": "offboarding"
+      },
+      {
+        "label": "C",
+        "text": "firewall"
+      },
+      {
+        "label": "D",
+        "text": "outsourcing"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 34,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "We should ______ our performance against industry standards.",
+    "options": [
+      {
+        "label": "A",
+        "text": "benchmark"
+      },
+      {
+        "label": "B",
+        "text": "destroy"
+      },
+      {
+        "label": "C",
+        "text": "avoid"
+      },
+      {
+        "label": "D",
+        "text": "postpone"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 35,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "The new software will ______ productivity by automating routine tasks.",
+    "options": [
+      {
+        "label": "A",
+        "text": "boost"
+      },
+      {
+        "label": "B",
+        "text": "reduce"
+      },
+      {
+        "label": "C",
+        "text": "complicate"
+      },
+      {
+        "label": "D",
+        "text": "reverse"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 36,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "A ______ approach allows rapid response to market changes.",
+    "options": [
+      {
+        "label": "A",
+        "text": "agile"
+      },
+      {
+        "label": "B",
+        "text": "rigid"
+      },
+      {
+        "label": "C",
+        "text": "linear"
+      },
+      {
+        "label": "D",
+        "text": "static"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 37,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "We need to ______ our core competencies to stay competitive.",
+    "options": [
+      {
+        "label": "A",
+        "text": "leverage"
+      },
+      {
+        "label": "B",
+        "text": "neglect"
+      },
+      {
+        "label": "C",
+        "text": "forget"
+      },
+      {
+        "label": "D",
+        "text": "overlook"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 38,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "The ______ between sales and marketing generated higher revenue.",
+    "options": [
+      {
+        "label": "A",
+        "text": "synergy"
+      },
+      {
+        "label": "B",
+        "text": "conflict"
+      },
+      {
+        "label": "C",
+        "text": "separation"
+      },
+      {
+        "label": "D",
+        "text": "chaos"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 39,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "We must ______ our goals with the company vision.",
+    "options": [
+      {
+        "label": "A",
+        "text": "align"
+      },
+      {
+        "label": "B",
+        "text": "disrupt"
+      },
+      {
+        "label": "C",
+        "text": "ignore"
+      },
+      {
+        "label": "D",
+        "text": "abandon"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 40,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "The ______ analysis helps identify strengths and weaknesses.",
+    "options": [
+      {
+        "label": "A",
+        "text": "SWOT"
+      },
+      {
+        "label": "B",
+        "text": "PEST"
+      },
+      {
+        "label": "C",
+        "text": "ROI"
+      },
+      {
+        "label": "D",
+        "text": "KPI"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 41,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "We need to ______ the risks before making a decision.",
+    "options": [
+      {
+        "label": "A",
+        "text": "assess"
+      },
+      {
+        "label": "B",
+        "text": "avoid"
+      },
+      {
+        "label": "C",
+        "text": "increase"
+      },
+      {
+        "label": "D",
+        "text": "ignore"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 42,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "The company decided to ______ its non-core activities.",
+    "options": [
+      {
+        "label": "A",
+        "text": "outsource"
+      },
+      {
+        "label": "B",
+        "text": "insource"
+      },
+      {
+        "label": "C",
+        "text": "expand"
+      },
+      {
+        "label": "D",
+        "text": "duplicate"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 43,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Employee ______ is measured through surveys and feedback.",
+    "options": [
+      {
+        "label": "A",
+        "text": "engagement"
+      },
+      {
+        "label": "B",
+        "text": "discontent"
+      },
+      {
+        "label": "C",
+        "text": "absence"
+      },
+      {
+        "label": "D",
+        "text": "turnover"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 44,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "We need to ______ our pricing strategy to meet competition.",
+    "options": [
+      {
+        "label": "A",
+        "text": "revise"
+      },
+      {
+        "label": "B",
+        "text": "delete"
+      },
+      {
+        "label": "C",
+        "text": "freeze"
+      },
+      {
+        "label": "D",
+        "text": "ignore"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 45,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "A ______ supply chain is more resilient to disruptions.",
+    "options": [
+      {
+        "label": "A",
+        "text": "diversified"
+      },
+      {
+        "label": "B",
+        "text": "centralized"
+      },
+      {
+        "label": "C",
+        "text": "fragile"
+      },
+      {
+        "label": "D",
+        "text": "linear"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 46,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "______ management is key to maintaining liquidity.",
+    "options": [
+      {
+        "label": "A",
+        "text": "Cash flow"
+      },
+      {
+        "label": "B",
+        "text": "Inventory"
+      },
+      {
+        "label": "C",
+        "text": "Debt"
+      },
+      {
+        "label": "D",
+        "text": "Tax"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 47,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "We should ______ a SWOT analysis to explore opportunities.",
+    "options": [
+      {
+        "label": "A",
+        "text": "conduct"
+      },
+      {
+        "label": "B",
+        "text": "avoid"
+      },
+      {
+        "label": "C",
+        "text": "postpone"
+      },
+      {
+        "label": "D",
+        "text": "cancel"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 48,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "The board approved a ______ for expansion.",
+    "options": [
+      {
+        "label": "A",
+        "text": "budget"
+      },
+      {
+        "label": "B",
+        "text": "cutback"
+      },
+      {
+        "label": "C",
+        "text": "freeze"
+      },
+      {
+        "label": "D",
+        "text": "loss"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 49,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "We aim to ______ customer satisfaction through better service.",
+    "options": [
+      {
+        "label": "A",
+        "text": "enhance"
+      },
+      {
+        "label": "B",
+        "text": "reduce"
+      },
+      {
+        "label": "C",
+        "text": "delay"
+      },
+      {
+        "label": "D",
+        "text": "ignore"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 50,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "The new policy will ______ from next month.",
+    "options": [
+      {
+        "label": "A",
+        "text": "take effect"
+      },
+      {
+        "label": "B",
+        "text": "expire"
+      },
+      {
+        "label": "C",
+        "text": "fail"
+      },
+      {
+        "label": "D",
+        "text": "retreat"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 51,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "We must ensure our operations are ______ to environmental regulations.",
+    "options": [
+      {
+        "label": "A",
+        "text": "compliant"
+      },
+      {
+        "label": "B",
+        "text": "resistant"
+      },
+      {
+        "label": "C",
+        "text": "indifferent"
+      },
+      {
+        "label": "D",
+        "text": "opposed"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 52,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "The company is focusing on ______ growth rather than short-term profits.",
+    "options": [
+      {
+        "label": "A",
+        "text": "sustainable"
+      },
+      {
+        "label": "B",
+        "text": "rapid"
+      },
+      {
+        "label": "C",
+        "text": "volatile"
+      },
+      {
+        "label": "D",
+        "text": "declining"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 53,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "We need to ______ our investment portfolio to minimize risk.",
+    "options": [
+      {
+        "label": "A",
+        "text": "diversify"
+      },
+      {
+        "label": "B",
+        "text": "concentrate"
+      },
+      {
+        "label": "C",
+        "text": "liquidate"
+      },
+      {
+        "label": "D",
+        "text": "overlook"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 54,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "The project requires a ______ approach to manage uncertainties.",
+    "options": [
+      {
+        "label": "A",
+        "text": "flexible"
+      },
+      {
+        "label": "B",
+        "text": "fixed"
+      },
+      {
+        "label": "C",
+        "text": "rigid"
+      },
+      {
+        "label": "D",
+        "text": "sequential"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 55,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "We should ______ our marketing message to different customer segments.",
+    "options": [
+      {
+        "label": "A",
+        "text": "tailor"
+      },
+      {
+        "label": "B",
+        "text": "copy"
+      },
+      {
+        "label": "C",
+        "text": "generalize"
+      },
+      {
+        "label": "D",
+        "text": "ignore"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 56,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "Effective ______ can drive innovation and efficiency.",
+    "options": [
+      {
+        "label": "A",
+        "text": "collaboration"
+      },
+      {
+        "label": "B",
+        "text": "competition"
+      },
+      {
+        "label": "C",
+        "text": "isolation"
+      },
+      {
+        "label": "D",
+        "text": "silence"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 57,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "The new system will ______ data from multiple sources.",
+    "options": [
+      {
+        "label": "A",
+        "text": "integrate"
+      },
+      {
+        "label": "B",
+        "text": "separate"
+      },
+      {
+        "label": "C",
+        "text": "delete"
+      },
+      {
+        "label": "D",
+        "text": "duplicate"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 58,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "We need to ______ our supply chain to avoid bottlenecks.",
+    "options": [
+      {
+        "label": "A",
+        "text": "streamline"
+      },
+      {
+        "label": "B",
+        "text": "complicate"
+      },
+      {
+        "label": "C",
+        "text": "slow down"
+      },
+      {
+        "label": "D",
+        "text": "disrupt"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 59,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "The CEO emphasized the importance of ______ leadership.",
+    "options": [
+      {
+        "label": "A",
+        "text": "transformational"
+      },
+      {
+        "label": "B",
+        "text": "transactional"
+      },
+      {
+        "label": "C",
+        "text": "autocratic"
+      },
+      {
+        "label": "D",
+        "text": "laissez-faire"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 60,
+    "chapter": "选词填空",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "We must ______ our business model to adapt to the digital age.",
+    "options": [
+      {
+        "label": "A",
+        "text": "transform"
+      },
+      {
+        "label": "B",
+        "text": "preserve"
+      },
+      {
+        "label": "C",
+        "text": "reject"
+      },
+      {
+        "label": "D",
+        "text": "ignore"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 61,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is the meaning of 'onboarding'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The process of integrating new employees"
+      },
+      {
+        "label": "B",
+        "text": "The process of firing employees"
+      },
+      {
+        "label": "C",
+        "text": "A type of training for managers"
+      },
+      {
+        "label": "D",
+        "text": "A financial audit"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 62,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What does 'EVP' stand for in business?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Employee Value Proposition"
+      },
+      {
+        "label": "B",
+        "text": "Enterprise Value Plan"
+      },
+      {
+        "label": "C",
+        "text": "Executive Vice President"
+      },
+      {
+        "label": "D",
+        "text": "Equity Valuation Process"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 63,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is the meaning of 'leverage'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "To use something to maximum advantage"
+      },
+      {
+        "label": "B",
+        "text": "To reduce something"
+      },
+      {
+        "label": "C",
+        "text": "To destroy something"
+      },
+      {
+        "label": "D",
+        "text": "To ignore something"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 64,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What does 'ROI' stand for?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Return on Investment"
+      },
+      {
+        "label": "B",
+        "text": "Rate of Interest"
+      },
+      {
+        "label": "C",
+        "text": "Risk of Inflation"
+      },
+      {
+        "label": "D",
+        "text": "Revenue over Income"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 65,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is a 'KPI'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Key Performance Indicator"
+      },
+      {
+        "label": "B",
+        "text": "Knowledge Process Integration"
+      },
+      {
+        "label": "C",
+        "text": "Kick-off Project Initiative"
+      },
+      {
+        "label": "D",
+        "text": "Kind Partner Interface"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 66,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What does 'benchmark' mean?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A standard for comparison"
+      },
+      {
+        "label": "B",
+        "text": "A physical marker"
+      },
+      {
+        "label": "C",
+        "text": "A financial loss"
+      },
+      {
+        "label": "D",
+        "text": "A type of contract"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 67,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is 'synergy'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Combined effort producing a greater effect than the sum"
+      },
+      {
+        "label": "B",
+        "text": "A conflict between teams"
+      },
+      {
+        "label": "C",
+        "text": "A reduction in workforce"
+      },
+      {
+        "label": "D",
+        "text": "A legal dispute"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 68,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is an 'agile' approach?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Flexible and iterative"
+      },
+      {
+        "label": "B",
+        "text": "Rigid and sequential"
+      },
+      {
+        "label": "C",
+        "text": "Slow and bureaucratic"
+      },
+      {
+        "label": "D",
+        "text": "Chaotic and unstructured"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 69,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What does 'scalable' mean?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Able to grow and handle increased demand"
+      },
+      {
+        "label": "B",
+        "text": "Fixed in size"
+      },
+      {
+        "label": "C",
+        "text": "Difficult to manage"
+      },
+      {
+        "label": "D",
+        "text": "Declining in value"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 70,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is 'turnover' in HR?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Rate at which employees leave"
+      },
+      {
+        "label": "B",
+        "text": "Rate of revenue growth"
+      },
+      {
+        "label": "C",
+        "text": "Inventory count"
+      },
+      {
+        "label": "D",
+        "text": "Customer complaints"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 71,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What does 'alignment' mean in a business context?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Consistency and agreement between goals and actions"
+      },
+      {
+        "label": "B",
+        "text": "Conflict"
+      },
+      {
+        "label": "C",
+        "text": "Independence"
+      },
+      {
+        "label": "D",
+        "text": "Isolation"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 72,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is 'outsourcing'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Contracting out business functions to external providers"
+      },
+      {
+        "label": "B",
+        "text": "Hiring more internal staff"
+      },
+      {
+        "label": "C",
+        "text": "Reducing product quality"
+      },
+      {
+        "label": "D",
+        "text": "Increasing prices"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 73,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is a 'SWOT analysis'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Assessment of strengths, weaknesses, opportunities, threats"
+      },
+      {
+        "label": "B",
+        "text": "Analysis of sales and profits"
+      },
+      {
+        "label": "C",
+        "text": "Evaluation of customer satisfaction"
+      },
+      {
+        "label": "D",
+        "text": "Review of employee performance"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 74,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What is 'cash flow'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Movement of money in and out of a business"
+      },
+      {
+        "label": "B",
+        "text": "Total profit"
+      },
+      {
+        "label": "C",
+        "text": "Fixed assets"
+      },
+      {
+        "label": "D",
+        "text": "Market share"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 75,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "What does 'compliance' refer to?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Adherence to laws and regulations"
+      },
+      {
+        "label": "B",
+        "text": "Resistance to change"
+      },
+      {
+        "label": "C",
+        "text": "Innovation"
+      },
+      {
+        "label": "D",
+        "text": "Risk-taking"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 76,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Which term means 'the ability to withstand market fluctuations'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Resilience"
+      },
+      {
+        "label": "B",
+        "text": "Fragility"
+      },
+      {
+        "label": "C",
+        "text": "Volatility"
+      },
+      {
+        "label": "D",
+        "text": "Stagnation"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 77,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'engagement' in employee context?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Emotional commitment to the organization"
+      },
+      {
+        "label": "B",
+        "text": "Resignation"
+      },
+      {
+        "label": "C",
+        "text": "Absenteeism"
+      },
+      {
+        "label": "D",
+        "text": "Indifference"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 78,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is a 'stakeholder'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any individual or group affected by the business"
+      },
+      {
+        "label": "B",
+        "text": "Only shareholders"
+      },
+      {
+        "label": "C",
+        "text": "Only employees"
+      },
+      {
+        "label": "D",
+        "text": "Only customers"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 79,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What does 'due diligence' mean?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Careful investigation before a business decision"
+      },
+      {
+        "label": "B",
+        "text": "Rushed action"
+      },
+      {
+        "label": "C",
+        "text": "Legal obligation to pay"
+      },
+      {
+        "label": "D",
+        "text": "Financial audit"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 80,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'brand equity'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The value of a brand name"
+      },
+      {
+        "label": "B",
+        "text": "The cost of branding"
+      },
+      {
+        "label": "C",
+        "text": "The number of products sold"
+      },
+      {
+        "label": "D",
+        "text": "The market share"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 81,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Which term refers to 'a plan for spending money'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Budget"
+      },
+      {
+        "label": "B",
+        "text": "Revenue"
+      },
+      {
+        "label": "C",
+        "text": "Profit"
+      },
+      {
+        "label": "D",
+        "text": "Loss"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 82,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'diversification'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Spreading investments across different areas"
+      },
+      {
+        "label": "B",
+        "text": "Focusing on one area"
+      },
+      {
+        "label": "C",
+        "text": "Selling all assets"
+      },
+      {
+        "label": "D",
+        "text": "Increasing debt"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 83,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'supply chain'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Network of suppliers and distributors"
+      },
+      {
+        "label": "B",
+        "text": "Only raw materials"
+      },
+      {
+        "label": "C",
+        "text": "Only finished goods"
+      },
+      {
+        "label": "D",
+        "text": "Marketing channels"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 84,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What does 'scalability' imply?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Ability to grow without performance loss"
+      },
+      {
+        "label": "B",
+        "text": "Inability to change"
+      },
+      {
+        "label": "C",
+        "text": "High cost of production"
+      },
+      {
+        "label": "D",
+        "text": "Limited capacity"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 85,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'intellectual property'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Creations of the mind protected by law"
+      },
+      {
+        "label": "B",
+        "text": "Physical assets"
+      },
+      {
+        "label": "C",
+        "text": "Financial investments"
+      },
+      {
+        "label": "D",
+        "text": "Real estate"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 86,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is a 'business model'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "How a company generates revenue and profits"
+      },
+      {
+        "label": "B",
+        "text": "The organizational structure"
+      },
+      {
+        "label": "C",
+        "text": "The marketing plan"
+      },
+      {
+        "label": "D",
+        "text": "The employee handbook"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 87,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What does 'market penetration' mean?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Increasing sales of existing products in current markets"
+      },
+      {
+        "label": "B",
+        "text": "Entering new markets"
+      },
+      {
+        "label": "C",
+        "text": "Developing new products"
+      },
+      {
+        "label": "D",
+        "text": "Reducing prices"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 88,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'customer loyalty'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Repeat purchases and positive attitude towards a brand"
+      },
+      {
+        "label": "B",
+        "text": "One-time purchase"
+      },
+      {
+        "label": "C",
+        "text": "Complaints"
+      },
+      {
+        "label": "D",
+        "text": "Indifference"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 89,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'risk management'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Identifying and mitigating potential threats"
+      },
+      {
+        "label": "B",
+        "text": "Ignoring risks"
+      },
+      {
+        "label": "C",
+        "text": "Taking all risks"
+      },
+      {
+        "label": "D",
+        "text": "Only insuring against risks"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 90,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "What is 'corporate governance'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "System of rules and practices by which a company is directed"
+      },
+      {
+        "label": "B",
+        "text": "Marketing strategy"
+      },
+      {
+        "label": "C",
+        "text": "Human resource policy"
+      },
+      {
+        "label": "D",
+        "text": "Financial accounting"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 91,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'disruptive innovation'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Innovation that creates a new market and displaces existing ones"
+      },
+      {
+        "label": "B",
+        "text": "Incremental improvement"
+      },
+      {
+        "label": "C",
+        "text": "Copying competitors"
+      },
+      {
+        "label": "D",
+        "text": "Reducing costs"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 92,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'blue ocean strategy'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Creating uncontested market space"
+      },
+      {
+        "label": "B",
+        "text": "Competing in existing markets"
+      },
+      {
+        "label": "C",
+        "text": "Price war"
+      },
+      {
+        "label": "D",
+        "text": "Cost cutting"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 93,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'value chain'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Series of activities that add value to a product"
+      },
+      {
+        "label": "B",
+        "text": "Distribution network"
+      },
+      {
+        "label": "C",
+        "text": "Production line"
+      },
+      {
+        "label": "D",
+        "text": "Customer service"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 94,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'economies of scale'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Cost advantages from large-scale production"
+      },
+      {
+        "label": "B",
+        "text": "Diseconomies from expansion"
+      },
+      {
+        "label": "C",
+        "text": "Fixed costs"
+      },
+      {
+        "label": "D",
+        "text": "Marginal costs"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 95,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'core competency'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Unique capability that gives competitive advantage"
+      },
+      {
+        "label": "B",
+        "text": "Basic skill"
+      },
+      {
+        "label": "C",
+        "text": "Common practice"
+      },
+      {
+        "label": "D",
+        "text": "Outdated technique"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 96,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'stakeholder capitalism'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Business focus on all stakeholders, not just shareholders"
+      },
+      {
+        "label": "B",
+        "text": "Only maximizing shareholder value"
+      },
+      {
+        "label": "C",
+        "text": "State ownership"
+      },
+      {
+        "label": "D",
+        "text": "Charity"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 97,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'ESG'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Environmental, Social, and Governance criteria"
+      },
+      {
+        "label": "B",
+        "text": "Economic Stability Group"
+      },
+      {
+        "label": "C",
+        "text": "Employee Satisfaction Guideline"
+      },
+      {
+        "label": "D",
+        "text": "Enterprise Security Grid"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 98,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'digital transformation'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Integration of digital technology into all business areas"
+      },
+      {
+        "label": "B",
+        "text": "Replacing all employees with robots"
+      },
+      {
+        "label": "C",
+        "text": "Using social media"
+      },
+      {
+        "label": "D",
+        "text": "Selling products online only"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 99,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'business intelligence'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Data-driven decision making and analytics"
+      },
+      {
+        "label": "B",
+        "text": "Gut feeling"
+      },
+      {
+        "label": "C",
+        "text": "Market gossip"
+      },
+      {
+        "label": "D",
+        "text": "Random guesses"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 100,
+    "chapter": "词义选择",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "What is 'organizational culture'?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Shared values and behaviors within a company"
+      },
+      {
+        "label": "B",
+        "text": "The physical office"
+      },
+      {
+        "label": "C",
+        "text": "Employee salaries"
+      },
+      {
+        "label": "D",
+        "text": "Product design"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 101,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Your company is planning to launch a new product. Write a memo to your team outlining the key steps and strategies.",
+    "answer": {
+      "reference": "The memo should include market research, target audience, pricing, promotion, and distribution channels.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 102,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "As a manager, write a proposal to improve employee engagement in your department.",
+    "answer": {
+      "reference": "Proposal may include flexible working hours, recognition programs, team-building activities, and clear career paths.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 103,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Write a cover letter for a job application in the finance industry.",
+    "answer": {
+      "reference": "Cover letter should highlight relevant skills, experience, and enthusiasm for the role.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 104,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Your company is facing a decline in sales. Write a report analyzing possible reasons and suggest corrective actions.",
+    "answer": {
+      "reference": "Reasons may include market saturation, poor customer service, or outdated products. Actions: innovate, improve service, or expand market.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 105,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "medium",
+    "question": "Write an email to a client thanking them for their business and proposing a new partnership opportunity.",
+    "answer": {
+      "reference": "Email should express gratitude, outline benefits of partnership, and suggest a meeting.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 106,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "hard",
+    "question": "As a CEO, write a speech for the annual shareholders' meeting addressing the company's performance and future strategy.",
+    "answer": {
+      "reference": "Speech should cover financial results, achievements, challenges, and vision for growth.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 107,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "hard",
+    "question": "Write a business plan for a startup in the sustainable energy sector.",
+    "answer": {
+      "reference": "Plan should include executive summary, market analysis, product description, marketing strategy, and financial projections.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 108,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "hard",
+    "question": "Your team is facing a conflict. Write a memo to resolve the issue and promote collaboration.",
+    "answer": {
+      "reference": "Memo should acknowledge the conflict, encourage open communication, and suggest conflict-resolution steps.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 109,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "hard",
+    "question": "Write a persuasive sales pitch for a new software product to a potential client.",
+    "answer": {
+      "reference": "Pitch should highlight product benefits, ROI, and unique features, and address client's pain points.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 110,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "hard",
+    "question": "Compose a response to a negative customer review, aiming to restore trust and improve service.",
+    "answer": {
+      "reference": "Response should apologize, explain corrective actions, and invite further feedback.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 111,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "easy",
+    "question": "Write a short notice to employees about the upcoming holiday schedule.",
+    "answer": {
+      "reference": "Notice should include dates, any adjustments, and contact for questions.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 112,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "easy",
+    "question": "Draft a thank-you note to a colleague for their support on a recent project.",
+    "answer": {
+      "reference": "Note should express gratitude and acknowledge their contribution.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 113,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "easy",
+    "question": "Write a brief agenda for a weekly team meeting.",
+    "answer": {
+      "reference": "Agenda might include project updates, issues, and next steps.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 114,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "easy",
+    "question": "Create a simple job advertisement for a sales assistant position.",
+    "answer": {
+      "reference": "Ad should include job title, responsibilities, qualifications, and contact details.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 115,
+    "chapter": "情景作文",
+    "type": "subjective",
+    "difficulty": "easy",
+    "question": "Write a social media post announcing a new store opening.",
+    "answer": {
+      "reference": "Post should include location, opening date, and a call to action.",
+      "min_match": 0.25
+    }
+  },
+  {
+    "sequence": 116,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Read the passage: 'ABC Corp has implemented a flexible work policy that allows employees to choose their starting hours. This initiative aims to improve work-life balance and has resulted in a 15% increase in employee satisfaction.' According to the passage, what is the main benefit of the policy?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Improved work-life balance"
+      },
+      {
+        "label": "B",
+        "text": "Higher salaries"
+      },
+      {
+        "label": "C",
+        "text": "More vacation days"
+      },
+      {
+        "label": "D",
+        "text": "Better office equipment"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 117,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Passage: 'The company's revenue grew by 20% last year, driven mainly by expansion into Asian markets. However, operating costs also increased by 12%.' What was the net effect on profit?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Profit increased"
+      },
+      {
+        "label": "B",
+        "text": "Profit decreased"
+      },
+      {
+        "label": "C",
+        "text": "Profit stayed same"
+      },
+      {
+        "label": "D",
+        "text": "Cannot be determined from the information given"
+      }
+    ],
+    "answer": "D"
+  },
+  {
+    "sequence": 118,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Passage: 'Sustainable practices are becoming a competitive differentiator. Consumers prefer eco-friendly products even at higher prices.' What does this imply for businesses?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They should adopt sustainable practices"
+      },
+      {
+        "label": "B",
+        "text": "They should lower prices"
+      },
+      {
+        "label": "C",
+        "text": "They should ignore sustainability"
+      },
+      {
+        "label": "D",
+        "text": "They should focus on quality only"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 119,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Passage: 'Remote work has become mainstream, with 70% of employees reporting higher productivity. However, some managers worry about team cohesion.' What is a concern mentioned?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Team cohesion"
+      },
+      {
+        "label": "B",
+        "text": "Productivity loss"
+      },
+      {
+        "label": "C",
+        "text": "Higher costs"
+      },
+      {
+        "label": "D",
+        "text": "Security risks"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 120,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "medium",
+    "question": "Passage: 'The new CRM system integrated all customer data, enabling personalized marketing campaigns. Sales increased by 8% in the first quarter.' What was the result of the system?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Increased sales"
+      },
+      {
+        "label": "B",
+        "text": "Reduced costs"
+      },
+      {
+        "label": "C",
+        "text": "Improved customer service"
+      },
+      {
+        "label": "D",
+        "text": "Higher employee turnover"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 121,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "Passage: 'Despite economic headwinds, our company maintained a strong balance sheet with low debt-to-equity ratio. This financial prudence allows us to invest in R&D.' What does the company prioritize?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Research and development"
+      },
+      {
+        "label": "B",
+        "text": "Debt reduction"
+      },
+      {
+        "label": "C",
+        "text": "Dividend payout"
+      },
+      {
+        "label": "D",
+        "text": "Mergers"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 122,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "Passage: 'The board approved a merger with XYZ Ltd. to achieve economies of scale and broaden product portfolio. The deal is subject to regulatory approval.' What is the primary motive for the merger?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Economies of scale and broader portfolio"
+      },
+      {
+        "label": "B",
+        "text": "Tax benefits"
+      },
+      {
+        "label": "C",
+        "text": "Eliminating competition"
+      },
+      {
+        "label": "D",
+        "text": "Acquiring talent"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 123,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "Passage: 'Customer feedback indicated that our delivery times are longer than competitors. We are now investing in a new logistics system to shorten delivery by 2 days.' What action is the company taking?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Investing in logistics"
+      },
+      {
+        "label": "B",
+        "text": "Lowering prices"
+      },
+      {
+        "label": "C",
+        "text": "Hiring more sales staff"
+      },
+      {
+        "label": "D",
+        "text": "Reducing product quality"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 124,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "Passage: 'Our market research shows that the target demographic is increasingly using mobile devices for shopping. We plan to optimize our website for mobile.' What is the company's response?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Mobile website optimization"
+      },
+      {
+        "label": "B",
+        "text": "Opening physical stores"
+      },
+      {
+        "label": "C",
+        "text": "TV advertising"
+      },
+      {
+        "label": "D",
+        "text": "Print catalogs"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 125,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "hard",
+    "question": "Passage: 'The CEO announced a new sustainability initiative aiming for net-zero emissions by 2030. This will involve investing in renewable energy and improving energy efficiency.' What is the goal of the initiative?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Net-zero emissions by 2030"
+      },
+      {
+        "label": "B",
+        "text": "Increase profits"
+      },
+      {
+        "label": "C",
+        "text": "Reduce employee numbers"
+      },
+      {
+        "label": "D",
+        "text": "Expand globally"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 126,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "Passage: 'Our company offers a comprehensive benefits package including health insurance, retirement plans, and tuition reimbursement.' Which benefit is mentioned?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Tuition reimbursement"
+      },
+      {
+        "label": "B",
+        "text": "Company car"
+      },
+      {
+        "label": "C",
+        "text": "Free lunch"
+      },
+      {
+        "label": "D",
+        "text": "Gym membership"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 127,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "Passage: 'The sales team exceeded their targets for the third consecutive quarter, driven by strong demand in the domestic market.' What contributed to the success?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Strong domestic demand"
+      },
+      {
+        "label": "B",
+        "text": "Export growth"
+      },
+      {
+        "label": "C",
+        "text": "Price cuts"
+      },
+      {
+        "label": "D",
+        "text": "New advertising"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 128,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "Passage: 'The new inventory management system reduced stockouts by 30%.' What was the result?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Fewer stockouts"
+      },
+      {
+        "label": "B",
+        "text": "More stockouts"
+      },
+      {
+        "label": "C",
+        "text": "Higher costs"
+      },
+      {
+        "label": "D",
+        "text": "Lower sales"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 129,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "Passage: 'The company's culture emphasizes transparency and open communication.' What does the culture stress?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Transparency and open communication"
+      },
+      {
+        "label": "B",
+        "text": "Secrecy and hierarchy"
+      },
+      {
+        "label": "C",
+        "text": "Competition and individualism"
+      },
+      {
+        "label": "D",
+        "text": "Routine and stability"
+      }
+    ],
+    "answer": "A"
+  },
+  {
+    "sequence": 130,
+    "chapter": "阅读理解",
+    "type": "single_choice",
+    "difficulty": "easy",
+    "question": "Passage: 'We are expanding our operations to Europe next year.' What is the company planning?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Expansion to Europe"
+      },
+      {
+        "label": "B",
+        "text": "Expansion to Asia"
+      },
+      {
+        "label": "C",
+        "text": "Expansion to South America"
+      },
+      {
+        "label": "D",
+        "text": "No expansion"
+      }
+    ],
+    "answer": "A"
+  }
+]
