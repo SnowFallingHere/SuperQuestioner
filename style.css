@@ -130,7 +130,7 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .sync-toggle-btn:hover { opacity: 1; transform: scale(1.15); }
 
 /* 同步面板 */
-.sync-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:16px;padding:24px 28px;max-width:520px;width:94%;box-shadow:0 8px 40px #0004;z-index:9997}
+.sync-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:16px;padding:24px 28px;max-width:520px;width:94%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px #0004;z-index:9997}
 .sync-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .sync-header h3{margin:0;font-size:17px}
 .sync-close{font-size:26px;cursor:pointer;color:#999;line-height:1}

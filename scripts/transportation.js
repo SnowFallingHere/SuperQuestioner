@@ -21,6 +21,8 @@ function srcIdToName(id){
 // ===== 发送打包 =====
 function safeJSON(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
 function collectSyncData(){
+  // 先刷新 localStorage：把内存进度写盘
+  try{if(typeof saveInfiniteProgress==='function')saveInfiniteProgress()}catch(e){}
   var parts=[];
 
   // g: 掌握进度 (grasp)
@@ -77,7 +79,7 @@ function collectSyncData(){
           else if(w2===1)arr.push(3);
           else if(c===2)arr.push(2);
           else if(c===1)arr.push(1);
-          else arr.push(0);
+          else arr.push(9);  // c=0,w=0 → 未答
         }else{
           arr.push(9);
         }
@@ -326,9 +328,9 @@ function applyData(s){
        var v=parseInt(ch,10);
        // 9=未答(跳过), 0=已掌握(≥3次), 1=对1次, 2=对2次
        if(v===9)continue;
-       if(v===0)prog[qk]=3;
-       else if(v===1)prog[qk]=1;
-       else if(v===2)prog[qk]=2;
+        if(v===0)prog[qk]={correctCount:3};
+        else if(v===1)prog[qk]={correctCount:1};
+        else if(v===2)prog[qk]={correctCount:2};
        // 3=错1, 4=错2, 5=错≥3
        if(v>=3)wrongEntries[qk]=(wrongEntries[qk]||0)+1;
     }
