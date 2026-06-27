@@ -21,8 +21,51 @@ function srcIdToName(id){
 // ===== 发送打包 =====
 function safeJSON(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
 function collectSyncData(){
-  // 先刷新 localStorage：把内存进度写盘
-  try{if(typeof saveInfiniteProgress==='function')saveInfiniteProgress()}catch(e){}
+  // 尝试直接从内存 infiniteMap 刷新 localStorage
+  try{
+    var imap = typeof window.__getInfiniteMapForSync === 'function' ? window.__getInfiniteMapForSync() : null;
+    if(imap&&Object.keys(imap).length>0){
+      var hasData=false;for(var _k in imap){if(imap[_k]&&imap[_k].correctCount>0){hasData=true;break}}
+      if(hasData){
+        localStorage.setItem('infiniteProgress',JSON.stringify(imap));
+        // 同步保存 stats
+        var st=typeof window.__getStatsForSync==='function'?window.__getStatsForSync():{};
+        localStorage.setItem('infiniteStats',JSON.stringify({
+          totalAnswered:st.totalAnswered||0,correctCount:st.correctCount||0
+        }));
+      }
+    }
+  }catch(e){}
+  // 兜底：如果 infiniteProgress 全零，从 quizAnalysis 补
+   try{
+     var qaData=localStorage.getItem('quizAnalysis');
+     console.log('[sync] quizAnalysis exists:', !!qaData, 'size:', qaData?qaData.length:0);
+     if(qaData){
+       var qaParsed=JSON.parse(qaData);
+       var qa=qaParsed.byQuestion;
+       console.log('[sync] byQuestion keys:', qa?Object.keys(qa).length:0);
+        if(qa){
+          var sampleKey=Object.keys(qa)[0];
+          var sampleVal=qa[sampleKey];
+          console.log('[sync] qa sample:', sampleKey, 'countCorrect:', sampleVal?sampleVal.countCorrect:'N/A');
+          var prog2=safeJSON('infiniteProgress',{});
+         console.log('[sync] infiniteProgress keys before:', Object.keys(prog2).length);
+          console.log('[sync] prog2 has sampleKey:', !!prog2[sampleKey], 'correctCount:', prog2[sampleKey]?prog2[sampleKey].correctCount:'N/A');
+          var added=0;
+         for(var qk2 in qa){
+           var cc=qa[qk2].countCorrect||0;
+           if(cc>0&&(!prog2[qk2]||prog2[qk2].correctCount===0)){
+             prog2[qk2]={correctCount:Math.min(cc,3)};added++;
+           }
+         }
+         console.log('[sync] added from quizAnalysis:', added);
+         if(added>0){
+           localStorage.setItem('infiniteProgress',JSON.stringify(prog2));
+           console.log('[sync] saved infiniteProgress with', Object.keys(prog2).length, 'entries');
+         }
+       }
+     }
+   }catch(e){console.log('[sync] quizAnalysis fallback error:',e)}
   var parts=[];
 
   // g: 掌握进度 (grasp)
@@ -50,7 +93,7 @@ function collectSyncData(){
       var sid=srcNameToId(k.slice(0,p));
       var qidx=parseInt(k.slice(p+2),10);
       if(!bySrc[sid])bySrc[sid]={};
-      bySrc[sid][qidx]={c:prog[k],w:0};
+      bySrc[sid][qidx]={c:prog[k].correctCount||0,w:0};
     }
     // 合并错题数据
     for(var wk in wrong){

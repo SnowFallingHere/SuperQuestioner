@@ -2285,6 +2285,19 @@ function resetProgress() {
   }
 }
 
+// 同步模块专用：返回当前 infiniteMap（绕过 IIFE 作用域限制）
+window.__getInfiniteMapForSync = function() {
+  console.log('[sync-debug] infiniteMap keys:', Object.keys(window.infiniteMap||{}).length);
+  return window.infiniteMap || {};
+};
+window.__getStatsForSync = function() {
+  return {
+    correctCount: typeof correctCount !== 'undefined' ? correctCount : 0,
+    wrongCount: typeof wrongCount !== 'undefined' ? wrongCount : 0,
+    totalAnswered: typeof totalAnswered !== 'undefined' ? totalAnswered : 0
+  };
+};
+
 // ====== Streak Effects ======
 // —— 连击设置 ——
 function getComboEffectsEnabled() {
