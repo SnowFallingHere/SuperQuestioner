@@ -436,7 +436,12 @@ function applyData(s){
     try{localStorage.setItem('challengeIncludeSubjective',b[5]==='1'?'true':'false')}catch(e){}
   }
 
-  if(obj.src){try{localStorage.setItem('sourceSelection',srcIdToName(parseInt(obj.src,10)))}catch(e){}}
+  if(obj.src){
+    var sidV=parseInt(obj.src,10);
+    var sel={};
+    for(var si=0;si<QUIZ_SOURCES.length;si++)sel[QUIZ_SOURCES[si].name]=(si===sidV);
+    try{localStorage.setItem('sourceSelection',JSON.stringify(sel))}catch(e){}
+  }
   if(obj.st){
     var sp=obj.st.split(',');
     if(sp.length===3){try{localStorage.setItem('_correctCount',sp[0]);localStorage.setItem('_wrongCount',sp[1]);localStorage.setItem('_totalAnswered',sp[2])}catch(e){}}
