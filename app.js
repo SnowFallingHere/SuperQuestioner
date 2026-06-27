@@ -1731,6 +1731,7 @@ function registerPerQuestionTimeout() {
   answered = true;
   wrongCount++;
   totalAnswered++;
+  try{localStorage.setItem('_syncStats',JSON.stringify({c:correctCount,w:wrongCount,t:totalAnswered}))}catch(e){}
   streak = 0;
   wrongList.push({question: q, selectedAnswer: '时间到'});
   // 显示 feedback
@@ -3926,6 +3927,7 @@ function judge(isCorrect, correctAnswer, selectedAnswer) {
   }
 
   totalAnswered++;
+  try{localStorage.setItem('_syncStats',JSON.stringify({c:correctCount,w:wrongCount,t:totalAnswered}))}catch(e){}
   const key = qKey(q);
 
   // —— 记录分析数据（章节错题 & 题目迟疑时长） ——
@@ -4176,6 +4178,7 @@ function judgeCalculation() {
   }
 
   totalAnswered++;
+  try{localStorage.setItem('_syncStats',JSON.stringify({c:correctCount,w:wrongCount,t:totalAnswered}))}catch(e){}
   const key = qKey(q);
   const chapter = q.chapter || '未分类';
   if (!quizAnalysis.byChapter[chapter]) quizAnalysis.byChapter[chapter] = {wrong:0, correct:0, total:0};
@@ -4343,6 +4346,7 @@ function judgeSubjective() {
   if (container) container.insertAdjacentHTML('beforeend', detailHtml);
 
   totalAnswered++;
+  try{localStorage.setItem('_syncStats',JSON.stringify({c:correctCount,w:wrongCount,t:totalAnswered}))}catch(e){}
   const key = qKey(q);
   const chapter = q.chapter || '未分类';
   if (!quizAnalysis.byChapter[chapter]) quizAnalysis.byChapter[chapter] = {wrong:0, correct:0, total:0};

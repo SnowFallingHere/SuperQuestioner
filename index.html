@@ -26,6 +26,7 @@
         <path d="M14 7l2.2 4.4 4.8.7-3.5 3.4.8 4.8L14 17.5l-4.3 2.8.8-4.8L7 12.1l4.8-.7z" fill="#f9a825" stroke="#f57f17" stroke-width=".3"/>
       </svg>
     </span>
+    <span class="sync-toggle-btn" onclick="toggleSyncPanel()" title="多端同步">📡</span>
   </div>
   <div id="source-area">
     <div class="loading">正在加载题库中...</div>
@@ -523,10 +524,66 @@
 <div id="debug-subradial" class="debug-subradial hidden"></div>
 <div id="honor-panel-container" style="display:none"></div>
 
+  <!-- 多端同步面板 -->
+  <div id="sync-panel" class="sync-panel hidden">
+    <div class="sync-header">
+      <h3>📡 多端同步</h3>
+      <span class="sync-close" onclick="toggleSyncPanel()">×</span>
+    </div>
+    <div class="sync-body">
+      <div class="sync-tabs">
+        <button class="sync-tab active" onclick="switchSyncTab('send',this)">发送</button>
+        <button class="sync-tab" onclick="switchSyncTab('scan',this)">接收</button>
+      </div>
+      <!-- 发送 -->
+      <div id="sync-send-pane" class="sync-pane">
+        <p class="sync-desc">将本机数据以二维码形式输出，用另一设备扫码接收</p>
+        <div id="sync-qr-area" class="sync-qr-area"></div>
+        <p class="sync-hint" id="sync-hint">请使用另一台设备扫码完成数据同步</p>
+        <div class="sync-btns">
+          <button class="btn btn-primary" onclick="startSyncSend()">开始发送</button>
+          <button class="btn btn-secondary" onclick="stopSync()">停止</button>
+        </div>
+        <div class="sync-export" id="sync-export-area" style="display:none">
+          <div class="sync-export-header" onclick="toggleSyncExport()">📋 导出数据 <span id="sync-export-arrow">▶</span></div>
+          <div id="sync-export-body" class="sync-export-body" style="display:none">
+            <textarea id="sync-export-text" readonly></textarea>
+            <div class="sync-btns" style="margin-top:4px">
+              <button class="debug-btn" onclick="copySyncData()">复制</button>
+              <button class="debug-btn" onclick="downloadSyncData()">下载</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 接收 -->
+      <div id="sync-scan-pane" class="sync-pane hidden">
+        <p class="sync-desc">扫描另一设备显示的二维码以同步数据</p>
+        <div id="sync-scanner-area" class="sync-qr-area"></div>
+        <div class="sync-btns">
+          <button class="btn btn-primary" onclick="startSyncScan()">开始扫描</button>
+          <button class="btn btn-secondary" onclick="stopSync()">停止</button>
+        </div>
+        <div class="sync-export" style="margin-top:8px">
+          <div class="sync-export-header" onclick="toggleSyncImport()">📥 导入数据 <span id="sync-import-arrow">▶</span></div>
+          <div id="sync-import-body" class="sync-export-body" style="display:none">
+            <textarea id="sync-import-text" placeholder="粘贴同步数据..."></textarea>
+            <div class="sync-btns" style="margin-top:4px">
+              <button class="debug-btn" onclick="importSyncData()">导入并应用</button>
+              <input type="file" id="sync-import-file" accept=".txt,.json" style="display:none" onchange="importSyncFile(this)">
+              <button class="debug-btn" onclick="document.getElementById('sync-import-file').click()">选择文件</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="sync-status" class="sync-status">就绪</div>
+    </div>
+  </div>
+
 <script src="app.js"></script>
 <script src="scripts/motion.js"></script>
 <script src="scripts/camera.js"></script>
 <script src="scripts/combo.js"></script>
 <script src="scripts/honor.js"></script>
+<script src="scripts/transportation.js"></script>
 </body>
 </html>

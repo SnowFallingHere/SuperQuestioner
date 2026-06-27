@@ -10,7 +10,7 @@ const cp = require('child_process');
 const os = require('os');
 const crypto = require('crypto');
 
-const PORT = 8080;
+const PORT = parseInt(process.env.PORT, 10) || 8080;
 const DIR = path.join(__dirname, '..');
 const PFX_PATH = path.join(os.tmpdir(), 'quiz-server.pfx');
 const PFX_PASS = 'quiz123';

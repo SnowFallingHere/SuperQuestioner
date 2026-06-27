@@ -125,6 +125,45 @@ body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: va
 .honor-btn { font-size: 0; cursor: pointer; margin-left: 6px; opacity: .75; transition: opacity .2s, transform .2s; display: inline-flex; align-items: center; vertical-align: middle; }
 .honor-btn:hover { opacity: 1; transform: scale(1.15); }
 
+/* 📡 同步按钮 */
+.sync-toggle-btn { font-size: 20px; cursor: pointer; margin-left: 6px; opacity: .7; transition: opacity .2s, transform .2s; display: inline-flex; align-items: center; vertical-align: middle; }
+.sync-toggle-btn:hover { opacity: 1; transform: scale(1.15); }
+
+/* 同步面板 */
+.sync-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:16px;padding:24px 28px;max-width:520px;width:94%;box-shadow:0 8px 40px #0004;z-index:9997}
+.sync-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sync-header h3{margin:0;font-size:17px}
+.sync-close{font-size:26px;cursor:pointer;color:#999;line-height:1}
+.sync-tabs{display:flex;gap:0;margin-bottom:12px;border-radius:8px;overflow:hidden;border:1px solid #ddd}
+.sync-tab{flex:1;padding:6px;border:none;background:#f5f5f5;cursor:pointer;font-size:13px;transition:.2s}
+.sync-tab.active{background:#6c5ce7;color:#fff}
+.sync-desc{font-size:12px;color:#888;margin-bottom:10px}
+.sync-qr-area{text-align:center;width:100%;overflow:hidden;position:relative}
+.sync-qr-area::before{content:'';display:block;padding-bottom:100%}
+.sync-qr-area canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important;border-radius:4px}
+.sync-hint{font-size:11px;color:#999;text-align:center;margin:6px 0 0;line-height:1.4}
+.sync-hint.sending{color:#6c5ce7}
+.sync-export{margin-top:4px;border-top:1px solid #eee;padding-top:4px}
+.sync-export-header{font-size:12px;color:#888;cursor:pointer;user-select:none;padding:2px 0}
+.sync-export-header:hover{color:#6c5ce7}
+.sync-export-body textarea{width:100%;height:70px;font-size:10px;font-family:monospace;border:1px solid #ddd;border-radius:4px;padding:4px;resize:vertical;background:#fafafa;color:#333;word-break:break-all}
+[data-theme="dark"] .sync-export{border-color:#313244}
+[data-theme="dark"] .sync-export-header{color:#6c7086}
+[data-theme="dark"] .sync-export-header:hover{color:#89b4fa}
+[data-theme="dark"] .sync-export-body textarea{background:#181825;color:#cdd6f4;border-color:#45475a}
+[data-theme="dark"] .sync-hint{color:#6c7086}
+.sync-btns{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.sync-status{font-size:12px;color:#666;text-align:center;padding:6px;background:#fafafa;border-radius:6px;transition:.3s}
+.sync-status.sync-ok{background:#d4edda;color:#155724;font-weight:600}
+.sync-status.sync-err{background:#f8d7da;color:#721c24}
+.sync-qr-area canvas{display:block;margin:0 auto;border-radius:4px}
+[data-theme="dark"] .sync-panel{background:#1e1e2e;color:#cdd6f4}
+[data-theme="dark"] .sync-tab{background:#313244;color:#a6adc8;border-color:#45475a}
+[data-theme="dark"] .sync-tab.active{background:#6c5ce7;color:#fff}
+[data-theme="dark"] .sync-desc{color:#6c7086}
+[data-theme="dark"] .sync-status{background:#181825;color:#a6adc8}
+[data-theme="dark"] .sync-close{color:#6c7086}
+
 /* 荣誉面板 */
 .honor-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:flex;align-items:center;justify-content:center}
 .honor-panel{background:#fff;border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;overflow-x:hidden;box-shadow:0 8px 40px #0004;scrollbar-width:none;-ms-overflow-style:none}
