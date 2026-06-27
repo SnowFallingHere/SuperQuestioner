@@ -3882,6 +3882,7 @@ function answerTF(val) {
 
 function judge(isCorrect, correctAnswer, selectedAnswer) {
   answered = true;
+  if(typeof window.recordDailyExercise==='function')window.recordDailyExercise();
   const q = quizQueue[currentIndex];
 
   // 作答完成：移除紫光提示
@@ -4137,6 +4138,7 @@ function renderCalculation(q, area) {
 
 function judgeCalculation() {
   answered = true;
+  if(typeof window.recordDailyExercise==='function')window.recordDailyExercise();
   if (mode === 'challenge') clearPerQuestionTimer();
   const q = quizQueue[currentIndex];
 
@@ -4271,6 +4273,7 @@ function renderSubjective(q, area) {
 
 function judgeSubjective() {
   answered = true;
+  if(typeof window.recordDailyExercise==='function')window.recordDailyExercise();
   if (mode === 'challenge') clearPerQuestionTimer();
   const q = quizQueue[currentIndex];
 
@@ -4443,7 +4446,10 @@ function showResult() {
     const wl = challengeSettings ? challengeSettings.wrongLimit : 100;
     const ct = challengeSettings ? challengeSettings.correctTarget : 160;
     if (wrongCount >= wl) title.textContent = '闯关失败 ❌';
-    else if (correctCount >= ct) title.textContent = '闯关胜利 🎉';
+    else if (correctCount >= ct) {
+      title.textContent = '闯关胜利 🎉';
+      if(typeof window.recordDailyPass==='function')window.recordDailyPass();
+    }
     else title.textContent = '已退出';
   } else if (mode === 'infinite') {
     const mastered = getActiveQuestions().filter(q => {

@@ -172,19 +172,35 @@ function collectSyncData(){
     parts.push('ha='+ha);
   }catch(e){}
 
-  // hh: 荣誉历史 (honor history) — MMDD,streak|MMDD,streak
+  // hh: 荣誉历史 (honor history) — YEAR=MMDD:streak,MMDD:streak|YEAR=...
   try{
     var rec2=safeJSON('honorRecords',[]);
     if(rec2.length){
-      var hh=[];
+      var hhByYear={};
       rec2.slice(0,30).forEach(function(r){
         var d=r.time?new Date(r.time):new Date();
+        var yr=d.getFullYear();
         var mm=('0'+(d.getMonth()+1)).slice(-2);
         var dd=('0'+d.getDate()).slice(-2);
-        hh.push(mm+dd+','+(r.streak||0));
+        if(!hhByYear[yr])hhByYear[yr]=[];
+        hhByYear[yr].push(mm+':'+(r.streak||0));
       });
-      parts.push('hh='+hh.join('|'));
+      var hhParts=[];
+      for(var yr2 in hhByYear)hhParts.push(yr2+'='+hhByYear[yr2].join(','));
+      parts.push('hh='+hhParts.join('|'));
     }
+  }catch(e){}
+
+  // db: 仪表盘 (dashboard) — [maxStreak,goodN,perfectN,...,omnipotentN]
+  try{
+    var db=typeof window.getDashboard==='function'?window.getDashboard():null;
+    if(db&&db.length>=12)parts.push('db='+db.join(','));
+  }catch(e){}
+
+  // t: 任务 (tasks) — tepa,tppd,tmpd,tce
+  try{
+    var ts=typeof window.getTasks==='function'?window.getTasks():null;
+    if(ts)parts.push('t='+(ts.tepa||0)+','+(ts.tppd||0)+','+(ts.tmpd||0)+','+(ts.tce||0));
   }catch(e){}
 
   // s: 开关掩码 — 7位（bit 5=无限主观题, bit 6=挑战主观题）
@@ -428,20 +444,47 @@ function applyData(s){
   }
 
   // ha: 成就 — 无需写入 localStorage，由 hh 重建
-  // hh: 荣誉历史 — 还原为 honorRecords
+  // hh: 荣誉历史 — YEAR=MMDD:streak,MMDD:streak|YEAR=...
   if(obj.hh){
     var hs=[];
-    obj.hh.split('|').forEach(function(e){
-      var c=e.indexOf(',');
-      if(c<0)return;
-      var md=e.slice(0,c),streak=parseInt(e.slice(c+1),10);
-      if(md.length!==4||isNaN(streak))return;
-      var now=new Date();now.setMonth(parseInt(md.slice(0,2),10)-1);now.setDate(parseInt(md.slice(2),10));
-      // 年份取自今年，如果月份大于当前月则用去年
-      if(now>new Date())now.setFullYear(now.getFullYear()-1);
-      hs.push({time:now.toLocaleString(),streak:streak});
+    obj.hh.split('|').forEach(function(yrBlock){
+      var eq=yrBlock.indexOf('=');
+      var year=eq>0?parseInt(yrBlock.slice(0,eq),10):new Date().getFullYear();
+      var entries=yrBlock.slice(eq+1);
+      entries.split(',').forEach(function(e){
+        var col=e.indexOf(':');
+        if(col<0)return;
+        var md=e.slice(0,col),streak=parseInt(e.slice(col+1),10);
+        if(md.length!==4||isNaN(streak))return;
+        var d=new Date(year,parseInt(md.slice(0,2),10)-1,parseInt(md.slice(2),10));
+        hs.push({time:d.toLocaleString(),streak:streak});
+      });
     });
     try{localStorage.setItem('honorRecords',JSON.stringify(hs))}catch(e){}
+  }
+
+  // db: 仪表盘
+  if(obj.db){
+    try{
+      var dbArr=obj.db.split(',').map(function(x){return parseInt(x,10)||0});
+      if(dbArr.length>=12)localStorage.setItem('honorDashboard',JSON.stringify(dbArr));
+    }catch(e){}
+  }
+
+  // t: 任务
+  if(obj.t){
+    try{
+      var tp=obj.t.split(',');
+      if(tp.length>=4){
+        localStorage.setItem('honorTasks',JSON.stringify({
+          date:new Date().getFullYear()+'-'+('0'+(new Date().getMonth()+1)).slice(-2)+'-'+('0'+new Date().getDate()).slice(-2),
+          tepa:parseInt(tp[0],10)||0,
+          tppd:parseInt(tp[1],10)||0,
+          tmpd:parseInt(tp[2],10)||0,
+          tce:parseInt(tp[3],10)||0
+        }));
+      }
+    }catch(e){}
   }
 
   // s: 开关（支持 6 位旧格式和 7 位新格式）

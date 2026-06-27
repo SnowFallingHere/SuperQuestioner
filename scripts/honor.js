@@ -1,8 +1,8 @@
-// 荣誉系统 — 连击里程碑记录 + SVG 徽章
+// 荣誉系统 — 连击里程碑记录 + SVG 徽章 + 仪表盘 + 任务
 (function(){
 'use strict';
 
-// ===== SVG 徽章 =====
+// ===== SVG 徽章（不变） =====
 var SVG_ICONS = {
   3:'<circle cx="24" cy="24" r="20" fill="#cdd6f4" stroke="#585b70" stroke-width="2"/><text x="24" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#585b70">✓</text>',
   10:'<path d="M24 6L8 16v12l16 10 16-10V16z" fill="#89b4fa" stroke="#1e66f5" stroke-width="1.5"/><text x="24" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">10</text>',
@@ -43,8 +43,132 @@ var HONOR_KEY='honorRecords';
 function loadRecords(){try{return JSON.parse(localStorage.getItem(HONOR_KEY)||'[]')}catch(e){return[]}}
 function saveRecords(r){try{localStorage.setItem(HONOR_KEY,JSON.stringify(r))}catch(e){}}
 
-// ===== 记录时机：在答错时检测 =====
-// 暴露给外部调用（由 app.js 在答错时调用）
+// ===== 仪表盘：里程碑获得次数 =====
+var DASH_KEY='honorDashboard';
+function loadDashboard(){
+  try{return JSON.parse(localStorage.getItem(DASH_KEY)||'[]')}catch(e){return[]}
+}
+function saveDashboard(d){
+  try{
+    // 格式: [maxStreak, count3, count10, count20, count30, count40, count50, count80, count110, count140, count170, count200]
+    localStorage.setItem(DASH_KEY,JSON.stringify(d));
+  }catch(e){}
+}
+function initDashboard(){
+  var d=loadDashboard();
+  // 如果不存在则初始化：maxStreak=0, 各里程碑0
+  if(!d.length||d.length<12){
+    d=[0,0,0,0,0,0,0,0,0,0,0,0];
+    saveDashboard(d);
+  }
+  return d;
+}
+function getMilestoneIdx(v){
+  var idxMap={3:1,10:2,20:3,30:4,40:5,50:6,80:7,110:8,140:9,170:10,200:11};
+  return idxMap[v]!==undefined?idxMap[v]:-1;
+}
+function updateDashboard(streakValue){
+  if(typeof streakValue!=='number')return;
+  var d=initDashboard();
+  if(streakValue>d[0])d[0]=streakValue; // 更新最高
+  // 更新对应里程碑计数
+  var idx=getMilestoneIdx(streakValue);
+  if(idx>=0&&idx<d.length)d[idx]=(d[idx]||0)+1;
+  saveDashboard(d);
+}
+window.getDashboard=function(){return initDashboard()};
+
+// ===== 任务系统 =====
+var TASK_KEY='honorTasks';
+function loadTasks(){
+  try{
+    var raw=JSON.parse(localStorage.getItem(TASK_KEY)||'{}');
+    // 检查日期是否变更
+    var today=dateStr();
+    if(raw.date!==today){
+      raw.tepa=0;raw.tppd=0;raw.tmpd=0;raw.date=today;
+      localStorage.setItem(TASK_KEY,JSON.stringify(raw));
+    }
+    return raw;
+  }catch(e){return{date:dateStr(),tepa:0,tppd:0,tmpd:0,tce:0}}
+}
+function saveTasks(t){try{localStorage.setItem(TASK_KEY,JSON.stringify(t))}catch(e){}}
+function dateStr(){
+  var d=new Date();
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+function initTasks(){
+  var t=loadTasks();
+  // tce: 连续天数的特殊处理，不因日重置清零
+  return t;
+}
+// 计算连续天数
+function calcConsecutiveDays(){
+  try{
+    var rec=loadRecords();
+    if(!rec.length)return 0;
+    var days=new Set();
+    rec.forEach(function(r){
+      try{
+        var d=new Date(r.time);
+        days.add(d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2));
+      }catch(e){}
+    });
+    var sorted=Array.from(days).sort();
+    if(!sorted.length)return 0;
+    // 从今天开始往前数连续天数
+    var today=dateStr();
+    var count=0;
+    for(var i=sorted.length-1;i>=0;i--){
+      var expected=dateOffset(today,-count);
+      if(sorted[i]===expected){count++;continue}
+      else if(sorted[i]<expected)break; // 不连续
+    }
+    return count;
+  }catch(e){return 0}
+}
+function dateOffset(base,offset){
+  var d=new Date(base);
+  d.setDate(d.getDate()+offset);
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+
+// ===== 外部触发接口 =====
+
+// 答题一次（记录日任务 & 连续天数）
+window.recordDailyExercise=function(){
+  var t=initTasks();
+  t.tepa=1;
+  // 更新连续天数
+  var days=calcConsecutiveDays();
+  t.tce=days;
+  saveTasks(t);
+};
+
+// 完成闯关
+window.recordDailyPass=function(){
+  var t=initTasks();
+  t.tppd=1;
+  saveTasks(t);
+};
+
+// 获得连击里程碑（同时更新仪表盘）
+window.recordMilestone=function(streakValue){
+  var t=initTasks();
+  t.tmpd=1;
+  saveTasks(t);
+  updateDashboard(streakValue);
+};
+
+// 获取任务状态
+window.getTasks=function(){
+  var t=initTasks();
+  var days=calcConsecutiveDays();
+  t.tce=days;
+  return t;
+};
+
+// ===== 记录荣誉（兼容旧接口，增加仪表盘） =====
 window.recordHonor=function(streakValue){
   if(typeof streakValue!=='number'||streakValue<3)return;
   var lbl=getLabel(streakValue);
@@ -53,6 +177,12 @@ window.recordHonor=function(streakValue){
   rec.unshift(entry);
   if(rec.length>200)rec=rec.slice(0,200);
   saveRecords(rec);
+  // 更新仪表盘
+  updateDashboard(streakValue);
+  // 记录里程碑任务
+  var t=initTasks();
+  t.tmpd=1;
+  saveTasks(t);
 };
 
 // ===== 检查成就进度 =====
@@ -62,8 +192,8 @@ function getAchievements(){
   rec.forEach(function(r){if(r.streak>best)best=r.streak});
   return {
     milestones:MILESTONES.map(function(m){return{value:m.v,label:m.label,unlocked:best>=m.v}}),
-    completedInfinite:rec.some(function(r){return r.label==='完成无限模式'}),
-    completedTimed:rec.some(function(r){return r.label==='完成限时模式'})
+    completedInfinite:rec.some(function(r){return r.label==='完成无限模式'||r.label==='无限模式'}),
+    completedTimed:rec.some(function(r){return r.label==='完成限时模式'||r.label==='限时模式'})
   };
 }
 
@@ -79,50 +209,134 @@ function badgeHTML(v,unlocked){
   '</div>';
 }
 
-// ===== 渲染面板 =====
-function renderPanel(){
+// ===== SVG 奖杯 =====
+function trophySVG(streak){
+  var s=streak||0;
+  return '<svg class="honor-trophy" viewBox="0 0 120 120" width="120" height="120">'+
+    '<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f5c211"/><stop offset="100%" stop-color="#d4a200"/></linearGradient>'+
+    '<linearGradient id="tg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffe066"/><stop offset="100%" stop-color="#f5c211"/></linearGradient>'+
+    '<radialGradient id="tg3"><stop offset="0%" stop-color="#fff8d6"/><stop offset="100%" stop-color="#f5c211"/></radialGradient></defs>'+
+    // 奖杯主体
+    '<path d="M40 95h40v10H40z" fill="#b8870a"/>'+
+    '<rect x="44" y="92" width="32" height="6" rx="2" fill="#d4a200"/>'+
+    // 杯身
+    '<path d="M30 20c0 15 5 40 30 50 25-10 30-35 30-50H75c0 10-5 20-15 25-10-5-15-15-15-25H30z" fill="url(#tg3)" stroke="#b8870a" stroke-width="2"/>'+
+    // 高光
+    '<path d="M40 25c0 12 5 30 20 38" fill="none" stroke="#fff" stroke-width="1.5" opacity=".3"/>'+
+    // 左把手
+    '<path d="M30 30c-15 0-20 10-10 15" fill="none" stroke="#d4a200" stroke-width="4" stroke-linecap="round"/>'+
+    // 右把手
+    '<path d="M90 30c15 0 20 10 10 15" fill="none" stroke="#d4a200" stroke-width="4" stroke-linecap="round"/>'+
+    // 彩带左
+    '<path d="M50 55l-15 40h10l5-40" fill="#e64553" opacity=".8"/>'+
+    // 彩带右
+    '<path d="M70 55l15 40h-10l-5-40" fill="#e64553" opacity=".8"/>'+
+    // 星标
+    '<text x="60" y="48" text-anchor="middle" font-size="14" fill="#b8870a" font-weight="700">🏆</text>'+
+    // 数字
+    '<text x="60" y="75" text-anchor="middle" font-size="22" font-weight="900" fill="#6c5ce7">'+(s>0?s:'—')+'</text>'+
+    '<text x="60" y="88" text-anchor="middle" font-size="8" fill="#b8870a">最高连击</text></svg>';
+}
+
+// ===== 仪表盘 HTML =====
+function dashboardHTML(){
+  var d=initDashboard();
+  if(!d||d.length<12)return'<div class="honor-dashboard">暂无数据</div>';
+  var labels=['GOOD','Perfect!','Awesome!','Unbelievable!','Fabulous!','Marvelous!','Legendary!','Unstoppable!','Godlike!','Transcendent!','Omnipotent!'];
+  // d[0]=maxStreak, d[1]-d[11]=各里程碑计数
+  var html='<div class="honor-dash-grid">';
+  // 跳过 d[0]（最高连击已在奖杯显示）
+  for(var i=1;i<d.length;i++){
+    var cnt=d[i]||0;
+    if(cnt===0)continue;
+    var lbl=labels[i-1]||'M'+i;
+    html+='<div class="honor-dash-item"><span class="honor-dash-label">'+lbl+'</span><span class="honor-dash-count">×'+cnt+'</span></div>';
+  }
+  html+='</div>';
+  if(d.slice(1).every(function(v){return!v}))html='<div class="honor-empty-sm">尚未获得里程碑</div>';
+  return html;
+}
+
+// ===== 任务 HTML =====
+function tasksHTML(){
+  var t=initTasks();
+  var days=calcConsecutiveDays();
+  t.tce=days;
+  var tasks=[
+    {k:'tepa',l:'每日答题',c:t.tepa?'✅':'⬜'},
+    {k:'tppd',l:'每日闯关',c:t.tppd?'✅':'⬜'},
+    {k:'tmpd',l:'每日连击里程碑',c:t.tmpd?'✅':'⬜'},
+    {k:'tce3',l:'连续作答 3 天',c:days>=3?'✅':'⬜',n:days+'/3'},
+    {k:'tce30',l:'连续作答 30 天',c:days>=30?'✅':'⬜',n:days+'/30'},
+    {k:'tce180',l:'连续作答 6 个月',c:days>=180?'✅':'⬜',n:days+'/180'},
+    {k:'tce365',l:'连续作答 1 年',c:days>=365?'✅':'⬜',n:days+'/365'}
+  ];
+  var html='<div class="honor-tasks">';
+  tasks.forEach(function(tk){
+    html+='<div class="honor-task-item"><span class="honor-task-icon">'+tk.c+'</span><span class="honor-task-label">'+tk.l+'</span>';
+    if(tk.n)html+='<span class="honor-task-progress">'+tk.n+'</span>';
+    html+='</div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+// ===== 渲染三栏面板 =====
+function renderPanel(tab){
   var ach=getAchievements();
   var isDark=document.body.getAttribute('data-theme')==='dark';
   var bg=isDark?'#1e1e2e':'#fff';
   var fg=isDark?'#cdd6f4':'#333';
   var close=isDark?'#6c7086':'#999';
-  var html='<div class="honor-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:flex;align-items:center;justify-content:center" onclick="closeHonorPanel()"><div class="honor-panel" style="background:'+bg+';border-radius:16px;padding:20px 24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.25);color:'+fg+'" onclick="event.stopPropagation()">'+
-    '<div class="honor-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="margin:0;font-size:20px;color:'+fg+'">🎖 荣誉殿堂</h2><span class="honor-close" style="font-size:28px;cursor:pointer;color:'+close+';line-height:1" onclick="closeHonorPanel()">×</span></div>';
+  var html='<div class="honor-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;align-items:center;justify-content:center" id="honor-overlay"><div class="honor-panel" style="background:'+bg+';border-radius:16px;padding:16px 20px;max-width:580px;width:94%;max-height:85vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.25);color:'+fg+'" onclick="event.stopPropagation()">'+
+    '<div class="honor-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0"><h2 style="margin:0;font-size:20px;color:'+fg+'">🎖 荣誉殿堂</h2><span class="honor-close" style="font-size:28px;cursor:pointer;color:'+close+';line-height:1" onclick="closeHonorPanel()">×</span></div>'+
+    // 三栏 Tab
+    '<div class="honor-tabs"><button class="honor-tab'+(tab==='ach'?' active':'')+'" onclick="switchHonorTab(\'ach\')">成就</button><button class="honor-tab'+(tab==='task'?' active':'')+'" onclick="switchHonorTab(\'task\')">任务</button><button class="honor-tab'+(tab==='hist'?' active':'')+'" onclick="switchHonorTab(\'hist\')">历史战绩</button></div>'+
+    // Tab 内容
+    '<div class="honor-tab-content">';
 
-  // 上栏：成就
-  html+='<div class="honor-section"><h3>成就</h3><div class="honor-badges">';
-  ach.milestones.forEach(function(m){html+=badgeHTML(m.value,m.unlocked)});
-  html+='<div class="honor-badge'+(ach.completedInfinite?' unlocked':'')+'" title="无限模式 · '+(ach.completedInfinite?'✅ 已解锁':'全部题目掌握后解锁')+'">'+
-    '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#6c5ce7" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="10" fill="#6c5ce7">∞</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#6c5ce7">无限</text></svg>'+
-    '<div class="honor-badge-label caption-complete">无限模式</div></div>';
-  html+='<div class="honor-badge'+(ach.completedTimed?' unlocked':'')+'" title="限时模式 · '+(ach.completedTimed?'✅ 已解锁':'完成一次限时模式后解锁')+'">'+
-    '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#f5c211" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="14" fill="#f5c211">⏱</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#f5c211">限时</text></svg>'+
-    '<div class="honor-badge-label caption-complete">限时模式</div></div>';
-  html+='</div></div>';
-
-  // 下栏：历史记录
-  var rec=loadRecords();
-  html+='<div class="honor-section"><h3>历史荣誉 <span class="honor-count">('+rec.length+')</span></h3>';
-  if(rec.length===0){
-    html+='<div class="honor-empty">暂无荣誉记录，开始答题吧！<br>答错时会自动记录本次连击数</div>';
+  if(tab==='ach'){
+    // 奖杯 + 仪表盘
+    var d=initDashboard();
+    html+='<div class="honor-ach-section"><div class="honor-trophy-wrap">'+trophySVG(d[0])+'</div><div class="honor-dash-wrap">'+dashboardHTML()+'</div></div>';
+    // 成就徽章
+    html+='<div class="honor-badges-wrap"><h4>里程碑</h4><div class="honor-badges">';
+    ach.milestones.forEach(function(m){html+=badgeHTML(m.value,m.unlocked)});
+    html+='<div class="honor-badge'+(ach.completedInfinite?' unlocked':'')+'" title="无限模式 · '+(ach.completedInfinite?'✅ 已解锁':'全部题目掌握后解锁')+'">'+
+      '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#6c5ce7" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="10" fill="#6c5ce7">∞</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#6c5ce7">无限</text></svg>'+
+      '<div class="honor-badge-label caption-complete">无限模式</div></div>';
+    html+='<div class="honor-badge'+(ach.completedTimed?' unlocked':'')+'" title="限时模式 · '+(ach.completedTimed?'✅ 已解锁':'完成一次限时模式后解锁')+'">'+
+      '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="none" stroke="#f5c211" stroke-width="2"/><text x="24" y="20" text-anchor="middle" font-size="14" fill="#f5c211">⏱</text><text x="24" y="32" text-anchor="middle" font-size="7" fill="#f5c211">限时</text></svg>'+
+      '<div class="honor-badge-label caption-complete">限时模式</div></div>';
+    html+='</div></div>';
+  }else if(tab==='task'){
+    html+=tasksHTML();
   }else{
-    html+='<div class="honor-list">';
-    rec.forEach(function(r){
-      html+='<div class="honor-item"><span class="honor-time">'+r.time+'</span><span class="honor-label">'+r.label+'</span></div>';
-    });
+    // 历史战绩
+    var rec=loadRecords();
+    html+='<div class="honor-hist-section"><div class="honor-count-badge">共 '+rec.length+' 条记录</div>';
+    if(rec.length===0){
+      html+='<div class="honor-empty">暂无荣誉记录，开始答题吧！</div>';
+    }else{
+      html+='<div class="honor-list">';
+      rec.forEach(function(r){
+        html+='<div class="honor-item"><span class="honor-time">'+r.time+'</span><span class="honor-label">'+r.label+'</span></div>';
+      });
+      html+='</div>';
+    }
     html+='</div>';
   }
-  html+='</div></div></div>';
 
+  html+='</div></div></div>';
   return html;
 }
 
 // ===== 开关面板 =====
-window.openHonorPanel=function(){
+window.openHonorPanel=function(tab){tab=tab||'ach';
   var el=document.getElementById('honor-panel-container');
   if(!el)return;
   el.style.display='';
-  el.innerHTML=renderPanel();
+  el.innerHTML=renderPanel(tab);
 };
 window.closeHonorPanel=function(){
   var el=document.getElementById('honor-panel-container');
@@ -130,16 +344,24 @@ window.closeHonorPanel=function(){
 };
 window.refreshHonorPanel=function(){
   var el=document.getElementById('honor-panel-container');
-  if(el&&el.style.display!=='none'){try{el.innerHTML=renderPanel()}catch(e){}}
+  if(el&&el.style.display!=='none'){try{el.innerHTML=renderPanel(getCurrentTab())}catch(e){}}
 };
-window.clearAllHonors=function(){
-  try{localStorage.removeItem('honorRecords')}catch(e){}
+window.switchHonorTab=function(tab){
   var el=document.getElementById('honor-panel-container');
-  if(el&&el.style.display!=='none'){el.innerHTML='';setTimeout(function(){el.innerHTML=renderPanel()},50)}
+  if(el&&el.style.display!=='none'){el.innerHTML=renderPanel(tab)}
+};
+function getCurrentTab(){
+  var el=document.querySelector('.honor-tab.active');
+  return el?el.textContent.trim():'ach';
+}
+window.clearAllHonors=function(){
+  try{localStorage.removeItem('honorRecords');localStorage.removeItem('honorDashboard')}catch(e){}
+  var el=document.getElementById('honor-panel-container');
+  if(el&&el.style.display!=='none'){el.innerHTML='';setTimeout(function(){el.innerHTML=renderPanel('ach')},50)}
 };
 
 // 🎖 按钮点击
-window.onHonorClick=function(){openHonorPanel()};
+window.onHonorClick=function(){openHonorPanel('ach')};
 
 // ===== 记录「完成模式」成就 =====
 window.recordModeComplete=function(modeLabel){
