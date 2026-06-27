@@ -390,6 +390,24 @@ function applyData(s){
        if(v>=3)wrongEntries[qk]=(wrongEntries[qk]||0)+1;
     }
     try{localStorage.setItem('infiniteProgress',JSON.stringify(prog))}catch(e){}
+    // 从 g 编码重建 infiniteSession（dots / wrongStreak）
+    try{
+      var ses={};
+      for(var si=0;si<digits.length;si++){
+        var sv=digits[si];
+        if(sv<'0'||sv>'9')continue;
+        var sqk=srcName+'::'+(si+1);
+        var siv=parseInt(sv,10);
+        if(siv===9)continue;
+        if(siv===0)ses[sqk]={dots:3,wrongStreak:0};
+        else if(siv===1)ses[sqk]={dots:1,wrongStreak:0};
+        else if(siv===2)ses[sqk]={dots:2,wrongStreak:0};
+        else if(siv===3)ses[sqk]={dots:0,wrongStreak:1};
+        else if(siv===4)ses[sqk]={dots:0,wrongStreak:2};
+        else if(siv>=5)ses[sqk]={dots:0,wrongStreak:3};
+      }
+      localStorage.setItem('infiniteSession',JSON.stringify(ses));
+    }catch(e){}
     // 写回 wrongBooks（保留已有结构，追加标记错误题目）
     if(Object.keys(wrongEntries).length){
       try{
